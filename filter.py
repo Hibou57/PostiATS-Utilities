@@ -23,7 +23,7 @@ Message = collections.namedtuple(
 
 # Constants
 # ----------------------------------------------------------------------------
-# Sample of message with location:
+# Sample message with location:
 #     UTF_8.dats: 5235(line=167, offs=53) -- 5237(line=167, offs=55): \
 #     error(3): static arity mismatch: more arguments are expected.
 
@@ -905,7 +905,7 @@ def simplified_image(node, level, acc):
 # ============================================================================
 
 def is_root_node(node):
-    """ An D2/S2/C3 node follow by end. """
+    """ True if node is a D2/S2/C3 node followed by end. """
     result = (
         node is not None
         and node.kind == KIND_D2S2C3
@@ -919,30 +919,44 @@ def pretty_printed(string):
     result = ""
     trees = []
     string = String(string)
+
+    def append_folded_ref():
+        """ Append a “[n]” in place of the parsed expression. """
+        nonlocal fold_count, string, result
+        # pylint: disable=unused-variable
+        fold_count += 1
+        if not string.has_item() or string.item() != "]":
+            result += "[%i]" % fold_count
+        else:
+            result += "%i" % fold_count
+
+    def append_folded_ref_target(lines):
+        """ Append an “[n]:” before a pretty printed expression. """
+        nonlocal fold_count, result
+        # pylint: disable=unused-variable
+        fold_count += 1
+        result += "[%i]: " % fold_count
+        if len(lines) > 1:
+            result += "\n"
+
     while string.has_item():
         string.push()
-        tree = parse_node(string)
+        tree = parse_node(string)  # The magic is here
         if is_root_node(tree):
             string.unpush()
-            fold_count += 1
-            if not string.has_item() or string.item() != "]":
-                result += "[%i]" % fold_count
-            else:
-                result += "%i" % fold_count
+            append_folded_ref()
             trees.append(tree)
         else:
             string.pop()
             result += string.item()
             string.consume()
+
     result += "\n"
     fold_count = 0
     for tree in trees:
-        fold_count += 1
-        lines = node_lines_image(tree)
+        lines = node_lines_image(tree)  # The magic is here
         lines = format_lines(lines)
-        result += "[%i]: " % fold_count
-        if (len(lines) > 1):
-            result += "\n"
+        append_folded_ref_target(lines)
         result += lines_image(lines)
     return result
 
