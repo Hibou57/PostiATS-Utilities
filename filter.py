@@ -913,8 +913,9 @@ def is_root_node(node):
     return result
 
 
-def folded(string):
-    """ Fold funny things. """
+def pretty_printed(string):
+    """ String with Postiats expression folded and re‑printed below. """
+    fold_count = 0
     result = ""
     trees = []
     string = String(string)
@@ -923,16 +924,23 @@ def folded(string):
         tree = parse_node(string)
         if is_root_node(tree):
             string.unpush()
-            result += "…"
+            fold_count += 1
+            if not string.has_item() or string.item() != "]":
+                result += "[%i]" % fold_count
+            else:
+                result += "%i" % fold_count
             trees.append(tree)
         else:
             string.pop()
             result += string.item()
             string.consume()
     result += "\n"
+    fold_count = 0
     for tree in trees:
+        fold_count += 1
         lines = node_lines_image(tree)
         lines = format_lines(lines)
+        result += "[%i]: " % fold_count
         result += lines_image(lines)
     return result
 
@@ -943,7 +951,7 @@ def main():
         line = line.strip()
         if is_message_with_location(line):
             message = parse_message_with_location(line)
-            text = folded(message.text)
+            text = pretty_printed(message.text)
             if LOC_WITH_COLUMN:
                 output = (
                     "%s:%i:%i: %s"
@@ -959,7 +967,8 @@ def main():
                        text))
             print(output)
         else:
-            print(line)
+            output = pretty_printed(line)
+            print(output)
 
 
 if __name__ == "__main__":
