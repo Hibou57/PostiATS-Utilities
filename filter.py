@@ -828,6 +828,18 @@ def c3nstrprop_simplified_image(node, level, acc):
     return result
 
 
+def d2esymmac_simplified_image(node, level, acc):
+    """ D2E(sym|mac)(name) --> name. """
+    result = False
+    if (node.token == "D2Esym") or (node.token == "D2Emac"):
+        if node.nodes is not None and len(node.nodes) == 1:
+            subnode = node.nodes[0]
+            if subnode.nodes is None:
+                acc.append(Word(subnode.token, level, WORD_TOKEN))
+                result = True
+    return result
+
+
 def name_simplified_image(node, level, acc):
     """ name(number) --> name. """
     result = False
@@ -850,6 +862,7 @@ SIMPLIFIED_IMAGE_METHODS = [
     s2eapp_simplified_image,
     s2eeqeq_simplified_image,
     c3nstrprop_simplified_image,
+    d2esymmac_simplified_image,
     name_simplified_image,
 ]
 
