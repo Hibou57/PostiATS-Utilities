@@ -703,13 +703,45 @@ NAME_AS_OPERATOR = {
 # Helper
 # ----------------------------------------------------------------------------
 
-def is_int(string):
-    """ Helper. """
-    try:
-        int(string)
-        result = True
-    except ValueError:
-        result = False
+def is_empty_node(node):
+    """ Node is empty (not the same as a leaf!). """
+    result = node.nodes is not None and len(node.nodes) == 0
+    return result
+
+
+def single_child(node):
+    """ The single child node or None. """
+    result = None
+    if node.nodes is not None and len(node.nodes) == 1:
+        result = node.nodes[0]
+    return result
+
+
+def leaf_single_child(node):
+    """ The single child leaf node or None. """
+    result = None
+    child = single_child(node)
+    if child is not None and child.nodes is None:
+        result = child
+    return result
+
+
+def int_single_child(node):
+    """ The single child leaf node holding an integer or None. """
+    result = None
+    child = leaf_single_child(node)
+    if child is not None and child.kind == KIND_NUMERIC:
+        result = child
+    return result
+
+
+def empty_single_child(node):
+    """ The single empty child node or None. """
+    result = None
+    child = single_child(node)
+    if child is not None:
+        if is_empty_node(child):
+            result = child
     return result
 
 
@@ -720,11 +752,10 @@ def s2eintinf_simplified_image(node, level, acc):
     """ S2Eintinf(number) --> number. """
     result = False
     if node.token == "S2Eintinf":
-        if node.nodes is not None and len(node.nodes) == 1:
-            subnode = node.nodes[0]
-            if subnode.nodes is None:
-                acc.append(Word(subnode.token, level, WORD_TOKEN))
-                result = True
+        leaf = int_single_child(node)
+        if leaf is not None:
+            acc.append(Word(leaf.token, level, WORD_TOKEN))
+            result = True
     return result
 
 
@@ -732,16 +763,15 @@ def s2ecst_simplified_image(node, level, acc):
     """ S2Ecst(name) --> name | symbol. """
     result = False
     if node.token == "S2Ecst":
-        if node.nodes is not None and len(node.nodes) == 1:
-            subnode = node.nodes[0]
-            if subnode.nodes is None:
-                token = subnode.token
-                if token in NAME_AS_OPERATOR:
-                    operator = NAME_AS_OPERATOR[token]
-                    acc.append(Word(operator, level, WORD_OPERATOR))
-                else:
-                    acc.append(Word(token, level, WORD_TOKEN))
-                result = True
+        leaf = leaf_single_child(node)
+        if leaf is not None:
+            token = leaf.token
+            if token in NAME_AS_OPERATOR:
+                operator = NAME_AS_OPERATOR[token]
+                acc.append(Word(operator, level, WORD_OPERATOR))
+            else:
+                acc.append(Word(token, level, WORD_TOKEN))
+            result = True
     return result
 
 
@@ -749,13 +779,12 @@ def d2s2evar_simplified_image(node, level, acc):
     """ (D2|S2)Evar(name(number)) --> name. """
     result = False
     if (node.token == "D2Evar") or (node.token == "S2Evar"):
-        if node.nodes is not None and len(node.nodes) == 1:
-            node = node.nodes[0]
-            if node.nodes is not None and len(node.nodes) == 1:
-                subnode = node.nodes[0]
-                if subnode.nodes is None and is_int(subnode.token):
-                    acc.append(Word(node.token, level, WORD_TOKEN))
-                    result = True
+        child = single_child(node)
+        if child is not None:
+            leaf = int_single_child(child)
+            if leaf is not None:
+                acc.append(Word(child.token, level, WORD_TOKEN))
+                result = True
     return result
 
 
@@ -819,9 +848,7 @@ def c3nstrprop_simplified_image(node, level, acc):
         nodes = node.nodes
         if nodes is not None and len(nodes) == 2:
             node1 = nodes[0]
-            if (node1.token == "C3TKmain"
-                    and node1.nodes is not None
-                    and len(node1.nodes) == 0):
+            if node1.token == "C3TKmain" and is_empty_node(node1):
                 node2 = nodes[1]
                 node_image(node2, level, acc)
                 result = True
@@ -832,11 +859,10 @@ def d2esymmac_simplified_image(node, level, acc):
     """ D2E(sym|mac)(name) --> name. """
     result = False
     if (node.token == "D2Esym") or (node.token == "D2Emac"):
-        if node.nodes is not None and len(node.nodes) == 1:
-            subnode = node.nodes[0]
-            if subnode.nodes is None:
-                acc.append(Word(subnode.token, level, WORD_TOKEN))
-                result = True
+        leaf = leaf_single_child(node)
+        if leaf is not None:
+            acc.append(Word(leaf.token, level, WORD_TOKEN))
+            result = True
     return result
 
 
@@ -844,11 +870,10 @@ def name_simplified_image(node, level, acc):
     """ name(number) --> name. """
     result = False
     if node.kind == KIND_NAME:
-        if node.nodes is not None and len(node.nodes) == 1:
-            subnode = node.nodes[0]
-            if subnode.nodes is None and is_int(subnode.token):
-                acc.append(Word(node.token, level, WORD_TOKEN))
-                result = True
+        leaf = int_single_child(node)
+        if leaf is not None:
+            acc.append(Word(node.token, level, WORD_TOKEN))
+            result = True
     return result
 
 
