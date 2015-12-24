@@ -914,7 +914,7 @@ def is_root_node(node):
 
 
 def pretty_printed(string):
-    """ String with Postiats expression folded and re‑printed below. """
+    """ String with Postiats expressions folded and re‑printed below. """
     fold_count = 0
     result = ""
     trees = []
@@ -941,6 +941,8 @@ def pretty_printed(string):
         lines = node_lines_image(tree)
         lines = format_lines(lines)
         result += "[%i]: " % fold_count
+        if (len(lines) > 1):
+            result += "\n"
         result += lines_image(lines)
     return result
 
