@@ -1,2 +1,2 @@
-# PostiATS-Messages-Filter
-Pretty printer for ATS/PostiATS messages
+# PostiATS-Utilities
+Messages pretty printer and JSONized files cache for ATS/PostiATS
