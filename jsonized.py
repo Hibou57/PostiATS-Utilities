@@ -7,6 +7,7 @@ JSON data may also be returned to stdout, for use from the command line.
 
 """
 
+import environment
 import json
 import os
 import subprocess
@@ -42,14 +43,10 @@ CACHE = os.path.join(CACHE_ROOT, "PostiATS")
 # Scanned directories for prefilling
 # ============================================================================
 
-CWD = os.getcwd()
-PATSHOME = os.getenv("PATSHOME")
-PATSHOMERELOC = os.getenv("PATSHOMERELOC")
-
 ROOTS = [
-    CWD,
-    PATSHOME,
-    PATSHOMERELOC
+    environment.CWD,
+    environment.PATSHOME,
+    environment.PATSHOMERELOC
 ]
 
 # Other constants
