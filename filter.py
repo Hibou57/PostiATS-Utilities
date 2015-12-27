@@ -4,6 +4,7 @@
 """ Filter for PostiATS messages. """
 
 import collections
+import locations
 import os.path
 import sys
 
@@ -19,7 +20,7 @@ REL_PATH = True
 # ----------------------------------------------------------------------------
 Message = collections.namedtuple(
     "Message",
-    ["path", "line", "col", "level", "text"])
+    ["path", "line", "column", "level", "text"])
 
 # Constants
 # ----------------------------------------------------------------------------
@@ -27,58 +28,9 @@ Message = collections.namedtuple(
 #     UTF_8.dats: 5235(line=167, offs=53) -- 5237(line=167, offs=55): \
 #     error(3): static arity mismatch: more arguments are expected.
 
-END_OF_PATH = ": "
-LINE_TAG = "(line="
-OFFS_TAG = ", offs="
-END_OF_BEGIN = ") -- "
-END_OF_END = "): "
+END_OF_LOCATION = locations.END_OF_END
+START_OF_MSG_LEVEL = ": "
 END_OF_MSG_LEVEL = ": "
-
-# Given these tags, the above sample would be split like this:
-#
-#  * "UTF_8.dats"   Path
-#  * ": "           END_OF_PATH
-#  * "5235"         Begin bytes
-#  * "(line="       LINE_TAG
-#  * "167"          Begin line
-#  * ", offs="      OFFS_TAG
-#  * "53"           Begin offset (column)
-#  * ") -- "        END_OF_START
-#  * "5237"         End bytes
-#  * "(line="       LINE_TAG
-#  * "167"          End line
-#  * ", offs="      OFFS_TAG
-#  * "55"           End offset (column)
-#  * "): "          END_OF_END
-#  * error(3)       Message level
-#  * ": "           END_OF_MSG_LEVEL
-#  * "static arity mismatch: more arguments are expected."  Message
-#
-# Tested and applied in this order (there are duplicates):
-#
-#  * END_OF_PATH
-#  * LINE_TAG
-#  * OFFS_TAG
-#  * END_OF_START
-#  * LINE_TAG
-#  * OFFS_TAG
-#  * END_OF_END
-#  * END_OF_MSG_LEVEL
-
-
-# Helper
-# ----------------------------------------------------------------------------
-
-def find_tag(line, tag, start):
-    """ Tuple `(start, end)` of `tag` in `line` starting at `start`.
-
-    If `tag` is not found, `(-1, end)` is returned.
-
-    """
-    i = line.find(tag, start)
-    j = i + len(tag)
-    result = (i, j)
-    return result
 
 
 # Methods
@@ -86,25 +38,15 @@ def find_tag(line, tag, start):
 
 def is_message_with_location(line):
     """ True is line is a message with location. """
-    j = 0
 
-    def test_tag(tag):
-        """ Update (i,j) if i is not -1. """
-        nonlocal j
-        (i, j) = find_tag(line, tag, j)
-        result = i != -1
-        return result
-
-    result = (
-        test_tag(END_OF_PATH)
-        and test_tag(LINE_TAG)
-        and test_tag(OFFS_TAG)
-        and test_tag(END_OF_BEGIN)
-        and test_tag(LINE_TAG)
-        and test_tag(OFFS_TAG)
-        and test_tag(END_OF_END)
-        and test_tag(END_OF_MSG_LEVEL)
-    )
+    result = False
+    i = line.find(END_OF_LOCATION + START_OF_MSG_LEVEL)
+    if i != -1:
+        i += len(END_OF_LOCATION)
+        if locations.is_location(line[:i]):
+            i += len(START_OF_MSG_LEVEL)
+            i = line.find(END_OF_MSG_LEVEL, i)
+            result = i != -1
 
     return result
 
@@ -125,53 +67,28 @@ def message_level_number(message_level):
 
 def parse_message_with_location(line):
     """ Parse `line` as a `Message`. """
-    i = 0
-    j = 0
-    k = 0
+    assert is_message_with_location(line)
 
-    (j, k) = find_tag(line, END_OF_PATH, k)
-    path = line[i:j]
-    i = k
+    i = line.find(END_OF_LOCATION + START_OF_MSG_LEVEL)
+    i += len(END_OF_LOCATION)
+    location = locations.parse(line[:i])
 
-    (j, k) = find_tag(line, LINE_TAG, k)
-    # start_bytes = line[i:j]
-    i = k
-
-    (j, k) = find_tag(line, OFFS_TAG, k)
-    start_line = line[i:j]
-    i = k
-
-    (j, k) = find_tag(line, END_OF_BEGIN, k)
-    start_offs = line[i:j]
-    i = k
-
-    (j, k) = find_tag(line, LINE_TAG, k)
-    # end_bytes = line[i:j]
-    i = k
-
-    (j, k) = find_tag(line, OFFS_TAG, k)
-    # end_line = line[i:j]
-    i = k
-
-    (j, k) = find_tag(line, END_OF_END, k)
-    # end_offs = line[i:j]
-    i = k
-
-    (j, k) = find_tag(line, END_OF_MSG_LEVEL, k)
+    i += len(START_OF_MSG_LEVEL)
+    j = line.find(END_OF_MSG_LEVEL, i)
     message_level = line[i:j]
-    i = k
-
     level = message_level_number(message_level)
+    j += len(END_OF_MSG_LEVEL)
 
-    text = line[i:]
+    text = line[j:]
 
+    path = location.path
     if REL_PATH:
         path = os.path.relpath(path)
 
     result = Message(
         path=path,
-        line=int(start_line),
-        col=int(start_offs),
+        line=location.start.line,
+        column=location.start.column,
         level=level,
         text=text)
 
@@ -963,6 +880,7 @@ def pretty_printed(string):
 
 def main():
     """ Main. """
+    message_before = False
     for line in sys.stdin:
         line = line.strip()
         if is_message_with_location(line):
@@ -973,7 +891,7 @@ def main():
                     "%s:%i:%i: %s"
                     % (message.path,
                        message.line,
-                       message.col,
+                       message.column,
                        text))
             else:
                 output = (
@@ -981,10 +899,15 @@ def main():
                     % (message.path,
                        message.line,
                        text))
-            print(output)
+            print()  # Separate messages with blank lines.
+            print(output, end="")
+            message_before = True
         else:
             output = pretty_printed(line)
-            print(output)
+            if message_before:
+                print()  # Separate from messages with blank lines.
+            print(output, end="")
+            message_before = False
 
 
 if __name__ == "__main__":
