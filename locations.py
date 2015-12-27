@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8; mode:python3; indent-tabs-mode:nil; tab-width:4; -*-
 
-""" PostiATS text ranges/pointers. """
+""" PostiATS text ranges/locations. """
 
 import collections
+import os
 
 # PostiATS Text Ranges/Locations
 # ============================================================================
+
+# Configuration
+# ----------------------------------------------------------------------------
+REL_PATH = True
 
 # Types
 # ----------------------------------------------------------------------------
@@ -67,7 +72,7 @@ def find_tag(text, tag, start):
     return result
 
 
-# Methods
+# Testing and Parsing
 # ----------------------------------------------------------------------------
 
 def is_location(text):
@@ -136,4 +141,26 @@ def parse(text):
     end = LineColumn(line=end_line, column=end_offs)
     result = Location(path=path, start=start, end=end)
 
+    return result
+
+
+# Formating
+# ----------------------------------------------------------------------------
+
+def ide_formated(location, with_column=True, rel_path=REL_PATH):
+    """ Location formated for typical IDE: “path:ln” or “path:ln:co”. """
+
+    path = location.path
+    if rel_path:
+        path = os.path.relpath(path)
+
+    if with_column:
+        result = "%s:%i:%i" % (
+            path,
+            location.start.line,
+            location.start.column)
+    else:
+        result = "%s:%i" % (
+            path,
+            location.start.line)
     return result

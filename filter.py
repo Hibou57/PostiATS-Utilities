@@ -5,22 +5,18 @@
 
 import collections
 import locations
-import os.path
 import sys
 
 LINE_WIDTH = 78
 SIMPLIFY = True
-LOC_WITH_COLUMN = True
-REL_PATH = True
+LOCATION_WITH_COLUMN = True
 
 # PostiATS Messages
 # ============================================================================
 
 # Type
 # ----------------------------------------------------------------------------
-Message = collections.namedtuple(
-    "Message",
-    ["path", "line", "column", "level", "text"])
+Message = collections.namedtuple("Message", ["location", "level", "text"])
 
 # Constants
 # ----------------------------------------------------------------------------
@@ -81,14 +77,8 @@ def parse_message_with_location(line):
 
     text = line[j:]
 
-    path = location.path
-    if REL_PATH:
-        path = os.path.relpath(path)
-
     result = Message(
-        path=path,
-        line=location.start.line,
-        column=location.start.column,
+        location=location,
         level=level,
         text=text)
 
@@ -880,25 +870,16 @@ def pretty_printed(string):
 
 def main():
     """ Main. """
-    message_before = False
+    message_before = False  # For managing additional blank lines.
     for line in sys.stdin:
         line = line.strip()
         if is_message_with_location(line):
             message = parse_message_with_location(line)
             text = pretty_printed(message.text)
-            if LOC_WITH_COLUMN:
-                output = (
-                    "%s:%i:%i: %s"
-                    % (message.path,
-                       message.line,
-                       message.column,
-                       text))
-            else:
-                output = (
-                    "%s:%i: %s"
-                    % (message.path,
-                       message.line,
-                       text))
+            location = message.location
+            output = "%s: %s" % (
+                locations.ide_formated(location, LOCATION_WITH_COLUMN),
+                text)
             print()  # Separate messages with blank lines.
             print(output, end="")
             message_before = True
