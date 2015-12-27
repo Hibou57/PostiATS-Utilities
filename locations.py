@@ -5,6 +5,7 @@
 
 import collections
 import os
+import urllib
 
 # PostiATS Text Ranges/Locations
 # ============================================================================
@@ -15,7 +16,7 @@ REL_PATH = True
 
 # Types
 # ----------------------------------------------------------------------------
-LineColumn = collections.namedtuple("LineColumn", ["line", "column"])
+Position = collections.namedtuple("Position", ["char", "line", "column"])
 Location = collections.namedtuple("Location", ["path", "start", "end"])
 
 # Constants
@@ -114,7 +115,7 @@ def parse(text):
     i = k
 
     (j, k) = find_tag(text, LINE_TAG, k)
-    # start_bytes = text[i:j]
+    start_byte = int(text[i:j])
     i = k
 
     (j, k) = find_tag(text, OFFS_TAG, k)
@@ -126,7 +127,7 @@ def parse(text):
     i = k
 
     (j, k) = find_tag(text, LINE_TAG, k)
-    # end_bytes = text[i:j]
+    end_byte = int(text[i:j])
     i = k
 
     (j, k) = find_tag(text, OFFS_TAG, k)
@@ -137,8 +138,8 @@ def parse(text):
     end_offs = int(text[i:j])
     i = k
 
-    start = LineColumn(line=start_line, column=start_offs)
-    end = LineColumn(line=end_line, column=end_offs)
+    start = Position(char=start_byte, line=start_line, column=start_offs)
+    end = Position(char=end_byte, line=end_line, column=end_offs)
     result = Location(path=path, start=start, end=end)
 
     return result
@@ -163,4 +164,27 @@ def ide_formated(location, with_column=True, rel_path=REL_PATH):
         result = "%s:%i" % (
             path,
             location.start.line)
+    return result
+
+
+def rfc5147_formated(location, as_range=True, protocol="file"):
+    """ Formated after RFC 5147, optionally as range.
+
+    The path is always absolute, so that it conforms to the “file” pseudo
+    protocol, which requires it.
+
+    """
+    path = location.path
+    path = os.path.abspath(path)
+    path = urllib.parse.quote(path)
+    result = "%s://%s" % (protocol, path)
+    if as_range:
+        result = "%s#char=%i,%i" % (
+            result,
+            location.start.char,
+            location.end.char)
+    else:
+        result = "%s#char=%i" % (
+            result,
+            location.start.char)
     return result
