@@ -246,17 +246,15 @@ def get_candidates(file_name, stop_at_first):
     """ For implementation of `which` and `which_candidates`. """
     result = []
     file_name = variables_substituted(file_name)
+    stop_at_first = stop_at_first or os.path.isabs(file_name)
+    # Don't return the same result multiple times: with an absolute path, the
+    # result will be the same, for all search directories.
     first = True
     for directory in SEARCH_DIRECTORIES:
         found = find_in_directory(directory, file_name)
         if found is not None:
             result.append(found)
             if first and stop_at_first:
-                break
-            if first and os.path.isabs(file_name):
-                # Don't return the same result multiple times: with an
-                # absolute path, the result will be the same, for all
-                # search directories.
                 break
             first = False
     return result
