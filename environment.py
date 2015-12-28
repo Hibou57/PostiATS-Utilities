@@ -230,6 +230,8 @@ def find_in_directory(directory, file_name):
 
     If a path is returned, it is normalized (without any “.” or “..”).
 
+    `file_name` is assumed to already have variables substitution applied.
+
     """
     result = None
     directory = variables_substituted(directory)
@@ -252,6 +254,9 @@ def get_candidates(file_name, stop_at_first):
             if first and stop_at_first:
                 break
             if first and os.path.isabs(file_name):
+                # Don't return the same result multiple times: with an
+                # absolute path, the result will be the same, for all
+                # search directories.
                 break
             first = False
     return result
