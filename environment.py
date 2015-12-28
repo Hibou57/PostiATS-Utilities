@@ -207,6 +207,20 @@ def variables_substituted(text):
 # Searching for files
 # ============================================================================
 
+def is_readable(path):
+    """ True if `file_name` can be opened for reading. """
+    result = False
+    if os.path.exists(path):
+        try:
+            open(path, "r").close()
+            result = True
+        except OSError:
+            pass
+        except IOError:
+            pass
+    return result
+
+
 def find_in_directory(directory, file_name):
     """ Search for `file_name` in `directory`, return its path or None.
 
@@ -219,28 +233,25 @@ def find_in_directory(directory, file_name):
     """
     result = None
     directory = variables_substituted(directory)
-    file_name = variables_substituted(file_name)
     path = os.path.join(directory, file_name)
-    if os.path.exists(path):
-        try:
-            open(path, "r").close()
-            result = os.path.normpath(path)
-        except OSError:
-            pass
-        except IOError:
-            pass
+    path = os.path.normpath(path)
+    if is_readable(path):
+        result = path
     return result
 
 
 def get_candidates(file_name, stop_at_first):
     """ For implementation of `which` and `which_candidates`. """
     result = []
+    file_name = variables_substituted(file_name)
     first = True
     for directory in SEARCH_DIRECTORIES:
         found = find_in_directory(directory, file_name)
         if found is not None:
             result.append(found)
             if first and stop_at_first:
+                break
+            if first and os.path.isabs(file_name):
                 break
             first = False
     return result
