@@ -254,6 +254,8 @@ def make_cached_json(file_name):
 
     Backup the content in cache and return the content as a JSON object.
 
+    `file_name` is assumed to be from `environment.which`.
+
     """
     result = None
     path = clean_path(file_name)
@@ -290,6 +292,8 @@ def get_json_from_cache(file_name):
     is in the cache, None may still be returned if the cache version is
     outdated.
 
+    `file_name` is assumed to be from `environment.which`.
+
     """
     result = None
     path = clean_path(file_name)
@@ -313,10 +317,17 @@ def get_json_from_cache(file_name):
 
 
 def get_json(file_name):
-    """ Get JSON for `file_name`, from cache or (re-)generated. """
-    result = get_json_from_cache(file_name)
-    if result is None:
-        result = make_cached_json(file_name)
+    """ Get JSON for `file_name`, from cache or (re-)generated.
+
+    Use `environment.which`.
+
+    """
+    result = None
+    path = environment.which(file_name)
+    if path is not None:
+        result = get_json_from_cache(path)
+        if result is None:
+            result = make_cached_json(path)
     return result
 
 
