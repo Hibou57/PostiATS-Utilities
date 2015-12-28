@@ -24,11 +24,20 @@ import sys
 #
 # In https://groups.google.com/d/msg/ats-lang-users/i_AKS-nggZY/MAkwU4KAnf8J
 # Hongwei Xi said:
-# You can set it as follows:
-
-# #define JNI_targetloc "$PATSHOMERELOC/contrib/JNI"
+# > You can set it as follows:
+# >
+# > #define JNI_targetloc "$PATSHOMERELOC/contrib/JNI"
+#
 # In reply to Brandon Barker asking:
 # > How do you set $JNI? Environment variables seems to not be the answer.
+#
+# In https://groups.google.com/d/msg/ats-lang-users/i_AKS-nggZY/IZ6O6SGfAQAJ
+# Hongwei Xi said:
+# > 1. The character '_' can be used in path names
+# > 2. Say you use $FOO but FOO is not defined (or defined as a non-string),
+#      the $FOO changes to FOO.
+# > 3. Recursive substitution is not supported (it can be easily supported if
+#      needed).
 
 # Search paths
 # ----------------------------------------------------------------------------
@@ -125,16 +134,21 @@ def handle_dats_args():
 handle_dats_args()
 
 
+def is_variable_name_char(char):
+    """ If char is alpha‑numeric or underscore. """
+    result = char.isalnum() or char == "_"
+    return result
+
+
 def end_of_name(text, start):
     """ End of a variable name at `start`. Return `start` if no name.
 
     Returning `start` just means the name at `start`, is empty.
 
     """
-    # TODO: are underscore allowed?
     result = start
     end = len(text)
-    while result < end and text[result].isalnum():
+    while result < end and is_variable_name_char(text[result]):
         result += 1
     return result
 
@@ -181,9 +195,10 @@ def variables_substituted(text):
     be used when otherwise the variable name would be followed by a name
     character, which would make it ambiguous.
 
+    Substitution is not recursive. An undefined variable is substituted its
+    own name.
+
     """
-    # TODO: is substitution recursive?
-    # TODO: what if a variable is unknown?
     result = ""
     i = 0  # end of last substituted variable.
     while True:
@@ -191,11 +206,12 @@ def variables_substituted(text):
         if variable is None:
             # Remaining of text starts at i.
             break
+        # pylint: disable=unpacking-non-sequence
         (name, var_start, var_end) = variable
         if name in PATH_VARIABLES:
             substitution = PATH_VARIABLES[name]
         else:
-            substitution = ""
+            substitution = name
         result += text[i:var_start]  # Segment after previous, before current.
         result += substitution  # Instead of substring var_start to var_end.
         i = var_end  # Resume after current.
