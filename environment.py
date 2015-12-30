@@ -235,9 +235,6 @@ def variables_substituted(text):
 
     return result
 
-print("[%s]" % variables_substituted("foo/$A"))
-exit(0)
-
 # Searching for files
 # ============================================================================
 
