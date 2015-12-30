@@ -38,6 +38,11 @@ import sys
 #      the $FOO changes to FOO.
 # > 3. Recursive substitution is not supported (it can be easily supported if
 #      needed).
+#
+# Then later
+# in https://groups.google.com/d/msg/ats-lang-users/i_AKS-nggZY/qCOK16cUAgAJ
+# > I changed the implementation a bit to support recursive substitution;
+# > the maximal recursion depth is set to be 100.
 
 # Search paths
 # ----------------------------------------------------------------------------
@@ -85,6 +90,7 @@ handle_iats_args()
 # Path variables
 # ----------------------------------------------------------------------------
 VARIABLE_SUFFIX = "_targetloc"
+REC_SUBST_MAX_DEPTH = 100
 
 PATSHOMERELOC = os.getenv("PATSHOMERELOC")
 
@@ -199,26 +205,38 @@ def variables_substituted(text):
     own name.
 
     """
-    result = ""
-    i = 0  # end of last substituted variable.
-    while True:
-        variable = find_variable(text, i)
-        if variable is None:
-            # Remaining of text starts at i.
+    recursion_depth = 0
+    result = text
+    changed = True
+    while changed:
+        changed = False
+        if recursion_depth > REC_SUBST_MAX_DEPTH:
             break
-        # pylint: disable=unpacking-non-sequence
-        (name, var_start, var_end) = variable
-        if name in PATH_VARIABLES:
-            substitution = PATH_VARIABLES[name]
-        else:
-            substitution = name
-        result += text[i:var_start]  # Segment after previous, before current.
-        result += substitution  # Instead of substring var_start to var_end.
-        i = var_end  # Resume after current.
+        source = "" + result
+        result = ""
+        i = 0  # end of last substituted variable.
+        while True:
+            variable = find_variable(source, i)
+            if variable is None:
+                # The rest to be appended, starts at i.
+                break
+            # pylint: disable=unpacking-non-sequence
+            (name, var_start, var_end) = variable
+            if name in PATH_VARIABLES:
+                substitution = PATH_VARIABLES[name]
+            else:
+                substitution = name
+            result += source[i:var_start]  # Seg. after prev., before current.
+            result += substitution  # Instead of substr. var_start to var_end.
+            changed = True
+            i = var_end  # Resume after current.
+        result += source[i:]  # Append rest: variable free last segment.
+        recursion_depth += 1
 
-    result += text[i:]
     return result
 
+print("[%s]" % variables_substituted("foo/$A"))
+exit(0)
 
 # Searching for files
 # ============================================================================
