@@ -235,6 +235,7 @@ def variables_substituted(text):
 
     return result
 
+
 # Searching for files
 # ============================================================================
 
@@ -316,7 +317,8 @@ def which_candidates(file_name):
 # ============================================================================
 
 def main():
-    """ Main. """
+    """ Invoked by `../pats-which`. """
+    my_name = os.path.split(sys.argv[0])[1]
     if len(sys.argv) == 2:
         file_name = sys.argv[1]
         candidates = which_candidates(file_name)
@@ -331,9 +333,5 @@ def main():
                 print("%s (hidden)" % candidate, file=sys.stderr)
             first = False
     else:
-        print("Usage: environment file-name.", file=sys.stderr)
+        print("Usage: %s file-name." % my_name, file=sys.stderr)
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()

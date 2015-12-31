@@ -7,7 +7,7 @@ JSON data may also be returned to stdout, for use from the command line.
 
 """
 
-import environment
+from . import environment
 import json
 import os
 import subprocess
@@ -59,7 +59,7 @@ TIMEOUT_DELAY = 3
 POSTIATS_ENCODING = "iso-8859-15"
 
 HELP = """\
-Usage: jsonized.py -h|--help|--to-stdout file|--prefill|--purge|--directory
+Usage: %s -h|--help|--to-stdout file|--prefill|--purge|--directory
 
 Or else used as a Python3 module.
 
@@ -388,13 +388,15 @@ def main():
 
     """ Main. """
 
+    my_name = os.path.split(sys.argv[0])[1]
+
     arg_error = True
 
     if len(sys.argv) == 2:
         arg1 = sys.argv[1]
         if arg1 in ["-h", "--help"]:
             arg_error = False
-            print(HELP)
+            print(HELP % my_name)
         elif arg1 == "--prefill":
             arg_error = False
             prefill_cache()
@@ -413,9 +415,5 @@ def main():
 
     if arg_error:
         print("ERROR: Invalid argument(s).", file=sys.stderr)
-        print(HELP, file=sys.stderr)
+        print(HELP % my_name, file=sys.stderr)
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()

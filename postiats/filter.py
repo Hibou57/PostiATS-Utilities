@@ -3,8 +3,9 @@
 
 """ Filter for PostiATS messages. """
 
+from . import locations
 import collections
-import locations
+import os
 import sys
 
 LINE_WIDTH = 78
@@ -869,7 +870,11 @@ def pretty_printed(string):
 
 
 def main():
-    """ Main. """
+    """ Invoked by `../pats-filter`. """
+    my_name = os.path.split(sys.argv[0])[1]
+    if len(sys.argv) != 1:
+        print("%s takes no parameter, just input." % my_name, file=sys.stderr)
+        exit(1)
     message_before = False  # For managing additional blank lines.
     for line in sys.stdin:
         line = line.strip()
@@ -889,7 +894,3 @@ def main():
                 print()  # Separate from messages with blank lines.
             print(output, end="")
             message_before = False
-
-
-if __name__ == "__main__":
-    main()
