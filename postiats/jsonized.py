@@ -19,7 +19,7 @@ import sys
 HOME = os.path.expanduser("~")
 
 
-def user_directoy(sub_directory):
+def user_directory(sub_directory):
     """ `$HOME/sub_directory` if it exists or else None. """
     result = None
     directory = os.path.join(HOME, sub_directory)
@@ -31,10 +31,10 @@ def user_directoy(sub_directory):
 CACHE_ROOT = (
     os.getenv("LocalAppData")
     or os.getenv("XDG_CACHE_HOME")
-    or user_directoy("AppData/Local")
-    or user_directoy("Local Settings/Application Data")
-    or user_directoy("Library/Caches")
-    or user_directoy(".cache")
+    or user_directory("AppData/Local")
+    or user_directory("Local Settings/Application Data")
+    or user_directory("Library/Caches")
+    or user_directory(".cache")
     or "/tmp"
 )
 
@@ -46,7 +46,7 @@ CACHE = os.path.join(CACHE_ROOT, "PostiATS")
 ROOTS = [
     environment.CWD,
     environment.PATSHOME,
-    environment.PATSHOMERELOC
+    environment.PATSCONTRIB
 ]
 
 # Other constants

@@ -19,7 +19,7 @@ import sys
 # >
 # > the ones in PREPATHLST (${PATSHOME} is the only one as of now)
 #
-# `PATSHOMERELOC` is only used for substitution of the define variable of the
+# `PATSCONTRIB` is only used for substitution of the define variable of the
 # same name.
 #
 # In https://groups.google.com/d/msg/ats-lang-users/i_AKS-nggZY/MAkwU4KAnf8J
@@ -30,6 +30,8 @@ import sys
 #
 # In reply to Brandon Barker asking:
 # > How do you set $JNI? Environment variables seems to not be the answer.
+#
+# Note: PATSHOMERELOC was the old name of PATSCONTRIB.
 #
 # In https://groups.google.com/d/msg/ats-lang-users/i_AKS-nggZY/IZ6O6SGfAQAJ
 # Hongwei Xi said:
@@ -92,20 +94,20 @@ handle_iats_args()
 VARIABLE_SUFFIX = "_targetloc"
 REC_SUBST_MAX_DEPTH = 100
 
-PATSHOMERELOC = os.getenv("PATSHOMERELOC")
+PATSCONTRIB = os.getenv("PATSCONTRIB")
 
 PATH_VARIABLES = {}
-# Prefilled with `PATSHOME` and `PATSHOMERELOC`.
+# Prefilled with `PATSHOME` and `PATSCONTRIB`.
 # Completed with `-(DD|D)ATS XYZ_targetloc=something` command line arguments.
 
 if PATSHOME is not None:
     PATH_VARIABLES["PATSHOME"] = PATSHOME
 
-if PATSHOMERELOC is not None:
-    PATH_VARIABLES["PATSHOMERELOC"] = PATSHOMERELOC
+if PATSCONTRIB is not None:
+    PATH_VARIABLES["PATSCONTRIB"] = PATSCONTRIB
 else:
     print(
-        "WARNING: the `PATSHOMERELOC` environment variable isn't set.",
+        "WARNING: the `PATSCONTRIB` environment variable isn't set.",
         file=sys.stderr)
 
 

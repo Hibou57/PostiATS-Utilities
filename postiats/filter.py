@@ -25,7 +25,7 @@ Message = collections.namedtuple("Message", ["location", "level", "text"])
 #     UTF_8.dats: 5235(line=167, offs=53) -- 5237(line=167, offs=55): \
 #     error(3): static arity mismatch: more arguments are expected.
 
-END_OF_LOCATION = locations.END_OF_END
+END_OF_LOCATION = locations.END_OF_END  # ")"
 START_OF_MSG_LEVEL = ": "
 END_OF_MSG_LEVEL = ": "
 
@@ -35,7 +35,6 @@ END_OF_MSG_LEVEL = ": "
 
 def is_message_with_location(line):
     """ True is line is a message with location. """
-
     result = False
     i = line.find(END_OF_LOCATION + START_OF_MSG_LEVEL)
     if i != -1:
