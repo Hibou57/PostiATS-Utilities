@@ -319,6 +319,8 @@ def get_json_from_cache(file_name):
 def get_json(file_name):
     """ Get JSON for `file_name`, from cache or (re-)generated.
 
+    Return `None` of not found.
+
     Use `environment.which`.
 
     """
