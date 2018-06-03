@@ -31,9 +31,9 @@ Use `pats-jsonized --help` for more and have a look at `postiats/jsonized.py`.
 
 ### `pats-ls`
 
-List the top‑level declarations in an ATS source file. Declarations from `#include` are treated as top‑level, although only the referenced from the file including the other, will be listed (limitation due to the produced JSON data).
+List the top‑level declarations in an ATS source file. Declarations from `#include` are treated as top‑level, although only the ones referenced from the file including the other, will be listed (limitation due to the produced JSON data).
 
-With the `-r` option, the listing can be recursive through *staload*. The same limitation as with `#include` applies.
+With the `-r` option, the listing can be recursive through *staload*.
 
 `pats-ls` handles `-IATS` options the same way as `pats-which` do.
 
