@@ -292,7 +292,6 @@ def handle_d2cfundecs(_loc, node):
         error("Unknown function construction: %s" % construct)
     construct = "function: " + construct
     for entry in node[2]:
-        print(entry["f2undec_ann"])
         stamp_id = entry["f2undec_var"]["d2var_stamp"]
         loc = entry["f2undec_loc"]
         add_declaration(
