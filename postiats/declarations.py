@@ -310,10 +310,18 @@ def handle_d2cimpdec(_loc, node):
     """ Handle a D2Cimpdec. """
     # The _loc argument is that of the keyword, not of the name. We can have
     # the loc of the name, which is better, so the one passed is ignored.
+    construct = node[0]
+    if construct == 1:
+        construct = "implement"
+    elif construct == -1:
+        construct = "primplmnt"
+    else:
+        error("Unknown case")
+    construct = "implementation: " + construct
     stamp_id = node[1]["i2mpdec_cst"]["d2cst_stamp"]
     loc = node[1]["i2mpdec_loc"]
     add_declaration(
-        construct="implement",
+        construct=construct,
         stamp_id=stamp_id,
         loc=loc)
 
