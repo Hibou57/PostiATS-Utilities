@@ -135,13 +135,13 @@ def s2var_sort(entry):
 # Declarations: general
 # ============================================================================
 
-def add_declaration(construct, stamp_id, loc, typ=None, sort=None):
+def add_declaration(construct, stamp_id, loc, typ=None, sort=None, name=None):
     """ Add a declaration given properties. """
     if stamp_id in STAMPS:
         stamp = STAMPS[stamp_id]
         declaration = Declaration(
             construct=construct,
-            name=stamp.name,
+            name=name or stamp.name,
             loc=loc,
             type=typ,
             sort=sort or stamp.sort)
@@ -354,6 +354,7 @@ def handle_d2coverload(loc, node):
     """ Handle a D2Coverload. """
     # No stamp for the symbol.
     stamp_id = None
+    name = node[0]
     sub_node = node[2][0]  # There are never many, isn’t it?
     if "D2ITMcst" in sub_node:
         stamp_id = sub_node["D2ITMcst"][0]["d2cst_stamp"]
@@ -367,7 +368,8 @@ def handle_d2coverload(loc, node):
         add_declaration(
             construct="overload",
             stamp_id=stamp_id,
-            loc=loc)
+            loc=loc,
+            name=name)
 
 
 def handle_d2cstacsts(loc, node):
