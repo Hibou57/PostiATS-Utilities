@@ -30,12 +30,10 @@ def dump():
     """ Dump declarations. """
     for value in declarations.DECLARATIONS:
         print("=========================")
-        print(value.stamp.name)
+        print(value.name)
         print(value.construct)
-        if value.types:
-            print("Type: %s" % ", ".join(value.types))
-        if value.sorts:
-            print("Sort: %s" % ", ".join(value.sorts))
+        if value.sort:
+            print(declarations.sort_image(value.sort))
         print_loc(value.loc)
 
 

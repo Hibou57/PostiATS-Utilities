@@ -7,14 +7,14 @@ from collections import namedtuple
 from postiats import jsonized
 
 
-Stamp = namedtuple("Stamp", ["id", "name", "origin"])
+Stamp = namedtuple("Stamp", ["id", "name", "sort"])  # Sort may be None.
 
 Declaration = namedtuple("Declaration",
                          ["construct",
-                          "stamp",
+                          "name",
                           "loc",
-                          "types",
-                          "sorts"])
+                          "type",
+                          "sort"])
 
 
 STAMPS = {}
@@ -44,11 +44,12 @@ def add_staloaded(path):
 # Stamps
 # ============================================================================
 
-def extract_stamp(entry, section, stamp_key, name_key):
+def extract_stamp(entry, stamp_key, name_key, sort):
     """ Extract a `Stamp` from a JSON node given keys. """
+    # Sort is a function.
     stamp_id = entry[stamp_key]
     name = entry[name_key]
-    return Stamp(stamp_id, name, section)
+    return Stamp(stamp_id, name, sort(entry))
 
 
 def add_stamp(stamp):
@@ -58,55 +59,92 @@ def add_stamp(stamp):
     STAMPS[stamp.id] = stamp
 
 
-def extract_and_add_stamps(root_node, section_key, stamp_key, name_key):
+def extract_and_add_stamps(root_node, section_key, stamp_key, name_key, sort):
     """ Extract and add stamps given root node and keys. """
+    # Sort is a function.
     for entry in root_node[section_key]:
-        stamp = extract_stamp(entry, section_key, stamp_key, name_key)
+        stamp = extract_stamp(entry, stamp_key, name_key, sort)
         add_stamp(stamp)
 
 
 def collect_stamps(root_node):
-    """ Collect stamps: their stamp id, name and origin. """
+    """ Collect stamps: their stamp id, name and sort. """
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="d2conmap",
         stamp_key="d2con_stamp",
-        name_key="d2con_sym")
+        name_key="d2con_sym",
+        sort=d2con_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="d2cstmap",
         stamp_key="d2cst_stamp",
-        name_key="d2cst_sym")
+        name_key="d2cst_sym",
+        sort=d2cst_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="d2varmap",
         stamp_key="d2var_stamp",
-        name_key="d2var_sym")
+        name_key="d2var_sym",
+        sort=d2var_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="s2cstmap",
         stamp_key="s2cst_stamp",
-        name_key="s2cst_sym")
+        name_key="s2cst_sym",
+        sort=s2cst_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="s2varmap",
         stamp_key="s2var_stamp",
-        name_key="s2var_sym")
+        name_key="s2var_sym",
+        sort=s2var_sort)
+
+
+def d2con_sort(entry):
+    """ Sort from d2conmap entry."""
+    return entry["d2con_type"]["s2exp_srt"]
+
+
+def d2cst_sort(entry):
+    """ Sort from d2cstmap entry."""
+    return entry["d2cst_type"]["s2exp_srt"]
+
+
+def d2var_sort(_entry):
+    """ Sort from d2varmap entry."""
+    # May be provided in a D2Cvardecs.
+    return None
+
+
+def s2cst_sort(entry):
+    """ Sort from s2cstmap entry."""
+    return entry["s2cst_srt"]
+
+
+def s2var_sort(entry):
+    """ Sort from s2varmap entry."""
+    return entry["s2var_srt"]
 
 
 # Declarations: general
 # ============================================================================
 
-def add_declaration(construct, stamp_id, loc, types, sorts):
+def add_declaration(construct, stamp_id, loc, typ=None, sort=None):
     """ Add a declaration given properties. """
     if stamp_id in STAMPS:
         stamp = STAMPS[stamp_id]
-        declaration = Declaration(construct, stamp, loc, types, sorts)
+        declaration = Declaration(
+            construct=construct,
+            name=stamp.name,
+            loc=loc,
+            type=typ,
+            sort=sort or stamp.sort)
         DECLARATIONS.append(declaration)
     else:
         # error("Missing stamp id: %i" % stamp_id)
@@ -176,9 +214,7 @@ def handle_d2cdatdecs(loc, node):
         add_declaration(
             construct=construct,
             stamp_id=stamp_id,
-            loc=loc,
-            types=[],
-            sorts=[])
+            loc=loc)
 
 
 def handle_d2cdcstdecs(loc, node):
@@ -206,9 +242,7 @@ def handle_d2cdcstdecs(loc, node):
         add_declaration(
             construct=construct,
             stamp_id=stamp_id,
-            loc=loc,
-            types=[],
-            sorts=[])
+            loc=loc)
 
 
 def handle_d2cexndecs(loc, node):
@@ -222,9 +256,7 @@ def handle_d2cexndecs(loc, node):
         add_declaration(
             construct="exception",
             stamp_id=stamp_id,
-            loc=loc,
-            types=[],
-            sorts=[])
+            loc=loc)
 
 
 def handle_d2cextcode(_loc, _node):
@@ -260,14 +292,13 @@ def handle_d2cfundecs(_loc, node):
         error("Unknown function construction: %s" % construct)
     construct = "function: " + construct
     for entry in node[2]:
+        print(entry["f2undec_ann"])
         stamp_id = entry["f2undec_var"]["d2var_stamp"]
         loc = entry["f2undec_loc"]
         add_declaration(
             construct=construct,
             stamp_id=stamp_id,
-            loc=loc,
-            types=[],
-            sorts=[])
+            loc=loc)
 
 
 def handle_d2cignored(_loc, _node):
@@ -285,9 +316,7 @@ def handle_d2cimpdec(_loc, node):
     add_declaration(
         construct="implement",
         stamp_id=stamp_id,
-        loc=loc,
-        types=[],
-        sorts=[])
+        loc=loc)
 
 
 def handle_d2cinclude(_loc, node):
@@ -331,9 +360,7 @@ def handle_d2coverload(loc, node):
         add_declaration(
             construct="overload",
             stamp_id=stamp_id,
-            loc=loc,
-            types=[],
-            sorts=[])
+            loc=loc)
 
 
 def handle_d2cstacsts(loc, node):
@@ -368,9 +395,7 @@ def handle_d2cstacsts(loc, node):
         add_declaration(
             construct=construct,
             stamp_id=stamp_id,
-            loc=loc,
-            types=[],
-            sorts=[])
+            loc=loc)
 
 
 def handle_d2cstaload(_loc, node):
@@ -396,17 +421,13 @@ def handle_d2cvaldecs(_loc, node):
         error("Unknown function construction: %s" % construct)
     construct = "value: " + construct
     for item in node[1]:
-        item = item["v2aldec_pat"]
-        loc = item["p2at_loc"]
-        item = item["p2at_node"]
-        for (loc, var) in p2at_node_p2tvars(loc, item):
+        for (loc, var, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
             stamp_id = var[0]["d2var_stamp"]
             add_declaration(
                 construct=construct,
                 stamp_id=stamp_id,
                 loc=loc,
-                types=[],
-                sorts=[])
+                sort=sort)
 
 
 def handle_d2cvardecs(_loc, node):
@@ -415,12 +436,13 @@ def handle_d2cvardecs(_loc, node):
     for item in node[0]:
         loc = item["v2ardec_loc"]
         stamp_id = item["v2ardec_dvar"]["d2var_stamp"]
+        type_node = item["v2ardec_type"]
+        sort = type_node[0]["s2exp_srt"] if type_node else None
         add_declaration(
             construct=construct,
             stamp_id=stamp_id,
             loc=loc,
-            types=[],
-            sorts=[])
+            sort=sort)
 
 
 DISPATCH_TABLE = {
@@ -444,20 +466,55 @@ DISPATCH_TABLE = {
 }
 
 
-def p2at_node_p2tvars(loc, node):
+# Other nodes
+# ============================================================================
+
+def p2at_node_p2tvars(node, sort=None):
     """ Yield variables from pattern. """
+    # Node is a {p2at_loc, p2at_node}
+    loc = node["p2at_loc"]
+    node = node["p2at_node"]
     if "P2Tann" in node:
-        node = node["P2Tann"][0]
-        loc = node["p2at_loc"]
-        node = node["p2at_node"]
-        yield from p2at_node_p2tvars(loc, node)
+        if not sort:
+            sort = node["P2Tann"][1]["s2exp_srt"]
+        yield from p2at_node_p2tvars(node["P2Tann"][0], sort)
     elif "P2Trec" in node:
         nodes = node["P2Trec"][2]
         for item in nodes:
-            item = item["LABP2ATnorm"][1]
-            loc = item["p2at_loc"]
-            item = item["p2at_node"]
-            yield from p2at_node_p2tvars(loc, item)
+            yield from p2at_node_p2tvars(item["LABP2ATnorm"][1], sort)
     elif "P2Tvar" in node:
         node = node["P2Tvar"]
-        yield (loc, node)
+        yield (loc, node, sort)
+
+
+def sort_image(node, paren_if_fun=False):
+    """ Image of s2xxx_srt and S2RTfun[0][n]. """
+    # Node is a {S2RTbas}|{S2RTfun}
+    if "S2RTbas" in node:
+        result = node["S2RTbas"][0]
+    elif "S2RTfun" in node:
+        node = node["S2RTfun"]
+        inputs = node[0]
+        output = node[1]
+        result = ""
+        if inputs:
+            if paren_if_fun:
+                result += "("
+            marny_args = len(inputs) > 1
+            if marny_args:
+                result += "("
+            first = True
+            for item in inputs:
+                result += sort_image(item, paren_if_fun=not marny_args)
+                if not first:
+                    result += ", "
+                first = False
+            if marny_args:
+                result += ")"
+            result += " -> "
+            if paren_if_fun:
+                result += ")"
+        result += sort_image(output)
+    else:
+        error("Unknown case")
+    return result

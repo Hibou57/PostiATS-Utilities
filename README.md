@@ -33,6 +33,15 @@ Use `pats-jsonized --help` for more and have a look at `postiats/jsonized.py`.
 
 List the top‑level declarations in an ATS source file. Declarations from `#include` are treated as top‑level, although only the ones referenced from the file including the other, will be listed, due to a limitation of the produced JSON data. Similarly, `typedef`, `infix` declarations and others, are not listed for the same reason.
 
+When available, sort information is displayed. Availability of sort information depends on the way the ATS source is written. With `val` and `var`, including with pattern matching, the defined entities need to be explicitly type annotated. With function, sort information appears only for an extern definition.
+
+The output format is as follow:
+
+  * First line is the entity name.
+  * Second line is the language construct, in one or two parts. When in two parts, the first part is a general category. Ex “value: val+”.
+  * The third line which is optional, displays the sort information.
+  * The last line is the location formatted in a way most text editor or IDE supports.
+
 With the `-r` option, the listing can be recursive through `staload`.
 
 `pats-ls` handles `-IATS` options the same way as `pats-which` do.
