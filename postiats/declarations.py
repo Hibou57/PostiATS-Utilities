@@ -114,17 +114,17 @@ def add_declaration(construct, stamp_id, loc, types, sorts):
         pass
 
 
-def collect_main_declarations(root_node):
-    """ Collect declarations. """
-    collect_declarations(root_node["d2eclist"])
-
-
 def collect_declarations(root_node):
     """ Collect declarations. """
     for entry in root_node:
         loc = entry["d2ecl_loc"]
         node = entry["d2ecl_node"]
         dispatch_declaration(loc, node)
+
+
+def collect_main_declarations(root_node):
+    """ Collect declarations. """
+    collect_declarations(root_node["d2eclist"])
 
 
 def handle_source_file(path):
@@ -150,6 +150,7 @@ def dispatch_declaration(loc, wrapper_node):
     if discriminant not in DISPATCH_TABLE:
         error("Unknon D2Cxxx: %s" % discriminant)
     DISPATCH_TABLE[discriminant](loc, node)
+    # The dispatch table is defined later, after each handler is defined.
 
 
 def handle_d2cdatdecs(loc, node):
