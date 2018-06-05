@@ -169,7 +169,7 @@ def handle_source_file(path):
     """ Handle one source file. """
     root_node = jsonized.get_json(path)
     if root_node is None:
-        error("Failed to get %s" % path)
+        error("Failed to evaluate %s" % path)
 
     collect_stamps(root_node)
     collect_main_declarations(root_node)
@@ -475,7 +475,7 @@ DISPATCH_TABLE = {
 }
 
 
-# Other nodes
+# Inner nodes
 # ============================================================================
 
 def p2at_node_p2tvars(node, sort=None):

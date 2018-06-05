@@ -342,7 +342,7 @@ def get_json_to_stdout(file_name):
     """
     json_object = get_json(file_name)
     if json_object is None:
-        print("Failed to generate JSON", file=sys.stderr)
+        print("Failed to evaluate %s" % file_name, file=sys.stderr)
         sys.exit(1)
     json.dump(json_object, sys.stdout)
     print()
