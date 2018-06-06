@@ -28,12 +28,36 @@ def print_loc(loc):
 
 def dump():
     """ Dump declarations. """
+    print("=========================")
+    first = True
+    print("Base sorts used:")
+    for name in sorted(declarations.BASE_SORTS):
+        print("   " + name)
+        first = False
+    if not first:
+        print("-------------------------")
+    print("Static constants defined or used:")
+    for name in sorted(declarations.STATIC_CONSTANTS.keys()):
+        sort = declarations.STATIC_CONSTANTS[name]
+        print("   " + name + ": " + declarations.sort_image(sort))
+        first = False
     for value in declarations.DECLARATIONS:
-        print("=========================")
-        print(value.name)
-        print(value.construct)
+        if not first:
+            print("-------------------------")
+        first = False
+        print("    Entity name: %s" % value.name)
         if value.sort:
-            print(declarations.sort_image(value.sort))
+            print(
+                "    Entity sort: %s" %
+                declarations.sta_sort_image(value.sort))
+        if value.type:
+            print(
+                "Expression type: %s" %
+                declarations.dyn_type_image(value.type))
+            print(
+                "Expression sort: %s" %
+                declarations.dyn_sort_image(value.type))
+        print("      Construct: %s" % value.construct)
         print_loc(value.loc)
 
 
@@ -58,9 +82,7 @@ def main():
         while True:
             to_be_done = declarations.STALOADED.difference(done)
             done.update(declarations.STALOADED)
-            declarations.STAMPS.clear()
-            declarations.DECLARATIONS.clear()
-            declarations.STALOADED.clear()
+            declarations.clear()
             if not to_be_done:
                 break
             for path in to_be_done:

@@ -31,22 +31,19 @@ Use `pats-jsonized --help` for more and have a look at `postiats/jsonized.py`.
 
 ### `pats-ls`
 
-List the top‑level declarations in an ATS source file. Declarations from `#include` are treated as top‑level, although only the ones referenced from the file including the other, will be listed, due to a limitation of the produced JSON data. Similarly, `typedef`, `infix` declarations and others, are not listed for the same reason.
+List the top‑level declarations in an ATS source file. Declarations from `#include` are treated as top‑level, although only the ones referenced from the file including the other, will be listed, due to a “limitation” of the produced JSON data. Similarly, `typedef`, `infix` declarations and others, are not listed for the same reason; however, some are listed in the list of static constants used in the ATS source. Ex. `typedef t = int` will appears as `t: t@ype` in the static constants list.
 
-When available, sort information is displayed. Availability of sort information depends on the way the ATS source is written. With `val` and `var`, including with pattern matching, the defined entities need to be explicitly type annotated. With function, sort information appears only for an extern definition.
+When available, sort and type informations are displayed. Availability of these informations depends on the way the ATS source is written. With `val` and `var`, including with pattern matching, the defined entities need to be explicitly type annotated. With function, these informations appears only for an extern definition or its implementation. This is an incentive to write separate declarations and implementations.
 
-The output format is as follow:
+The output format is self explanatory. Just note the two lists which appears at the beginning, is a list of the base sort and a list of the static constants referred by the ATS source file. The static constants list shows their name and sort, but not their expression.
 
-  * First line is the entity name.
-  * Second line is the language construct, in one or two parts. When in two parts, the first part is a general category. Ex “value: val+”.
-  * The third line which is optional, displays the sort information.
-  * The last line is the location formatted in a way most text editor or IDE supports.
+This tool is waiting for review. Use it for testing only for now.
 
 With the `-r` option, the listing can be recursive through `staload`.
 
 `pats-ls` handles `-IATS` options the same way as `pats-which` do.
 
-This utility may be useful as a quick documentation tool to be used from a text editor. In the future, a search command based on this listing, will be added.
+This utility may be useful as a quick documentation tool to be used from a text editor. It is also expected to be useful to help reading ATS source files. In the future, a search command based on this listing, will be added. Also, another tool will come to further help reading and search deeper.
 
 
 ### `pats-which`

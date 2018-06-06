@@ -7,7 +7,8 @@ from collections import namedtuple
 from postiats import jsonized
 
 
-Stamp = namedtuple("Stamp", ["id", "name", "sort"])  # Sort may be None.
+Stamp = namedtuple("Stamp", ["id", "name", "type", "sort"])
+# Type and sort may be None.
 
 Declaration = namedtuple("Declaration",
                          ["construct",
@@ -17,9 +18,20 @@ Declaration = namedtuple("Declaration",
                           "sort"])
 
 
+BASE_SORTS = set()
 STAMPS = {}
+STATIC_CONSTANTS = {}
 DECLARATIONS = []
 STALOADED = set()
+
+
+def clear():
+    """ Clear generated data. """
+    BASE_SORTS.clear()
+    STAMPS.clear()
+    STATIC_CONSTANTS.clear()
+    DECLARATIONS.clear()
+    STALOADED.clear()
 
 
 # Helpers
@@ -41,15 +53,32 @@ def add_staloaded(path):
     STALOADED.add(path)
 
 
+# Base sorts
+# ============================================================================
+
+def collect_base_sorts(node):
+    """ Fill BASE_SORTS. """
+    if isinstance(node, dict):
+        if "S2RTbas" in node:
+            BASE_SORTS.add(node["S2RTbas"][0])
+        else:
+            for sub_node in node.values():
+                collect_base_sorts(sub_node)
+    elif isinstance(node, list):
+        for sub_node in node:
+            collect_base_sorts(sub_node)
+
+
 # Stamps
 # ============================================================================
 
-def extract_stamp(entry, stamp_key, name_key, sort):
+def extract_stamp(entry, stamp_key, name_key, type_sort):
     """ Extract a `Stamp` from a JSON node given keys. """
-    # Sort is a function.
+    # type_sort is a function.
+    (typ, sort) = type_sort(entry)
     stamp_id = entry[stamp_key]
     name = entry[name_key]
-    return Stamp(stamp_id, name, sort(entry))
+    return Stamp(stamp_id, name, typ, sort)
 
 
 def add_stamp(stamp):
@@ -59,12 +88,19 @@ def add_stamp(stamp):
     STAMPS[stamp.id] = stamp
 
 
-def extract_and_add_stamps(root_node, section_key, stamp_key, name_key, sort):
+def extract_and_add_stamps(
+        root_node,
+        section_key,
+        stamp_key,
+        name_key,
+        type_sort):
     """ Extract and add stamps given root node and keys. """
-    # Sort is a function.
+    # type_sort is a function.
     for entry in root_node[section_key]:
-        stamp = extract_stamp(entry, stamp_key, name_key, sort)
+        stamp = extract_stamp(entry, stamp_key, name_key, type_sort)
         add_stamp(stamp)
+        if section_key == "s2cstmap":
+            STATIC_CONSTANTS[stamp.name] = stamp.sort
 
 
 def collect_stamps(root_node):
@@ -75,61 +111,64 @@ def collect_stamps(root_node):
         section_key="d2conmap",
         stamp_key="d2con_stamp",
         name_key="d2con_sym",
-        sort=d2con_sort)
+        type_sort=d2con_type_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="d2cstmap",
         stamp_key="d2cst_stamp",
         name_key="d2cst_sym",
-        sort=d2cst_sort)
+        type_sort=d2cst_type_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="d2varmap",
         stamp_key="d2var_stamp",
         name_key="d2var_sym",
-        sort=d2var_sort)
+        type_sort=d2var_type_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="s2cstmap",
         stamp_key="s2cst_stamp",
         name_key="s2cst_sym",
-        sort=s2cst_sort)
+        type_sort=s2cst_type_sort)
 
     extract_and_add_stamps(
         root_node=root_node,
         section_key="s2varmap",
         stamp_key="s2var_stamp",
         name_key="s2var_sym",
-        sort=s2var_sort)
+        type_sort=s2var_type_sort)
 
 
-def d2con_sort(entry):
+def d2con_type_sort(entry):
     """ Sort from d2conmap entry."""
-    return entry["d2con_type"]["s2exp_srt"]
+    type_node = entry["d2con_type"]
+    return (type_node["s2exp_node"], type_node["s2exp_srt"])
 
 
-def d2cst_sort(entry):
+def d2cst_type_sort(entry):
     """ Sort from d2cstmap entry."""
-    return entry["d2cst_type"]["s2exp_srt"]
+    type_node = entry["d2cst_type"]
+    return (type_node["s2exp_node"], type_node["s2exp_srt"])
 
 
-def d2var_sort(_entry):
+def d2var_type_sort(_entry):
     """ Sort from d2varmap entry."""
     # May be provided in a D2Cvardecs.
-    return None
+    return (None, None)
 
 
-def s2cst_sort(entry):
+def s2cst_type_sort(entry):
     """ Sort from s2cstmap entry."""
-    return entry["s2cst_srt"]
+    # Static constant has a sort, no a type.
+    return (None, entry["s2cst_srt"])
 
 
-def s2var_sort(entry):
+def s2var_type_sort(entry):
     """ Sort from s2varmap entry."""
-    return entry["s2var_srt"]
+    return (None, entry["s2var_srt"])
 
 
 # Declarations: general
@@ -143,7 +182,7 @@ def add_declaration(construct, stamp_id, loc, typ=None, sort=None, name=None):
             construct=construct,
             name=name or stamp.name,
             loc=loc,
-            type=typ,
+            type=typ or stamp.type,
             sort=sort or stamp.sort)
         DECLARATIONS.append(declaration)
     else:
@@ -171,6 +210,7 @@ def handle_source_file(path):
     if root_node is None:
         error("Failed to evaluate %s" % path)
 
+    collect_base_sorts(root_node)
     collect_stamps(root_node)
     collect_main_declarations(root_node)
 
@@ -215,6 +255,7 @@ def handle_d2cdatdecs(loc, node):
             construct=construct,
             stamp_id=stamp_id,
             loc=loc)
+        # Sort in Stamp but no type?
 
 
 def handle_d2cdcstdecs(loc, node):
@@ -243,6 +284,7 @@ def handle_d2cdcstdecs(loc, node):
             construct=construct,
             stamp_id=stamp_id,
             loc=loc)
+        # Type and sort informations are in the Stamp.
 
 
 def handle_d2cexndecs(loc, node):
@@ -257,6 +299,7 @@ def handle_d2cexndecs(loc, node):
             construct="exception",
             stamp_id=stamp_id,
             loc=loc)
+        # Type and sort informations are in the Stamp.
 
 
 def handle_d2cextcode(_loc, _node):
@@ -298,6 +341,7 @@ def handle_d2cfundecs(_loc, node):
             construct=construct,
             stamp_id=stamp_id,
             loc=loc)
+        # No type/sort informations, but could be derived.
 
 
 def handle_d2cignored(_loc, _node):
@@ -319,11 +363,13 @@ def handle_d2cimpdec(_loc, node):
         error("Unknown case")
     construct = "implementation: " + construct
     stamp_id = node[1]["i2mpdec_cst"]["d2cst_stamp"]
+    # The stamp id is the same as that of the extern function declaration.
     loc = node[1]["i2mpdec_loc"]
     add_declaration(
         construct=construct,
         stamp_id=stamp_id,
         loc=loc)
+    # Type and sort informations are in the Stamp.
 
 
 def handle_d2cinclude(_loc, node):
@@ -370,6 +416,7 @@ def handle_d2coverload(loc, node):
             stamp_id=stamp_id,
             loc=loc,
             name=name)
+        # Either type/sort from stamp (D2ITMcst) or none (D2ITMvar).
 
 
 def handle_d2cstacsts(loc, node):
@@ -405,6 +452,7 @@ def handle_d2cstacsts(loc, node):
             construct=construct,
             stamp_id=stamp_id,
             loc=loc)
+        # Sort in Stamp but no type?
 
 
 def handle_d2cstaload(_loc, node):
@@ -430,13 +478,15 @@ def handle_d2cvaldecs(_loc, node):
         error("Unknown function construction: %s" % construct)
     construct = "value: " + construct
     for item in node[1]:
-        for (loc, var, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
+        for (loc, var, typ, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
             stamp_id = var[0]["d2var_stamp"]
             add_declaration(
                 construct=construct,
                 stamp_id=stamp_id,
                 loc=loc,
+                typ=typ,
                 sort=sort)
+            # Type/sort retrieved from pattern if annotated.
 
 
 def handle_d2cvardecs(_loc, node):
@@ -445,13 +495,25 @@ def handle_d2cvardecs(_loc, node):
     for item in node[0]:
         loc = item["v2ardec_loc"]
         stamp_id = item["v2ardec_dvar"]["d2var_stamp"]
+        typ = None
+        sort = None
         type_node = item["v2ardec_type"]
-        sort = type_node[0]["s2exp_srt"] if type_node else None
+        if type_node:
+            typ = type_node[0]["s2exp_node"]
+            sort = type_node[0]["s2exp_srt"]
         add_declaration(
             construct=construct,
             stamp_id=stamp_id,
             loc=loc,
+            typ=typ,
             sort=sort)
+        # Type/sort available if annotated.
+        stamp_id = item["v2ardec_svar"]["s2var_stamp"]
+        add_declaration(
+            construct=construct,
+            stamp_id=stamp_id,
+            loc=loc)
+        # Sort available in stamp.
 
 
 DISPATCH_TABLE = {
@@ -478,22 +540,27 @@ DISPATCH_TABLE = {
 # Inner nodes
 # ============================================================================
 
-def p2at_node_p2tvars(node, sort=None):
+def p2at_node_p2tvars(node, type_sort=None):
     """ Yield variables from pattern. """
     # Node is a {p2at_loc, p2at_node}
     loc = node["p2at_loc"]
     node = node["p2at_node"]
     if "P2Tann" in node:
-        if not sort:
-            sort = node["P2Tann"][1]["s2exp_srt"]
-        yield from p2at_node_p2tvars(node["P2Tann"][0], sort)
+        if not type_sort:
+            type_sort = node["P2Tann"][1]
+        yield from p2at_node_p2tvars(node["P2Tann"][0], type_sort)
     elif "P2Trec" in node:
         nodes = node["P2Trec"][2]
         for item in nodes:
-            yield from p2at_node_p2tvars(item["LABP2ATnorm"][1], sort)
+            yield from p2at_node_p2tvars(item["LABP2ATnorm"][1], type_sort)
     elif "P2Tvar" in node:
         node = node["P2Tvar"]
-        yield (loc, node, sort)
+        typ = None
+        sort = None
+        if type_sort:
+            typ = type_sort["s2exp_node"]
+            sort = type_sort["s2exp_srt"]
+        yield (loc, node, typ, sort)
 
 
 def sort_image(node, paren_if_fun=False):
@@ -514,12 +581,14 @@ def sort_image(node, paren_if_fun=False):
                 result += "("
             first = True
             for item in inputs:
-                result += sort_image(item, paren_if_fun=not marny_args)
                 if not first:
                     result += ", "
+                result += sort_image(item, paren_if_fun=not marny_args)
                 first = False
             if marny_args:
                 result += ")"
+            elif first:
+                result += "()"
             result += " -> "
             if paren_if_fun:
                 result += ")"
@@ -527,3 +596,128 @@ def sort_image(node, paren_if_fun=False):
     else:
         error("Unknown case")
     return result
+
+
+def sta_sort_image(node, paren_if_fun=False):
+    """ Sort image. """
+    return sort_image(node, paren_if_fun)
+
+
+def s2var_image(stamp_id):
+    """ Static variable image. """
+    if stamp_id in STAMPS:
+        stamp = STAMPS[stamp_id]
+        return stamp.name + ": " + sort_image(stamp.sort)
+    return "*ERR*"
+
+
+def dyn_image(node, for_type, paren_if_fun=False):
+    """ Image of s2exp_node. """
+    if for_type:
+        key = "s2exp_node"
+    else:
+        key = "s2exp_srt"
+    if for_type:
+        image = dyn_type_image
+    else:
+        image = sort_image
+    if "S2Ecst" in node:
+        stamp_id = node["S2Ecst"][0]["s2cst_stamp"]
+        if stamp_id in STAMPS:
+            if for_type:
+                return STAMPS[stamp_id].name
+            return sort_image(STAMPS[stamp_id].sort)
+        return "*ERROR*"
+    elif "S2Evar" in node:
+        stamp_id = node["S2Evar"][0]["s2var_stamp"]
+        if stamp_id in STAMPS:
+            if for_type:
+                return STAMPS[stamp_id].name
+            return sort_image(STAMPS[stamp_id].sort)
+        return "*ERROR*"
+    elif "S2Eextkind" in node:
+        return node["S2Eextkind"][0]
+    elif "S2Eintinf" in node:
+        return node["S2Eintinf"][0]
+    elif "S2Efun" in node:
+        node = node["S2Efun"]
+        inputs = node[1]
+        output = node[2]
+        result = ""
+        if paren_if_fun:
+            result += "("
+        marny_args = len(inputs) > 1
+        if marny_args:
+            result += "("
+        first = True
+        for item in inputs:
+            if not first:
+                result += ", "
+            result += image(item[key], not marny_args)
+            first = False
+        if marny_args:
+            result += ")"
+        elif first:
+            result += "()"
+        result += " -> "
+        if paren_if_fun:
+            result += ")"
+        result += image(output[key])
+    elif "S2Eapp" in node:
+        node = node["S2Eapp"]
+        function = node[0]
+        arguments = node[1]
+        result = image(function[key])
+        result += "("
+        first = True
+        for item in arguments:
+            if not first:
+                result += ", "
+            result += image(item[key])
+            first = False
+        result += ")"
+    elif "S2Eexi" in node or "S2Euni" in node:
+        if "S2Eexi" in node:
+            node = node["S2Eexi"]
+            begin = "["
+            end = "]"
+        else:
+            node = node["S2Euni"]
+            begin = "{"
+            end = "}"
+        variables = node[0]
+        predicats = node[1]
+        expression = node[2]
+        result = begin
+        first = True
+        for variable in variables:
+            if not first:
+                result += "; "
+            result += s2var_image(variable["s2var_stamp"])
+            first = False
+        if predicats:
+            if variables:
+                result += " | "
+            first = True
+            for predicat in predicats:
+                if not first:
+                    result += "; "
+                result += image(predicat[key])
+                first = False
+        result += end
+        result += " "
+        result += image(expression[key])
+    else:
+        for key in node.keys():
+            return "?"
+    return result
+
+
+def dyn_type_image(node, paren_if_fun=False):
+    """ Dyn image. """
+    return dyn_image(node, True, paren_if_fun)
+
+
+def dyn_sort_image(node, paren_if_fun=False):
+    """ Dyn image. """
+    return dyn_image(node, False, paren_if_fun)
