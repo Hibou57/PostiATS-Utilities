@@ -35,7 +35,7 @@ List the top‑level declarations in an ATS source file. Declarations from `#inc
 
 When available, sort and type informations are displayed. Availability of these informations depends on the way the ATS source is written. With `val` and `var`, including with pattern matching, the defined entities need to be explicitly type annotated. With function, these informations appears only for an extern definition or its implementation. This is an incentive to write separate declarations and implementations.
 
-The output format is self explanatory. Just note the two lists which appears at the beginning, is a list of the base sort and a list of the static constants referred by the ATS source file. The static constants list shows their name and sort, but not their expression.
+The output format is self explanatory. Just note the two lists which appears at the beginning, is a list of the base sorts and a list of the static constants referred by the ATS source file. The static constants list shows their name and sort, but not their expression and type annotations to `val`/`var`.
 
 This tool is waiting for review. Use it for testing only for now.
 
