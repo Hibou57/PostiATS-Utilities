@@ -20,7 +20,7 @@ Declaration = namedtuple("Declaration",
                           "sort"])
 
 
-BASE_SORTS = set()
+SORTS = set()
 STAMPS = {}
 STATIC_CONSTANTS = {}
 DECLARATIONS = []
@@ -29,7 +29,7 @@ STALOADED = set()
 
 def clear():
     """ Clear generated data. """
-    BASE_SORTS.clear()
+    SORTS.clear()
     STAMPS.clear()
     STATIC_CONSTANTS.clear()
     DECLARATIONS.clear()
@@ -58,17 +58,17 @@ def add_staloaded(path):
 # Base sorts
 # ============================================================================
 
-def collect_base_sorts(node):
-    """ Fill BASE_SORTS. """
+def collect_sorts(node):
+    """ Fill SORTS. """
     if isinstance(node, dict):
         if "S2RTbas" in node:
-            BASE_SORTS.add(node["S2RTbas"][0])
+            SORTS.add(node["S2RTbas"][0])
         else:
             for sub_node in node.values():
-                collect_base_sorts(sub_node)
+                collect_sorts(sub_node)
     elif isinstance(node, list):
         for sub_node in node:
-            collect_base_sorts(sub_node)
+            collect_sorts(sub_node)
 
 
 # Stamps
@@ -212,7 +212,7 @@ def handle_source_file(path):
     if root_node is None:
         error("Failed to evaluate %s" % path)
 
-    collect_base_sorts(root_node)
+    collect_sorts(root_node)
     collect_stamps(root_node)
     collect_main_declarations(root_node)
 
