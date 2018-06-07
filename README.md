@@ -46,7 +46,9 @@ This tool is waiting for review. Use it for testing only for now.
 
 With the `-r` option, the listing can be recursive through `staload`.
 
-`pats-ls` handles `-IATS` options the same way as `pats-which` do.
+`pats-ls` handles `-IATS` options and file path resolution the same way as `pats-which` do, which is the same way the ATS2 compiler do.
+
+Warning: the current working directory comes first in the search path, but when a DATS files refers to a SATS file, it needs to do so using a dotted relative path. Ex. if `foo.dats` staload `foo.sats` in the same directory as `foo.dats`, it needs to do `staload "./foo.sats"`, because the current working directory is not that of the DATS file. If `foo.dats` do `staload "foo.sats"`, it will only work if compiled from within its own directory. It is safer to always use dotted relative path to refer a file relatively to its own directory.
 
 This utility may be useful as a quick documentation tool to be used from a text editor. It is also expected to be useful to help reading ATS source files. In the future, a search command based on this listing, will be added. Also, another tool will come to further help reading and search deeper.
 
