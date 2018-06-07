@@ -3,9 +3,10 @@
 
 """ PostiATS text ranges/locations. """
 
-import collections
 import os
 import urllib
+
+from collections import namedtuple
 
 # PostiATS Text Ranges/Locations
 # ============================================================================
@@ -16,8 +17,8 @@ REL_PATH = True
 
 # Types
 # ----------------------------------------------------------------------------
-Position = collections.namedtuple("Position", ["char", "line", "column"])
-Location = collections.namedtuple("Location", ["path", "start", "end"])
+Position = namedtuple("Position", ["char", "line", "column"])
+Location = namedtuple("Location", ["path", "start", "end"])
 
 # Constants
 # ----------------------------------------------------------------------------
@@ -88,14 +89,13 @@ def is_location(text):
         return result
 
     result = (
-        test_tag(END_OF_PATH)
-        and test_tag(LINE_TAG)
-        and test_tag(OFFS_TAG)
-        and test_tag(END_OF_BEGIN)
-        and test_tag(LINE_TAG)
-        and test_tag(OFFS_TAG)
-        and test_tag(END_OF_END)
-    )
+        test_tag(END_OF_PATH) and
+        test_tag(LINE_TAG) and
+        test_tag(OFFS_TAG) and
+        test_tag(END_OF_BEGIN) and
+        test_tag(LINE_TAG) and
+        test_tag(OFFS_TAG) and
+        test_tag(END_OF_END))
 
     result = result and j == len(text)
 

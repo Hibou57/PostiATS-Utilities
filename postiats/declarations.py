@@ -1,5 +1,7 @@
 """ Collect declarations. """
 
+# This module is still work in progress, don’t care about the source.
+
 import sys
 
 from collections import namedtuple
@@ -533,8 +535,7 @@ DISPATCH_TABLE = {
     "D2Cstacsts": handle_d2cstacsts,
     "D2Cstaload": handle_d2cstaload,
     "D2Cvaldecs": handle_d2cvaldecs,
-    "D2Cvardecs": handle_d2cvardecs
-}
+    "D2Cvardecs": handle_d2cvardecs}
 
 
 # Inner nodes

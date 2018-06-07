@@ -3,12 +3,13 @@
 
 """ Filter for PostiATS messages. """
 
-from . import locations
 import os
 import sys
-from enum import Enum
-from collections import namedtuple
 
+from collections import namedtuple
+from enum import Enum
+
+from . import locations
 
 # Configuration (editable)
 # ============================================================================
@@ -145,13 +146,13 @@ class String(object):
 
     def unpush(self):
         """ Pop from stack not touching index. """
-        if len(self.indexes) == 0:
+        if not self.indexes:
             raise IndexError
         self.indexes.pop()
 
     def pop(self):
         """ Pop current index from stack. """
-        if len(self.indexes) == 0:
+        if not self.indexes:
             raise IndexError
         self.index = self.indexes.pop()
 
@@ -175,8 +176,8 @@ Node = namedtuple("Node", ["token", "kind", "nodes", "end"])
 
 # Constants
 # ----------------------------------------------------------------------------
-Kind = Enum("Kind", "D2S2C3 NAME NAME_ID NUMERIC SYMBOL")
-Followed_By = Enum("Followed_By", "SEMI_COLON COMMA ARROW END")
+KIND = Enum("KIND", "D2S2C3 NAME NAME_ID NUMERIC SYMBOL")
+FOLLOWED_BY = Enum("FOLLOWED_BY", "SEMI_COLON COMMA ARROW END")
 
 
 # Methods
@@ -315,12 +316,11 @@ def parse_token(string):
         return result
 
     result = (
-        try_token(parse_d2s2c3_name, Kind.D2S2C3)
-        or try_token(parse_name_id, Kind.NAME_ID)
-        or try_token(parse_name, Kind.NAME)
-        or try_token(parse_numeric, Kind.NUMERIC)
-        or try_token(parse_symbol, Kind.SYMBOL)
-    )
+        try_token(parse_d2s2c3_name, KIND.D2S2C3) or
+        try_token(parse_name_id, KIND.NAME_ID) or
+        try_token(parse_name, KIND.NAME) or
+        try_token(parse_numeric, KIND.NUMERIC) or
+        try_token(parse_symbol, KIND.SYMBOL))
 
     return result
 
@@ -331,13 +331,13 @@ def get_end_kind(string):
     """ End kind. """
     result = None
     if string.test_and_consume("; "):
-        result = Followed_By.SEMI_COLON
+        result = FOLLOWED_BY.SEMI_COLON
     elif string.test_and_consume(", "):
-        result = Followed_By.COMMA
+        result = FOLLOWED_BY.COMMA
     elif string.test_and_consume("->"):
-        result = Followed_By.ARROW
+        result = FOLLOWED_BY.ARROW
     else:
-        result = Followed_By.END
+        result = FOLLOWED_BY.END
     return result
 
 
@@ -379,7 +379,7 @@ def parse_nodes(string):
             else:
                 result = None
                 break
-            if node.end == Followed_By.END:
+            if node.end == FOLLOWED_BY.END:
                 break
     return result
 
@@ -445,14 +445,14 @@ def lines_image(lines):
 
 def append_words_as_line(result, words, indent):
     """ Helper. """
-    if len(words) > 0:
+    if words:
         line = Line(indent, words)
         result.append(line)
 
 
 def splitted_at_separator(line):
     """ Split line at separators kept at the end of each lines. """
-    if len(line.words) > 0:
+    if line.words:
         indent = line.indent
         words = line.words
         level = words[0].level
@@ -476,7 +476,7 @@ def splitted_at_separator(line):
 
 def splitted_at_operator(line):
     """ Split line at operators kept at the start of each lines. """
-    if len(line.words) > 0:
+    if line.words:
         indent = line.indent
         words = line.words
         level = words[0].level
@@ -501,7 +501,7 @@ def indented_on_next_level(line):
     """ Split line with indent on next level. """
 
     words = line.words
-    if len(line.words) > 0:
+    if line.words:
         i = 0
         last = len(words) - 1
         level = words[0].level
@@ -526,7 +526,7 @@ def indented_on_next_level(line):
         indent = line.indent
         while i <= last:
             part(True, indent)
-            part(False, indent+1)
+            part(False, indent + 1)
     else:
         result = [line]
     return result
@@ -543,23 +543,28 @@ def format_lines(lines):
         for line in lines:
             if len(line_image(line)) <= LINE_WIDTH:
                 result.append(line)
-            else:
-                sublines = splitted_at_separator(line)
-                if len(sublines) > 1:
-                    result += sublines
-                    changed = True
-                else:
-                    sublines = splitted_at_operator(line)
-                    if len(sublines) > 1:
-                        result += sublines
-                        changed = True
-                    else:
-                        sublines = indented_on_next_level(line)
-                        if len(sublines) > 1:
-                            result += sublines
-                            changed = True
-                        else:
-                            result.append(line)
+                continue
+
+            sublines = splitted_at_separator(line)
+            if len(sublines) > 1:
+                result += sublines
+                changed = True
+                continue
+
+            sublines = splitted_at_operator(line)
+            if len(sublines) > 1:
+                result += sublines
+                changed = True
+                continue
+
+            sublines = indented_on_next_level(line)
+            if len(sublines) > 1:
+                result += sublines
+                changed = True
+                continue
+
+            result.append(line)
+
     return result
 
 
@@ -568,13 +573,13 @@ def format_lines(lines):
 
 def append_end(node, level, acc):
     """ Helper. """
-    if node.end == Followed_By.SEMI_COLON:
+    if node.end == FOLLOWED_BY.SEMI_COLON:
         acc.append(Word(";", level, WORD_SEPARATOR))
-    elif node.end == Followed_By.COMMA:
+    elif node.end == FOLLOWED_BY.COMMA:
         acc.append(Word(",", level, WORD_SEPARATOR))
-    elif node.end == Followed_By.ARROW:
+    elif node.end == FOLLOWED_BY.ARROW:
         acc.append(Word("->", level, WORD_OPERATOR))
-    elif node.end == Followed_By.END:
+    elif node.end == FOLLOWED_BY.END:
         pass
 
 
@@ -586,7 +591,7 @@ def node_image(node, level, acc, with_end=True):
         if node.nodes is not None:
             result.append(Word("(", level, WORD_OPEN))
             for subnode in node.nodes:
-                result = node_image(subnode, level+1, result)
+                result = node_image(subnode, level + 1, result)
             result.append(Word(")", level, WORD_CLOSE))
     if with_end:
         append_end(node, level, result)
@@ -613,8 +618,7 @@ def node_lines_image(node):
 NAME_AS_OPERATOR = {
     "mul_int_int": "*",
     "add_int_int": "+",
-    "sub_int_int": "*",
-}
+    "sub_int_int": "*"}
 
 
 # Helper
@@ -647,7 +651,7 @@ def int_single_child(node):
     """ The single child leaf node holding an integer or None. """
     result = None
     child = leaf_single_child(node)
-    if child is not None and child.kind == Kind.NUMERIC:
+    if child is not None and child.kind == KIND.NUMERIC:
         result = child
     return result
 
@@ -715,23 +719,23 @@ def s2eapp_simplified_image(node, level, acc):
             node1 = node.nodes[0]
             node2 = node.nodes[1]
             node3 = node.nodes[2]
-            if (node1.end == Followed_By.SEMI_COLON
-                    and node2.end == Followed_By.COMMA
-                    and node3.end == Followed_By.END):
-                image1 = node_image(node1, level+1, [], False)
-                image2 = node_image(node2, level+1, [], False)
-                image3 = node_image(node3, level+1, [], False)
+            if (node1.end == FOLLOWED_BY.SEMI_COLON and
+                    node2.end == FOLLOWED_BY.COMMA and
+                    node3.end == FOLLOWED_BY.END):
+                image1 = node_image(node1, level + 1, [], False)
+                image2 = node_image(node2, level + 1, [], False)
+                image3 = node_image(node3, level + 1, [], False)
                 if len(image1) == 1 and is_symbol_char(image1[0].text[0]):
                     acc.append(Word("(", level, WORD_OPEN))
                     acc += image2
-                    acc.append(Word(image1[0].text, level+1, WORD_OPERATOR))
+                    acc.append(Word(image1[0].text, level + 1, WORD_OPERATOR))
                     acc += image3
                     acc.append(Word(")", level, WORD_CLOSE))
                 else:
                     acc += image1
                     acc.append(Word("(", level, WORD_OPEN))
                     acc += image2
-                    acc.append(Word(",", level+1, WORD_SEPARATOR))
+                    acc.append(Word(",", level + 1, WORD_SEPARATOR))
                     acc += image3
                     acc.append(Word(")", level, WORD_CLOSE))
                 result = True
@@ -745,13 +749,13 @@ def s2eeqeq_simplified_image(node, level, acc):
         if node.nodes is not None and len(node.nodes) == 2:
             node1 = node.nodes[0]
             node2 = node.nodes[1]
-            if (node1.end == Followed_By.SEMI_COLON
-                    and node2.end == Followed_By.END):
-                image1 = node_image(node1, level+1, [], False)
-                image2 = node_image(node2, level+1, [], False)
+            if (node1.end == FOLLOWED_BY.SEMI_COLON and
+                    node2.end == FOLLOWED_BY.END):
+                image1 = node_image(node1, level + 1, [], False)
+                image2 = node_image(node2, level + 1, [], False)
                 acc.append(Word("(", level, WORD_OPEN))
                 acc += image1
-                acc.append(Word("==", level+1, WORD_OPERATOR))
+                acc.append(Word("==", level + 1, WORD_OPERATOR))
                 acc += image2
                 acc.append(Word(")", level, WORD_CLOSE))
                 result = True
@@ -786,7 +790,7 @@ def d2esymmac_simplified_image(node, level, acc):
 def name_simplified_image(node, level, acc):
     """ name(number) --> name. """
     result = False
-    if node.kind == Kind.NAME:
+    if node.kind == KIND.NAME:
         leaf = int_single_child(node)
         if leaf is not None:
             acc.append(Word(node.token, level, WORD_TOKEN))
@@ -805,8 +809,7 @@ SIMPLIFIED_IMAGE_METHODS = [
     s2eeqeq_simplified_image,
     c3nstrprop_simplified_image,
     d2esymmac_simplified_image,
-    name_simplified_image,
-]
+    name_simplified_image]
 
 
 def simplified_image(node, level, acc):
@@ -824,9 +827,9 @@ def simplified_image(node, level, acc):
 def is_root_node(node):
     """ True if node is a D2/S2/C3 node followed by end. """
     result = (
-        node is not None
-        and node.kind == Kind.D2S2C3
-        and node.end == Followed_By.END)
+        node is not None and
+        node.kind == KIND.D2S2C3 and
+        node.end == FOLLOWED_BY.END)
     return result
 
 

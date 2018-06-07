@@ -7,11 +7,12 @@ JSON data may also be returned to stdout, for use from the command line.
 
 """
 
-from . import environment
 import json
 import os
 import subprocess
 import sys
+
+from . import environment
 
 # Cache directory
 # ============================================================================
@@ -29,14 +30,13 @@ def user_directory(sub_directory):
 
 
 CACHE_ROOT = (
-    os.getenv("LocalAppData")
-    or os.getenv("XDG_CACHE_HOME")
-    or user_directory("AppData/Local")
-    or user_directory("Local Settings/Application Data")
-    or user_directory("Library/Caches")
-    or user_directory(".cache")
-    or "/tmp"
-)
+    os.getenv("LocalAppData") or
+    os.getenv("XDG_CACHE_HOME") or
+    user_directory("AppData/Local") or
+    user_directory("Local Settings/Application Data") or
+    user_directory("Library/Caches") or
+    user_directory(".cache") or
+    "/tmp")
 
 CACHE = os.path.join(CACHE_ROOT, "PostiATS")
 
@@ -46,8 +46,7 @@ CACHE = os.path.join(CACHE_ROOT, "PostiATS")
 ROOTS = [
     environment.CWD,
     environment.PATSHOME,
-    environment.PATSCONTRIB
-]
+    environment.PATSCONTRIB]
 
 # Other constants
 # ============================================================================
@@ -309,9 +308,8 @@ def get_json_from_cache(file_name):
                 except ValueError:
                     pass
                 source.close()
-            except IOError:
-                pass
             except OSError:
+                # Includes IOError
                 pass
     return result
 
@@ -378,7 +376,7 @@ def purge_cache():
                 os.remove(path)
         for directory in dir_names:
             path = os.path.join(dir_path, directory)
-            if len(os.listdir(path)) == 0:
+            if not os.listdir(path):
                 print("Removing directory “%s”" % path)
                 os.rmdir(path)
 

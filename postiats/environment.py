@@ -249,8 +249,7 @@ def is_readable(path):
             open(path, "r").close()
             result = True
         except OSError:
-            pass
-        except IOError:
+            # Includes IOError
             pass
     return result
 
@@ -298,7 +297,7 @@ def which(file_name):
     """ Like the UNIX `which` command, for files in Postiats search path. """
     result = None
     candidates = get_candidates(file_name, stop_at_first=True)
-    if len(candidates) > 0:
+    if candidates:
         result = candidates[0]
     return result
 
@@ -324,7 +323,7 @@ def main():
     if len(sys.argv) == 2:
         file_name = sys.argv[1]
         candidates = which_candidates(file_name)
-        if len(candidates) == 0:
+        if not candidates:
             print("Not found.", file=sys.stderr)
             exit(1)
         first = True
