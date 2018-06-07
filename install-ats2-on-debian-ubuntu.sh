@@ -63,7 +63,7 @@ get_or_update_git_clone() {
    if [ \! -d $DIR/.git ]; then
       if [ -d $DIR ]; then
          # Directory exists, but is not a valid git clone: reset.
-         echo "Please, delete the $DIR directory, it is broken."
+         echo "Please, delete the $DIR directory, it is not a Git clone."
          exit 1;
       fi
       git clone -b master --single-branch --depth 1 $URL $DIR

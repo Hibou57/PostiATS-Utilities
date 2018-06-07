@@ -8,6 +8,11 @@ Note this is not part of the official Postiats release and as much the repositor
 ## Help
 
 
+### `install-ats2-on-debian-ubuntu.sh`
+
+Variation of [githwxi/C9-ATS2-install.sh](https://gist.github.com/githwxi/7e31f4fd4df92125b73c). See comments at the top of `install-ats2-on-debian-ubuntu.sh`. In particular, there are configuration variables one may need to edit.
+
+
 ### `pats-filter`
 
 A filter for output from `patscc`. Convenient for more readable error output in a terminal or for easier integration in a text editor able to display error messages.
