@@ -30,9 +30,9 @@ def dump():
     """ Dump declarations. """
     print("=========================")
     first = True
-    if declarations.SORTS:
-        print("Sorts defined or used:")
-        for name in sorted(declarations.SORTS):
+    if declarations.BASE_SORTS:
+        print("Base sorts used:")
+        for name in sorted(declarations.BASE_SORTS):
             print("   " + name)
             first = False
     if declarations.STATIC_CONSTANTS:
