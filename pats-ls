@@ -31,7 +31,7 @@ def dump():
     print("=========================")
     first = True
     if declarations.BASE_SORTS:
-        print("Base sorts used:")
+        print("Base sorts defined or used:")
         for name in sorted(declarations.BASE_SORTS):
             print("   " + name)
             first = False
