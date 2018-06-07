@@ -36,9 +36,9 @@ def dump():
             print("   " + name)
             first = False
     if declarations.STATIC_CONSTANTS:
-        print("Static constants defined or used:")
         if not first:
             print("-------------------------")
+        print("Static constants defined or used:")
         for name in sorted(declarations.STATIC_CONSTANTS.keys()):
             sort = declarations.STATIC_CONSTANTS[name]
             print("   " + name + ": " + declarations.sort_image(sort))
