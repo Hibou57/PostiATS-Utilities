@@ -4,20 +4,26 @@
 """ Filter for PostiATS messages. """
 
 from . import locations
-import collections
 import os
 import sys
+from enum import Enum
+from collections import namedtuple
+
+
+# Configuration (editable)
+# ============================================================================
 
 LINE_WIDTH = 78
 SIMPLIFY = True
 LOCATION_WITH_COLUMN = True
+
 
 # PostiATS Messages
 # ============================================================================
 
 # Type
 # ----------------------------------------------------------------------------
-Message = collections.namedtuple("Message", ["location", "level", "text"])
+Message = namedtuple("Message", ["location", "level", "text"])
 
 # Constants
 # ----------------------------------------------------------------------------
@@ -89,7 +95,7 @@ def parse_message_with_location(line):
 # ============================================================================
 
 class String(object):
-    """ String iterator. """
+    """ String iterator with indexes stack. """
 
     def __init__(self, string):
         """ Assign content to `string` and initializes index and stack. """
@@ -97,6 +103,10 @@ class String(object):
         self.index = 0
         self.indexes = []
         self.len = len(string)
+
+    def print_head(self):
+        """ For debugging. """
+        print(self.string[self.index:])
 
     def has_item(self):
         """ True if `item` is valid. """
@@ -161,20 +171,12 @@ class String(object):
 
 # Type
 # ----------------------------------------------------------------------------
-Node = collections.namedtuple("Node", ["token", "kind", "nodes", "end"])
+Node = namedtuple("Node", ["token", "kind", "nodes", "end"])
 
 # Constants
 # ----------------------------------------------------------------------------
-KIND_D2S2C3 = 1
-KIND_NAME = 2
-KIND_NAME_ID = 3
-KIND_NUMERIC = 4
-KIND_SYMBOL = 5
-
-FOLLOWED_BY_SEMI_COLON = 1
-FOLLOWED_BY_COMMA = 2
-FOLLOWED_BY_ARROW = 3
-FOLLOWED_BY_END = 4
+Kind = Enum("Kind", "D2S2C3 NAME NAME_ID NUMERIC SYMBOL")
+Followed_By = Enum("Followed_By", "SEMI_COLON COMMA ARROW END")
 
 
 # Methods
@@ -184,6 +186,7 @@ FOLLOWED_BY_END = 4
 
 def parse_d2s2c3_name(string):
     """ An S2Xxxx or a C3Xxxx or None. """
+    # Ex. S2RTbas
     result = None
     prefix = None
     if string.test_and_consume("D2"):
@@ -206,6 +209,7 @@ def parse_d2s2c3_name(string):
 
 def parse_numeric(string):
     """ A numeric or None. """
+    # Ex. -123
     result = None
     string.push()
     if string.has_item():
@@ -230,20 +234,20 @@ def parse_numeric(string):
 
 # ### Name Token
 
-def is_name_head_char(char):
-    """ Alpha or _. """
-    result = char.isalpha() or char == "_"
-    return result
-
-
-def is_name_tail_char(char):
-    """ Alnum or _ or '. """
-    result = char.isalnum() or char == "_" or char == "'"
-    return result
-
-
 def parse_name(string):
     """ A name or None. """
+    # Ex. int or t@ype (but it is not selective!)
+
+    def is_name_head_char(char):
+        """ Alpha or _. """
+        result = char.isalpha() or char == "_"
+        return result
+
+    def is_name_tail_char(char):
+        """ Alnum or _ or @ or '. """
+        result = char.isalnum() or char in {"_", "'", "@"}
+        return result
+
     result = None
     if string.has_item() and is_name_head_char(string.item()):
         result = string.item()
@@ -258,6 +262,7 @@ def parse_name(string):
 
 def parse_name_id(string):
     """ A name$id or None. """
+    # Ex. foo$123
     result = None
     string.push()
     name_part = parse_name(string)
@@ -277,12 +282,14 @@ def parse_name_id(string):
 
 def is_symbol_char(char):
     """ True if `char` is a symbol. """
+    # Also used by s2eapp_simplified_image.
     result = char in "[]<>.-+/%=~*&|"
     return result
 
 
 def parse_symbol(string):
     """ A symbole or None. """
+    # Ex. [ or --
     result = None
     if string.has_item() and is_symbol_char(string.item()):
         result = string.item()
@@ -297,7 +304,8 @@ def parse_symbol(string):
 
 def parse_token(string):
     """ `(token, kind)` or None. """
-
+    # Used by parse_node which do an higher level parsing using
+    # the kind part.
     def try_token(method, kind):
         """ (token, kind) or None. """
         result = None
@@ -307,11 +315,11 @@ def parse_token(string):
         return result
 
     result = (
-        try_token(parse_d2s2c3_name, KIND_D2S2C3)
-        or try_token(parse_name_id, KIND_NAME_ID)
-        or try_token(parse_name, KIND_NAME)
-        or try_token(parse_numeric, KIND_NUMERIC)
-        or try_token(parse_symbol, KIND_SYMBOL)
+        try_token(parse_d2s2c3_name, Kind.D2S2C3)
+        or try_token(parse_name_id, Kind.NAME_ID)
+        or try_token(parse_name, Kind.NAME)
+        or try_token(parse_numeric, Kind.NUMERIC)
+        or try_token(parse_symbol, Kind.SYMBOL)
     )
 
     return result
@@ -323,18 +331,19 @@ def get_end_kind(string):
     """ End kind. """
     result = None
     if string.test_and_consume("; "):
-        result = FOLLOWED_BY_SEMI_COLON
+        result = Followed_By.SEMI_COLON
     elif string.test_and_consume(", "):
-        result = FOLLOWED_BY_COMMA
+        result = Followed_By.COMMA
     elif string.test_and_consume("->"):
-        result = FOLLOWED_BY_ARROW
+        result = Followed_By.ARROW
     else:
-        result = FOLLOWED_BY_END
+        result = Followed_By.END
     return result
 
 
 def parse_node(string):
     """ A Node or None. """
+    # High level parsing based on token kind.
     result = None
     token = None
     kind = False
@@ -360,6 +369,7 @@ def parse_node(string):
 
 def parse_nodes(string):
     """ Nodes or None. """
+    # Iterate parse_node on string.
     result = []
     if string.item() != ")":
         while True:
@@ -369,7 +379,7 @@ def parse_nodes(string):
             else:
                 result = None
                 break
-            if node.end == FOLLOWED_BY_END:
+            if node.end == Followed_By.END:
                 break
     return result
 
@@ -379,7 +389,7 @@ def parse_nodes(string):
 
 # Type
 # ----------------------------------------------------------------------------
-Word = collections.namedtuple("Word", ["text", "level", "kind"])
+Word = namedtuple("Word", ["text", "level", "kind"])
 
 # Constants
 # ----------------------------------------------------------------------------
@@ -395,7 +405,7 @@ WORD_CLOSE = 5
 
 # Type
 # ----------------------------------------------------------------------------
-Line = collections.namedtuple("Line", ["indent", "words"])
+Line = namedtuple("Line", ["indent", "words"])
 
 
 # Methods
@@ -558,13 +568,13 @@ def format_lines(lines):
 
 def append_end(node, level, acc):
     """ Helper. """
-    if node.end == FOLLOWED_BY_SEMI_COLON:
+    if node.end == Followed_By.SEMI_COLON:
         acc.append(Word(";", level, WORD_SEPARATOR))
-    elif node.end == FOLLOWED_BY_COMMA:
+    elif node.end == Followed_By.COMMA:
         acc.append(Word(",", level, WORD_SEPARATOR))
-    elif node.end == FOLLOWED_BY_ARROW:
+    elif node.end == Followed_By.ARROW:
         acc.append(Word("->", level, WORD_OPERATOR))
-    elif node.end == FOLLOWED_BY_END:
+    elif node.end == Followed_By.END:
         pass
 
 
@@ -637,7 +647,7 @@ def int_single_child(node):
     """ The single child leaf node holding an integer or None. """
     result = None
     child = leaf_single_child(node)
-    if child is not None and child.kind == KIND_NUMERIC:
+    if child is not None and child.kind == Kind.NUMERIC:
         result = child
     return result
 
@@ -705,9 +715,9 @@ def s2eapp_simplified_image(node, level, acc):
             node1 = node.nodes[0]
             node2 = node.nodes[1]
             node3 = node.nodes[2]
-            if (node1.end == FOLLOWED_BY_SEMI_COLON
-                    and node2.end == FOLLOWED_BY_COMMA
-                    and node3.end == FOLLOWED_BY_END):
+            if (node1.end == Followed_By.SEMI_COLON
+                    and node2.end == Followed_By.COMMA
+                    and node3.end == Followed_By.END):
                 image1 = node_image(node1, level+1, [], False)
                 image2 = node_image(node2, level+1, [], False)
                 image3 = node_image(node3, level+1, [], False)
@@ -735,8 +745,8 @@ def s2eeqeq_simplified_image(node, level, acc):
         if node.nodes is not None and len(node.nodes) == 2:
             node1 = node.nodes[0]
             node2 = node.nodes[1]
-            if (node1.end == FOLLOWED_BY_SEMI_COLON
-                    and node2.end == FOLLOWED_BY_END):
+            if (node1.end == Followed_By.SEMI_COLON
+                    and node2.end == Followed_By.END):
                 image1 = node_image(node1, level+1, [], False)
                 image2 = node_image(node2, level+1, [], False)
                 acc.append(Word("(", level, WORD_OPEN))
@@ -776,7 +786,7 @@ def d2esymmac_simplified_image(node, level, acc):
 def name_simplified_image(node, level, acc):
     """ name(number) --> name. """
     result = False
-    if node.kind == KIND_NAME:
+    if node.kind == Kind.NAME:
         leaf = int_single_child(node)
         if leaf is not None:
             acc.append(Word(node.token, level, WORD_TOKEN))
@@ -815,8 +825,8 @@ def is_root_node(node):
     """ True if node is a D2/S2/C3 node followed by end. """
     result = (
         node is not None
-        and node.kind == KIND_D2S2C3
-        and node.end == FOLLOWED_BY_END)
+        and node.kind == Kind.D2S2C3
+        and node.end == Followed_By.END)
     return result
 
 
@@ -893,3 +903,11 @@ def main():
                 print()  # Separate from messages with blank lines.
             print(output, end="")
             message_before = False
+
+
+TEST1 = (
+    "/home/yannick/Bureau/Test/utils/foo.dats: 14(line=1, " +
+    "offs=14) -- 17(line=1, offs=17): error(2): the static " +
+    "expression is of the sort [S2RTbasXXX(S2RTBASimpZZZ(1; t@ype))] " +
+    "but it is expected to be of the sort " +
+    "[S2RTbas(S2RTBASpre(int))].")
