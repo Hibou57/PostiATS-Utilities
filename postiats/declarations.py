@@ -269,13 +269,14 @@ def handle_d2cdatdecs(loc, node):
     else:
         error("Unknown data construction: %i" % construct_tag)
     for entry in node[1]:
-        stamp = entry["s2cst_stamp"]
+        stamp_key = "s2cst_stamp"
+        stamp = entry[stamp_key]
         add_declaration(
-            stamp_key="s2cst_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Sort in Def but no type?
+        # Sort in def but no type.
 
 
 def handle_d2cdcstdecs(loc, node):
@@ -299,9 +300,10 @@ def handle_d2cdcstdecs(loc, node):
     else:
         error("Unknown constant construction: %s" % construct_tag)
     for entry in node[2]:
-        stamp = entry["d2cst_stamp"]
+        stamp_key = "d2cst_stamp"
+        stamp = entry[stamp_key]
         add_declaration(
-            stamp_key="d2cst_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct)
@@ -317,13 +319,14 @@ def handle_d2cexndecs(loc, node):
     construct = ["dynamic", "constructor"]
     construct.append("exception")
     for item in node[0]:
-        stamp = item["d2con_stamp"]
+        stamp_key = "d2con_stamp"
+        stamp = item[stamp_key]
         add_declaration(
-            stamp_key="d2con_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Type and sort informations are in the Def.
+        # Type and sort informations are in the def.
 
 
 def handle_d2cextcode(_loc, _node):
@@ -359,10 +362,11 @@ def handle_d2cfundecs(_loc, node):
     else:
         error("Unknown function construction: %s" % construct_tag)
     for entry in node[2]:
-        stamp = entry["f2undec_var"]["d2var_stamp"]
+        stamp_key = "d2var_stamp"
+        stamp = entry["f2undec_var"][stamp_key]
         loc = entry["f2undec_loc"]
         add_declaration(
-            stamp_key="d2var_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct)
@@ -384,14 +388,15 @@ def handle_d2cimpdec(_loc, node):
     if construct_tag == 1:
         construct.append("implement")
     elif construct_tag == -1:
-        construct.append("primplmnt")
+        construct.append("primplement")
     else:
         error("Unknown implementation construction: %i" % construct_tag)
-    stamp = node[1]["i2mpdec_cst"]["d2cst_stamp"]
+    stamp_key = "d2cst_stamp"
+    stamp = node[1]["i2mpdec_cst"][stamp_key]
     # The stamp id is the same as that of the extern function declaration.
     loc = node[1]["i2mpdec_loc"]
     add_declaration(
-        stamp_key="d2cst_stamp",
+        stamp_key=stamp_key,
         stamp=stamp,
         loc=loc,
         construct=construct)
@@ -479,13 +484,14 @@ def handle_d2cstacsts(loc, node):
             error("Unknown static constant construct %i" % construct_tag)
         declarations = node[1]
     for declaration in declarations:
-        stamp = declaration["s2cst_stamp"]
+        stamp_key = "s2cst_stamp"
+        stamp = declaration[stamp_key]
         add_declaration(
-            stamp_key="s2cst_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Sort in Def but no type?
+        # Sort in def but no type.
 
 
 def handle_d2cstaload(_loc, node):
@@ -512,9 +518,10 @@ def handle_d2cvaldecs(_loc, node):
         error("Unknown function construction: %s" % construct)
     for item in node[1]:
         for (loc, var, typ, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
-            stamp = var[0]["d2var_stamp"]
+            stamp_key = "d2var_stamp"
+            stamp = var[0][stamp_key]
             add_declaration(
-                stamp_key="d2var_stamp",
+                stamp_key=stamp_key,
                 stamp=stamp,
                 loc=loc,
                 construct=construct,
@@ -527,28 +534,30 @@ def handle_d2cvardecs(_loc, node):
     """ Handle a D2Cvardecs. """
     for item in node[0]:
         loc = item["v2ardec_loc"]
-        stamp = item["v2ardec_dvar"]["d2var_stamp"]
+        stamp_key = "d2var_stamp"
+        stamp = item["v2ardec_dvar"][stamp_key]
         typ = None
         sort = None
         type_node = item["v2ardec_type"]
-        construct = ["dynamic", "var"]
+        construct = ["dynamic", "value"]
         construct.append("var")
         if type_node:
             typ = type_node[0]["s2exp_node"]
             sort = type_node[0]["s2exp_srt"]
         add_declaration(
-            stamp_key="d2var_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct,
             sort=sort,
             typ=typ)
         # Type/sort available if annotated.
-        construct = ["static", "var"]
+        construct = ["static", "value"]
         construct.append("var")
-        stamp = item["v2ardec_svar"]["s2var_stamp"]
+        stamp_key = "s2var_stamp"
+        stamp = item["v2ardec_svar"][stamp_key]
         add_declaration(
-            stamp_key="s2var_stamp",
+            stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
             construct=construct)
