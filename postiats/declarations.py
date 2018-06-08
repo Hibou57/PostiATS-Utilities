@@ -9,19 +9,26 @@ from collections import namedtuple
 from postiats import jsonized
 
 
-Stamp = namedtuple("Stamp", ["id", "name", "type", "sort"])
-# Type and sort may be None.
+Def = namedtuple("Def", ["table", "stamp", "name", "sort", "type", "cons"])
+# Map is a Python built‑in, so table.
+# The stamp key is used for table, it’s more straighforward.
+# Sort, type and cons may be None.
 
 Declaration = namedtuple("Declaration",
-                         ["construct",
+                         ["loc",
                           "name",
-                          "loc",
-                          "type",
-                          "sort"])
+                          "construct",
+                          "sort",
+                          "type"])
 
 
+DEFS = {
+    "d2con_stamp": {},
+    "d2cst_stamp": {},
+    "d2var_stamp": {},
+    "s2cst_stamp": {},
+    "s2var_stamp": {}}
 BASE_SORTS = set()
-STAMPS = {}
 STATIC_CONSTANTS = {}
 DECLARATIONS = []
 STALOADED = set()
@@ -29,8 +36,9 @@ STALOADED = set()
 
 def clear():
     """ Clear generated data. """
+    for table in DEFS.values():
+        table.clear()
     BASE_SORTS.clear()
-    STAMPS.clear()
     STATIC_CONSTANTS.clear()
     DECLARATIONS.clear()
     STALOADED.clear()
@@ -74,69 +82,70 @@ def collect_base_sorts(node):
 # Stamps
 # ============================================================================
 
-def extract_stamp(entry, stamp_key, name_key, type_sort):
-    """ Extract a `Stamp` from a JSON node given keys. """
+def extract_def(entry, stamp_key, name_key, type_sort):
+    """ Extract a `Def` from a JSON node given keys. """
     # type_sort is a function.
     (typ, sort) = type_sort(entry)
-    stamp_id = entry[stamp_key]
+    stamp = entry[stamp_key]
     name = entry[name_key]
-    return Stamp(stamp_id, name, typ, sort)
+    return Def(stamp_key, stamp, name, sort, typ, None)
 
 
-def add_stamp(stamp):
-    """ Add `stamp` in `STAMPS`. """
-    if stamp.id in STAMPS:
-        error("Warning: duplicated stamp: %s." % repr(stamp))
-    STAMPS[stamp.id] = stamp
+def add_def(den):
+    """ Add `den` in `DEFS`. """
+    table = DEFS[den.table]
+    if den.stamp in table:
+        error("Duplicated stamp: %s." % repr(den.stamp))
+    table[den.stamp] = den
 
 
-def extract_and_add_stamps(
+def extract_and_add_defs(
         root_node,
         section_key,
         stamp_key,
         name_key,
         type_sort):
-    """ Extract and add stamps given root node and keys. """
+    """ Extract and add defs given root node and keys. """
     # type_sort is a function.
     for entry in root_node[section_key]:
-        stamp = extract_stamp(entry, stamp_key, name_key, type_sort)
-        add_stamp(stamp)
+        den = extract_def(entry, stamp_key, name_key, type_sort)
+        add_def(den)
         if section_key == "s2cstmap":
-            STATIC_CONSTANTS[stamp.name] = stamp.sort
+            STATIC_CONSTANTS[den.name] = den.sort
 
 
-def collect_stamps(root_node):
-    """ Collect stamps: their stamp id, name and sort. """
+def collect_defs(root_node):
+    """ Collect defs: their stamp, name, sort and type. """
 
-    extract_and_add_stamps(
+    extract_and_add_defs(
         root_node=root_node,
         section_key="d2conmap",
         stamp_key="d2con_stamp",
         name_key="d2con_sym",
         type_sort=d2con_type_sort)
 
-    extract_and_add_stamps(
+    extract_and_add_defs(
         root_node=root_node,
         section_key="d2cstmap",
         stamp_key="d2cst_stamp",
         name_key="d2cst_sym",
         type_sort=d2cst_type_sort)
 
-    extract_and_add_stamps(
+    extract_and_add_defs(
         root_node=root_node,
         section_key="d2varmap",
         stamp_key="d2var_stamp",
         name_key="d2var_sym",
         type_sort=d2var_type_sort)
 
-    extract_and_add_stamps(
+    extract_and_add_defs(
         root_node=root_node,
         section_key="s2cstmap",
         stamp_key="s2cst_stamp",
         name_key="s2cst_sym",
         type_sort=s2cst_type_sort)
 
-    extract_and_add_stamps(
+    extract_and_add_defs(
         root_node=root_node,
         section_key="s2varmap",
         stamp_key="s2var_stamp",
@@ -176,19 +185,27 @@ def s2var_type_sort(entry):
 # Declarations: general
 # ============================================================================
 
-def add_declaration(construct, stamp_id, loc, typ=None, sort=None, name=None):
+def add_declaration(
+        stamp_key,
+        stamp,
+        loc,
+        construct,
+        name=None,
+        sort=None,
+        typ=None):
     """ Add a declaration given properties. """
-    if stamp_id in STAMPS:
-        stamp = STAMPS[stamp_id]
+    table = DEFS[stamp_key]
+    if stamp in table:
+        den = table[stamp]
         declaration = Declaration(
-            construct=construct,
-            name=name or stamp.name,
             loc=loc,
-            type=typ or stamp.type,
-            sort=sort or stamp.sort)
+            name=name or den.name,
+            construct=construct,
+            sort=sort or den.sort,
+            type=typ or den.type)
         DECLARATIONS.append(declaration)
     else:
-        # error("Missing stamp id: %i" % stamp_id)
+        # error("Missing stamp: %i" % stamp)
         # #include is buggy with stamps.
         pass
 
@@ -213,7 +230,7 @@ def handle_source_file(path):
         error("Failed to evaluate %s" % path)
 
     collect_base_sorts(root_node)
-    collect_stamps(root_node)
+    collect_defs(root_node)
     collect_main_declarations(root_node)
 
 
@@ -252,12 +269,13 @@ def handle_d2cdatdecs(loc, node):
         error("Unknown data construction: %i" % construct)
     construct = "data: " + construct
     for entry in node[1]:
-        stamp_id = entry["s2cst_stamp"]
+        stamp = entry["s2cst_stamp"]
         add_declaration(
-            construct=construct,
-            stamp_id=stamp_id,
-            loc=loc)
-        # Sort in Stamp but no type?
+            stamp_key="s2cst_stamp",
+            stamp=stamp,
+            loc=loc,
+            construct=construct)
+        # Sort in Def but no type?
 
 
 def handle_d2cdcstdecs(loc, node):
@@ -281,12 +299,13 @@ def handle_d2cdcstdecs(loc, node):
         error("Unknown constant construction: %s" % construct)
     construct = "constant: " + construct
     for entry in node[2]:
-        stamp_id = entry["d2cst_stamp"]
+        stamp = entry["d2cst_stamp"]
         add_declaration(
-            construct=construct,
-            stamp_id=stamp_id,
-            loc=loc)
-        # Type and sort informations are in the Stamp.
+            stamp_key="d2cst_stamp",
+            stamp=stamp,
+            loc=loc,
+            construct=construct)
+        # Type and sort informations are in the Def.
 
 
 def handle_d2cexndecs(loc, node):
@@ -296,12 +315,13 @@ def handle_d2cexndecs(loc, node):
     # exception e1 and e2. Unfortunately, we can’t have the loc of the name,
     # which would be better.
     for item in node[0]:
-        stamp_id = item["d2con_stamp"]
+        stamp = item["d2con_stamp"]
         add_declaration(
-            construct="exception",
-            stamp_id=stamp_id,
-            loc=loc)
-        # Type and sort informations are in the Stamp.
+            stamp_key="d2con_stamp",
+            stamp=stamp,
+            loc=loc,
+            construct="exception")
+        # Type and sort informations are in the Def.
 
 
 def handle_d2cextcode(_loc, _node):
@@ -337,12 +357,13 @@ def handle_d2cfundecs(_loc, node):
         error("Unknown function construction: %s" % construct)
     construct = "function: " + construct
     for entry in node[2]:
-        stamp_id = entry["f2undec_var"]["d2var_stamp"]
+        stamp = entry["f2undec_var"]["d2var_stamp"]
         loc = entry["f2undec_loc"]
         add_declaration(
-            construct=construct,
-            stamp_id=stamp_id,
-            loc=loc)
+            stamp_key="d2var_stamp",
+            stamp=stamp,
+            loc=loc,
+            construct=construct)
         # No type/sort informations, but could be derived.
 
 
@@ -364,14 +385,15 @@ def handle_d2cimpdec(_loc, node):
     else:
         error("Unknown case")
     construct = "implementation: " + construct
-    stamp_id = node[1]["i2mpdec_cst"]["d2cst_stamp"]
+    stamp = node[1]["i2mpdec_cst"]["d2cst_stamp"]
     # The stamp id is the same as that of the extern function declaration.
     loc = node[1]["i2mpdec_loc"]
     add_declaration(
-        construct=construct,
-        stamp_id=stamp_id,
-        loc=loc)
-    # Type and sort informations are in the Stamp.
+        stamp_key="d2cst_stamp",
+        stamp=stamp,
+        loc=loc,
+        construct=construct)
+    # Type and sort informations are in the Def.
 
 
 def handle_d2cinclude(_loc, node):
@@ -401,22 +423,26 @@ def handle_d2cnone(_loc, _node):
 def handle_d2coverload(loc, node):
     """ Handle a D2Coverload. """
     # No stamp for the symbol.
-    stamp_id = None
+    stamp_key = None
+    stamp = None
     name = node[0]
     sub_node = node[2][0]  # There are never many, isn’t it?
     if "D2ITMcst" in sub_node:
-        stamp_id = sub_node["D2ITMcst"][0]["d2cst_stamp"]
+        stamp_key = "d2cst_stamp"
+        stamp = sub_node["D2ITMcst"][0][stamp_key]
     elif "D2ITMvar" in sub_node:
-        stamp_id = sub_node["D2ITMvar"][0]["d2var_stamp"]
+        stamp_key = "d2var_stamp"
+        stamp = sub_node["D2ITMvar"][0][stamp_key]
     elif "D2ITMignored" in sub_node:
         pass
     else:
         error("Unknow case")
-    if stamp_id is not None:
+    if stamp is not None:
         add_declaration(
-            construct="overload",
-            stamp_id=stamp_id,
+            stamp_key=stamp_key,
+            stamp=stamp,
             loc=loc,
+            construct="overload",
             name=name)
         # Either type/sort from stamp (D2ITMcst) or none (D2ITMvar).
 
@@ -449,12 +475,13 @@ def handle_d2cstacsts(loc, node):
         declarations = node[1]
     construct = "static constant: " + construct
     for declaration in declarations:
-        stamp_id = declaration["s2cst_stamp"]
+        stamp = declaration["s2cst_stamp"]
         add_declaration(
-            construct=construct,
-            stamp_id=stamp_id,
-            loc=loc)
-        # Sort in Stamp but no type?
+            stamp_key="s2cst_stamp",
+            stamp=stamp,
+            loc=loc,
+            construct=construct)
+        # Sort in Def but no type?
 
 
 def handle_d2cstaload(_loc, node):
@@ -481,13 +508,14 @@ def handle_d2cvaldecs(_loc, node):
     construct = "value: " + construct
     for item in node[1]:
         for (loc, var, typ, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
-            stamp_id = var[0]["d2var_stamp"]
+            stamp = var[0]["d2var_stamp"]
             add_declaration(
-                construct=construct,
-                stamp_id=stamp_id,
+                stamp_key="d2var_stamp",
+                stamp=stamp,
                 loc=loc,
-                typ=typ,
-                sort=sort)
+                construct=construct,
+                sort=sort,
+                typ=typ)
             # Type/sort retrieved from pattern if annotated.
 
 
@@ -496,7 +524,7 @@ def handle_d2cvardecs(_loc, node):
     construct = "var"
     for item in node[0]:
         loc = item["v2ardec_loc"]
-        stamp_id = item["v2ardec_dvar"]["d2var_stamp"]
+        stamp = item["v2ardec_dvar"]["d2var_stamp"]
         typ = None
         sort = None
         type_node = item["v2ardec_type"]
@@ -504,17 +532,19 @@ def handle_d2cvardecs(_loc, node):
             typ = type_node[0]["s2exp_node"]
             sort = type_node[0]["s2exp_srt"]
         add_declaration(
-            construct=construct,
-            stamp_id=stamp_id,
+            stamp_key="d2var_stamp",
+            stamp=stamp,
             loc=loc,
-            typ=typ,
-            sort=sort)
-        # Type/sort available if annotated.
-        stamp_id = item["v2ardec_svar"]["s2var_stamp"]
-        add_declaration(
             construct=construct,
-            stamp_id=stamp_id,
-            loc=loc)
+            sort=sort,
+            typ=typ)
+        # Type/sort available if annotated.
+        stamp = item["v2ardec_svar"]["s2var_stamp"]
+        add_declaration(
+            stamp_key="s2var_stamp",
+            stamp=stamp,
+            loc=loc,
+            construct=construct)
         # Sort available in stamp.
 
 
@@ -604,11 +634,11 @@ def sta_sort_image(node, paren_if_fun=False):
     return sort_image(node, paren_if_fun)
 
 
-def s2var_image(stamp_id):
+def s2var_image(stamp):
     """ Static variable image. """
-    if stamp_id in STAMPS:
-        stamp = STAMPS[stamp_id]
-        return stamp.name + ": " + sort_image(stamp.sort)
+    if stamp in DEFS:
+        den = DEFS["s2var_stamp"][stamp]
+        return den.name + ": " + sort_image(den.sort)
     return "*ERR*"
 
 
@@ -623,18 +653,22 @@ def dyn_image(node, for_type, paren_if_fun=False):
     else:
         image = sort_image
     if "S2Ecst" in node:
-        stamp_id = node["S2Ecst"][0]["s2cst_stamp"]
-        if stamp_id in STAMPS:
+        stamp = node["S2Ecst"][0]["s2cst_stamp"]
+        table = DEFS["s2cst_stamp"]
+        if stamp in table:
+            den = table[stamp]
             if for_type:
-                return STAMPS[stamp_id].name
-            return sort_image(STAMPS[stamp_id].sort)
+                return den.name
+            return sort_image(den.sort)
         return "*ERROR*"
     elif "S2Evar" in node:
-        stamp_id = node["S2Evar"][0]["s2var_stamp"]
-        if stamp_id in STAMPS:
+        stamp = node["S2Evar"][0]["s2var_stamp"]
+        table = DEFS["s2var_stamp"]
+        if stamp in table:
+            den = table[stamp]
             if for_type:
-                return STAMPS[stamp_id].name
-            return sort_image(STAMPS[stamp_id].sort)
+                return den.name
+            return sort_image(den.sort)
         return "*ERROR*"
     elif "S2Eextkind" in node:
         return node["S2Eextkind"][0]
