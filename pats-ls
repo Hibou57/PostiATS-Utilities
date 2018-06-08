@@ -59,7 +59,7 @@ def dump():
             print(
                 "Expression sort: %s" %
                 declarations.dyn_sort_image(value.type))
-        print("      Construct: %s" % value.construct)
+        print("      Construct: %s" % " ".join(value.construct))
         print_loc(value.loc)
 
 

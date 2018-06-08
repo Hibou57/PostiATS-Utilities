@@ -256,18 +256,18 @@ def handle_d2cdatdecs(loc, node):
     # be multiple data construction for an say datatype keyword, as in
     # datatype T and U and V. Unfortunately, we can’t have the loc of the
     # name, which would be better.
-    construct = node[0]
-    if construct == 0:
-        construct = "datatype"
-    elif construct == 2:
-        construct = "datavtype"
-    elif construct == 5:
-        construct = "dataprop"
-    elif construct == 7:
-        construct = "dataview"
+    construct = ["static", "data"]
+    construct_tag = node[0]
+    if construct_tag == 0:
+        construct.append("datatype")
+    elif construct_tag == 2:
+        construct.append("datavtype")
+    elif construct_tag == 5:
+        construct.append("dataprop")
+    elif construct_tag == 7:
+        construct.append("dataview")
     else:
-        error("Unknown data construction: %i" % construct)
-    construct = "data: " + construct
+        error("Unknown data construction: %i" % construct_tag)
     for entry in node[1]:
         stamp = entry["s2cst_stamp"]
         add_declaration(
@@ -284,20 +284,20 @@ def handle_d2cdcstdecs(loc, node):
     # be multiple constant construction for an say extern keyword, as in val a
     # and b. Unfortunately, we can’t have the loc of the name, which would be
     # better.
-    construct = node[1]
-    if construct == "DCKcastfn":
-        construct = "castfn"
-    elif construct == "DCKfun":
-        construct = "fun"
-    elif construct == "DCKpraxi":
-        construct = "praxi"
-    elif construct == "DCKprfun":
-        construct = "prfun"
-    elif construct == "DCKval":
-        construct = "val"
+    construct = ["dynamic", "constant"]
+    construct_tag = node[1]
+    if construct_tag == "DCKcastfn":
+        construct.append("castfn")
+    elif construct_tag == "DCKfun":
+        construct.append("fun")
+    elif construct_tag == "DCKpraxi":
+        construct.append("praxi")
+    elif construct_tag == "DCKprfun":
+        construct.append("prfun")
+    elif construct_tag == "DCKval":
+        construct.append("val")
     else:
-        error("Unknown constant construction: %s" % construct)
-    construct = "constant: " + construct
+        error("Unknown constant construction: %s" % construct_tag)
     for entry in node[2]:
         stamp = entry["d2cst_stamp"]
         add_declaration(
@@ -314,13 +314,15 @@ def handle_d2cexndecs(loc, node):
     # be multiple constant construction for an say extern keyword, as in
     # exception e1 and e2. Unfortunately, we can’t have the loc of the name,
     # which would be better.
+    construct = ["dynamic", "constructor"]
+    construct.append("exception")
     for item in node[0]:
         stamp = item["d2con_stamp"]
         add_declaration(
             stamp_key="d2con_stamp",
             stamp=stamp,
             loc=loc,
-            construct="exception")
+            construct=construct)
         # Type and sort informations are in the Def.
 
 
@@ -342,20 +344,20 @@ def handle_d2cfundecs(_loc, node):
     # be multiple functions for an say fun keyword, as in fun x and y and z.
     # We can have the loc of the name, which is better, so the one passed is
     # ignored.
-    construct = node[0]
-    if construct == "FK_fn":
-        construct = "fn"
-    elif construct == "FK_fnx":
-        construct = "fnx"
-    elif construct == "FK_fun":
-        construct = "fun"
-    elif construct == "FK_prfn":
-        construct = "prfn"
-    elif construct == "FK_prfun":
-        construct = "prfun"
+    construct = ["dynamic", "function"]
+    construct_tag = node[0]
+    if construct_tag == "FK_fn":
+        construct.append("fn")
+    elif construct_tag == "FK_fnx":
+        construct.append("fnx")
+    elif construct_tag == "FK_fun":
+        construct.append("fun")
+    elif construct_tag == "FK_prfn":
+        construct.append("prfn")
+    elif construct_tag == "FK_prfun":
+        construct.append("prfun")
     else:
-        error("Unknown function construction: %s" % construct)
-    construct = "function: " + construct
+        error("Unknown function construction: %s" % construct_tag)
     for entry in node[2]:
         stamp = entry["f2undec_var"]["d2var_stamp"]
         loc = entry["f2undec_loc"]
@@ -377,14 +379,14 @@ def handle_d2cimpdec(_loc, node):
     """ Handle a D2Cimpdec. """
     # The _loc argument is that of the keyword, not of the name. We can have
     # the loc of the name, which is better, so the one passed is ignored.
-    construct = node[0]
-    if construct == 1:
-        construct = "implement"
-    elif construct == -1:
-        construct = "primplmnt"
+    construct = ["dynamic", "implementation"]
+    construct_tag = node[0]
+    if construct_tag == 1:
+        construct.append("implement")
+    elif construct_tag == -1:
+        construct.append("primplmnt")
     else:
-        error("Unknown case")
-    construct = "implementation: " + construct
+        error("Unknown implementation construction: %i" % construct_tag)
     stamp = node[1]["i2mpdec_cst"]["d2cst_stamp"]
     # The stamp id is the same as that of the extern function declaration.
     loc = node[1]["i2mpdec_loc"]
@@ -423,6 +425,7 @@ def handle_d2cnone(_loc, _node):
 def handle_d2coverload(loc, node):
     """ Handle a D2Coverload. """
     # No stamp for the symbol.
+    construct = ["dynamic", "alias"]
     stamp_key = None
     stamp = None
     name = node[0]
@@ -436,13 +439,14 @@ def handle_d2coverload(loc, node):
     elif "D2ITMignored" in sub_node:
         pass
     else:
-        error("Unknow case")
+        error("Unknow overload case")
+    construct.append("overload")
     if stamp is not None:
         add_declaration(
             stamp_key=stamp_key,
             stamp=stamp,
             loc=loc,
-            construct="overload",
+            construct=construct,
             name=name)
         # Either type/sort from stamp (D2ITMcst) or none (D2ITMvar).
 
@@ -453,27 +457,27 @@ def handle_d2cstacsts(loc, node):
     # be multiple constant construction for an say extern keyword, as in
     # extern f(): int and g(): int. Unfortunately, we can’t have the loc of
     # the name, which would be better.
+    construct = ["static", "constant"]
     if len(node) == 1:
-        construct = "stacst"
+        construct.append("stacst")
         declarations = node[0]
     else:
-        construct = node[0]
-        if construct == 0:
-            construct = "abstype"
-        elif construct == 1:
-            construct = "abst@ype"
-        elif construct == 2:
-            construct = "absvtype"
-        elif construct == 3:
-            construct = "absvt@ype"
-        elif construct == 5:
-            construct = "absprop"
-        elif construct == 7:
-            construct = "absview"
+        construct_tag = node[0]
+        if construct_tag == 0:
+            construct.append("abstype")
+        elif construct_tag == 1:
+            construct.append("abst@ype")
+        elif construct_tag == 2:
+            construct.append("absvtype")
+        elif construct_tag == 3:
+            construct.append("absvt@ype")
+        elif construct_tag == 5:
+            construct.append("absprop")
+        elif construct_tag == 7:
+            construct.append("absview")
         else:
-            error("Unknown static constant construct %i" % construct)
+            error("Unknown static constant construct %i" % construct_tag)
         declarations = node[1]
-    construct = "static constant: " + construct
     for declaration in declarations:
         stamp = declaration["s2cst_stamp"]
         add_declaration(
@@ -494,18 +498,18 @@ def handle_d2cstaload(_loc, node):
 def handle_d2cvaldecs(_loc, node):
     """ Handle a D2Cvaldecs. """
 
-    construct = node[0]
-    if construct == "VK_prval":
-        construct = "prval"
-    elif construct == "VK_val":
-        construct = "val"
-    elif construct == "VK_val_neg":
-        construct = "val-"
-    elif construct == "VK_val_pos":
-        construct = "val+"
+    construct = ["dynamic", "value"]
+    construct_tag = node[0]
+    if construct_tag == "VK_prval":
+        construct.append("prval")
+    elif construct_tag == "VK_val":
+        construct.append("val")
+    elif construct_tag == "VK_val_neg":
+        construct.append("val-")
+    elif construct_tag == "VK_val_pos":
+        construct.append("val+")
     else:
         error("Unknown function construction: %s" % construct)
-    construct = "value: " + construct
     for item in node[1]:
         for (loc, var, typ, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
             stamp = var[0]["d2var_stamp"]
@@ -521,13 +525,14 @@ def handle_d2cvaldecs(_loc, node):
 
 def handle_d2cvardecs(_loc, node):
     """ Handle a D2Cvardecs. """
-    construct = "var"
     for item in node[0]:
         loc = item["v2ardec_loc"]
         stamp = item["v2ardec_dvar"]["d2var_stamp"]
         typ = None
         sort = None
         type_node = item["v2ardec_type"]
+        construct = ["dynamic", "var"]
+        construct.append("var")
         if type_node:
             typ = type_node[0]["s2exp_node"]
             sort = type_node[0]["s2exp_srt"]
@@ -539,6 +544,8 @@ def handle_d2cvardecs(_loc, node):
             sort=sort,
             typ=typ)
         # Type/sort available if annotated.
+        construct = ["static", "var"]
+        construct.append("var")
         stamp = item["v2ardec_svar"]["s2var_stamp"]
         add_declaration(
             stamp_key="s2var_stamp",
