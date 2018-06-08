@@ -204,6 +204,16 @@ def add_declaration(
             sort=sort or den.sort,
             type=typ or den.type)
         DECLARATIONS.append(declaration)
+        if stamp_key == "d2var_stamp" and not den.sort:
+            # Workaround lack of type information in d2varmap.
+            new_den = Def(
+                table=den.table,
+                stamp=den.stamp,
+                name=den.name,
+                sort=sort,
+                type=typ,
+                cons=None)
+            table[stamp] = new_den
     else:
         # error("Missing stamp: %i" % stamp)
         # #include is buggy with stamps.
@@ -448,7 +458,7 @@ def handle_d2coverload(loc, node):
     construct.append("overload")
     if stamp is not None:
         add_declaration(
-            stamp_key=stamp_key,
+            stamp_key=stamp_key,  # Of the overloaded entity.
             stamp=stamp,
             loc=loc,
             construct=construct,
