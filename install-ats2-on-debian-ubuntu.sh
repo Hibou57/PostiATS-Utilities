@@ -13,8 +13,7 @@
 #
 # Edit the configuration variables below. Note you still have to clear the
 # install directory before each update, as this script don't do it for you,
-# for safety. Also note `apt-get` invocations are commented (with `#--`) and
-# you have to comment it out if you know some build dependencies are missing.
+# for safety.
 
 # Installation directory: edit to set it to your own.
 INST_DIR="$HOME/apps/ats"
