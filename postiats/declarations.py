@@ -749,7 +749,7 @@ def s2ecst_image(node, for_type):
     Type or sort, depending on `for_type`.
 
     """
-    stamp = node["S2Ecst"][0]["s2cst_stamp"]
+    stamp = node[0]["s2cst_stamp"]
     den = get_def("s2cst_stamp", stamp)
     if den is None:
         return "*ERROR*"
@@ -764,7 +764,7 @@ def s2evar_image(node, for_type):
     Type or sort, depending on `for_type`.
 
     """
-    stamp = node["S2Evar"][0]["s2var_stamp"]
+    stamp = node[0]["s2var_stamp"]
     den = get_def("s2var_stamp", stamp)
     if den is None:
         return "*ERROR*"
@@ -780,7 +780,7 @@ def s2eapp_image(node, key_image):
 
     """
     (key, image) = key_image  # `image` is a function.
-    node = node["S2Eapp"]
+    assert key == "s2exp_node" or key == "s2exp_srt"
     function = node[0]
     arguments = node[1]
     result = image(function[key])
@@ -802,7 +802,7 @@ def s2efun_image(node, key_image, paren_if_fun):
 
     """
     (key, image) = key_image  # `image` is a function.
-    node = node["S2Efun"]
+    assert key == "s2exp_node" or key == "s2exp_srt"
     inputs = node[1]
     output = node[2]
     result = ""
@@ -828,20 +828,40 @@ def s2efun_image(node, key_image, paren_if_fun):
     return result
 
 
-def quantifier_image(node, key_image, begin_end):
+def s2erefarg_image(node, key_image):
+    """ Image of a S2Erefarg, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    assert key == "s2exp_node" or key == "s2exp_srt"
+    passing_style = node[0]
+    if passing_style == 0:
+        # By value
+        prefix = "!"
+    elif passing_style == 1:
+        # By reference
+        prefix = "&"
+    else:
+        error("Unknown argument passing style: %i" % passing_style)
+    return prefix + image(node[1][key])
+
+
+def quantifier_image(node, key_image, open_close):
     """ Image of an S2Eexi or of an S2Euni, either as type or sort.
 
     Type or sort, depending on `key_image`.
 
-    Of an S2Eexi or of an S2Euni, depending on `begin_end` characters.
+    Of an S2Eexi or of an S2Euni, depending on `open_close` characters.
 
     """
     (key, image) = key_image  # `image` is a function.
-    (begin, end) = begin_end  # Two paired characters.
+    (opn, close) = open_close  # Two paired characters.
     variables = node[0]
     predicats = node[1]
     expression = node[2]
-    result = begin
+    result = opn
     first = True
     for variable in variables:
         if not first:
@@ -857,7 +877,7 @@ def quantifier_image(node, key_image, begin_end):
                 result += "; "
             result += image(predicat[key])
             first = False
-    result += end
+    result += close
     result += " "
     result += image(expression[key])
     return result
@@ -873,6 +893,7 @@ def dyn_image(node, for_type, paren_if_fun=False):
     keys = list(node.keys())
     assert len(keys) == 1
     key = keys[0]
+    node = node[key]
 
     if key == "S2Ecst":
         result = s2ecst_image(node, for_type)
@@ -880,22 +901,22 @@ def dyn_image(node, for_type, paren_if_fun=False):
         result = s2evar_image(node, for_type)
     elif key == "S2Eextkind":
         assert for_type
-        result = node[key][0]
+        result = node[0]
     elif key == "S2Eintinf":
         assert for_type
-        result = node[key][0]
+        result = node[0]
     elif key == "S2Eapp":
         result = s2eapp_image(node, key_image)
     elif key == "S2Efun":
         result = s2efun_image(node, key_image, paren_if_fun)
     elif key == "S2Eexi":
-        node = node[key]
-        begin_end = ("[", "]")
-        result = quantifier_image(node, key_image, begin_end)
+        open_close = ("[", "]")
+        result = quantifier_image(node, key_image, open_close)
     elif key == "S2Euni":
-        node = node[key]
-        begin_end = ("{", "}")
-        result = quantifier_image(node, key_image, begin_end)
+        open_close = ("{", "}")
+        result = quantifier_image(node, key_image, open_close)
+    elif key == "S2Erefarg":
+        result = s2erefarg_image(node, key_image)
     else:
         result = "?"
     return result
