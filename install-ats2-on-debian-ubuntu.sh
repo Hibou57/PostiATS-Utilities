@@ -40,7 +40,7 @@ WITH_ATSCC2PHP=1
 #
 ######
 
-if [ $INSTALL_BUILD_DEPENDENCIES -eq 1 ]; then
+if [ "$INSTALL_BUILD_DEPENDENCIES" -eq 1 ]; then
    sudo apt-get update
    sudo apt-get install -y gcc
    sudo apt-get install -y git
@@ -51,7 +51,7 @@ fi
 ######
 
 exit_if_failed() {
-   if [ $? -ne 0 ]; then
+   if [ "$?" -ne 0 ]; then
       echo "Exit on failure."
       exit 1
    fi
@@ -59,8 +59,8 @@ exit_if_failed() {
 
 get_or_update_git_clone() {
    # Caller defines DIR and URL.
-   if [ \! -d $DIR/.git ]; then
-      if [ -d $DIR ]; then
+   if [ \! -d "$DIR/.git" ]; then
+      if [ -d "$DIR" ]; then
          # Directory exists, but is not a valid git clone: reset.
          echo "Please, delete the $DIR directory, it is not a Git clone."
          exit 1;
@@ -117,13 +117,13 @@ ln -fs lib/$PATSHOME_NAME/share $INST_DIR/share
 (cd ATS2/contrib/ATS-extsolve && make DATS_C); exit_if_failed
 #
 # For building patsolve_z3
-if [ $WITH_PATSOLVE_Z3 -eq 1 ]; then
+if [ "$WITH_PATSOLVE_Z3" -eq 1 ]; then
    (cd ATS2/contrib/ATS-extsolve-z3 && make all && make clean); exit_if_failed
    (cd ATS2/contrib/ATS-extsolve-z3/bin && mv -f patsolve_z3 $PATSHOME/bin); exit_if_failed
 fi;
 #
 # For building patsolve_smt2
-if [ $WITH_PATSOLVE_SMT2 -eq 1 ]; then
+if [ "$WITH_PATSOLVE_SMT2" -eq 1 ]; then
    (cd ATS2/contrib/ATS-extsolve-smt2 && make all && make clean); exit_if_failed
    (cd ATS2/contrib/ATS-extsolve-smt2/bin && mv -f patsolve_smt2 $PATSHOME/bin); exit_if_failed
 fi;
@@ -137,7 +137,7 @@ fi;
 #
 # For building atscc2js
 #
-if [ $WITH_ATSCC2JS -eq 1 ]; then
+if [ "$WITH_ATSCC2JS" -eq 1 ]; then
    (cd ATS2/contrib/CATS-atscc2js && make all && make clean); exit_if_failed
    (cd ATS2/contrib/CATS-atscc2js && mv -f bin/atscc2js $PATSHOME/bin); exit_if_failed
    ln -s "../lib/$PATSHOME_NAME/bin/atscc2js" "$INST_DIR/bin/atscc2js"
@@ -145,7 +145,7 @@ fi;
 #
 # For building atscc2py3
 #
-if [ $WITH_ATSCC2PY3 -eq 1 ]; then
+if [ "$WITH_ATSCC2PY3" -eq 1 ]; then
    (cd ATS2/contrib/CATS-atscc2py3 && make all && make clean); exit_if_failed
    (cd ATS2/contrib/CATS-atscc2py3 && mv -f bin/atscc2py3 $PATSHOME/bin); exit_if_failed
    ln -s "../lib/$PATSHOME_NAME/bin/atscc2py3" "$INST_DIR/bin/atscc2py3"
@@ -153,7 +153,7 @@ fi;
 #
 # For building atscc2php
 #
-if [ $WITH_ATSCC2PHP -eq 1 ]; then
+if [ "$WITH_ATSCC2PHP" -eq 1 ]; then
    (cd ATS2/contrib/CATS-atscc2php && make all && make clean); exit_if_failed
    (cd ATS2/contrib/CATS-atscc2php && mv -f bin/atscc2php $PATSHOME/bin); exit_if_failed
    ln -s "../lib/$PATSHOME_NAME/bin/atscc2php" "$INST_DIR/bin/atscc2php"
