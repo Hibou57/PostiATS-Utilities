@@ -773,7 +773,7 @@ def s2evar_image(node, for_type):
     return sort_image(den.sort)
 
 
-def s2eapp_image(node, key_image):
+def s2eapp_image(node, key_image, paren_if_fun):
     """ Image of an S2Eapp, either as type or sort.
 
     Type or sort, depending on `key_image`.
@@ -783,7 +783,10 @@ def s2eapp_image(node, key_image):
     assert key == "s2exp_node" or key == "s2exp_srt"
     function = node[0]
     arguments = node[1]
-    result = image(function[key])
+    result = ""
+    if paren_if_fun:
+        result += "("
+    result += image(function[key])
     result += "("
     first = True
     for item in arguments:
@@ -792,6 +795,8 @@ def s2eapp_image(node, key_image):
         result += image(item[key])
         first = False
     result += ")"
+    if paren_if_fun:
+        result += ")"
     return result
 
 
@@ -822,9 +827,9 @@ def s2efun_image(node, key_image, paren_if_fun):
     elif first:
         result += "()"
     result += " -> "
+    result += image(output[key])
     if paren_if_fun:
         result += ")"
-    result += image(output[key])
     return result
 
 
@@ -845,7 +850,7 @@ def s2erefarg_image(node, key_image):
         prefix = "&"
     else:
         error("Unknown argument passing style: %i" % passing_style)
-    return prefix + image(node[1][key])
+    return prefix + image(node[1][key], paren_if_fun=True)
 
 
 def quantifier_image(node, key_image, open_close):
@@ -906,7 +911,7 @@ def dyn_image(node, for_type, paren_if_fun=False):
         assert for_type
         result = node[0]
     elif key == "S2Eapp":
-        result = s2eapp_image(node, key_image)
+        result = s2eapp_image(node, key_image, paren_if_fun)
     elif key == "S2Efun":
         result = s2efun_image(node, key_image, paren_if_fun)
     elif key == "S2Eexi":
