@@ -42,7 +42,7 @@ When available, sort and type informations are displayed. Availability of these 
 
 The output format is self explanatory. Just note the two lists which appears at the beginning, are a list of the base sorts and a list of the static constants referred by the ATS source file. The static constants list shows their name and sort.
 
-Where type is displayed, a type expression or sub‑expression may be replaced by a question mark, “?”. This means producing a text image for the expression, is not already supported. If you happen to miss one and have too many of these “?”, please, feel free to file an issue with a sample ATS source file where such a declaration appears. Sometimes, “*ERROR*” may appears in place of a type expression ; this means the static constant expression is missing from the JSON data.
+Where type is displayed, a type expression or sub‑expression may be replaced by a question mark, “?”. This means producing a text image for the expression, is not already supported. If you happen to miss one and have too many of these “?”, please, feel free to fill an issue with a sample ATS source file where such a declaration appears. Sometimes, “*ERROR*” may appears in place of a type expression ; this means the static constant expression is missing from the JSON data.
 
 Note sometimes the location displayed is that of the keyword introducing an entity declaration, not that of the name of the declared entity. This notably happens with constructors defined by say `datatype`.
 
