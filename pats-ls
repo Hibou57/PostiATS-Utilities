@@ -26,9 +26,15 @@ def print_loc(loc):
     print(loc)
 
 
-def dump():
+HR1 = "========================="
+HR2 = "-------------------------"
+
+
+def dump(path):
     """ Dump declarations. """
-    print("=========================")
+    print(HR1)
+    print(os.path.relpath(path))
+    print(HR2)
     first = True
     if declarations.BASE_SORTS:
         print("Base sorts defined or used:")
@@ -37,7 +43,7 @@ def dump():
             first = False
     if declarations.STATIC_CONSTANTS:
         if not first:
-            print("-------------------------")
+            print(HR2)
         print("Static constants defined or used:")
         for name in sorted(declarations.STATIC_CONSTANTS.keys()):
             sort = declarations.STATIC_CONSTANTS[name]
@@ -45,8 +51,9 @@ def dump():
             first = False
     for value in declarations.DECLARATIONS:
         if not first:
-            print("-------------------------")
+            print(HR2)
         first = False
+        print_loc(value.loc)
         print("    Entity name: %s" % value.name)
         if value.sort:
             print(
@@ -60,7 +67,6 @@ def dump():
                 "Expression sort: %s" %
                 declarations.dyn_sort_image(value.type))
         print("      Construct: %s" % " ".join(value.construct))
-        print_loc(value.loc)
 
 
 def main():
@@ -77,19 +83,18 @@ def main():
 
     path = sys.argv[1]
     declarations.handle_source_file(path)
-    dump()
+    dump(path)
 
     if recursive:
         done = set()
-        while True:
-            to_be_done = declarations.STALOADED.difference(done)
-            done.update(declarations.STALOADED)
-            declarations.clear()
-            if not to_be_done:
-                break
-            for path in to_be_done:
-                declarations.handle_source_file(path)
-                dump()
+        done.add(path)
+        to_be_done = declarations.STALOADED.difference(done)
+        while to_be_done:
+            path = sorted(to_be_done)[0]
+            declarations.handle_source_file(path)
+            dump(path)
+            done.add(path)
+            to_be_done.update(declarations.STALOADED.difference(done))
 
 
 if __name__ == "__main__":

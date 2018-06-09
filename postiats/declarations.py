@@ -1,7 +1,5 @@
 """ Collect declarations. """
 
-# This module is still work in progress, don’t care about the source.
-
 import sys
 
 from collections import namedtuple
@@ -9,30 +7,43 @@ from collections import namedtuple
 from postiats import jsonized
 
 
-Def = namedtuple("Def", ["table", "stamp", "name", "sort", "type", "conss"])
-# Map is a Python built‑in, so table.
-# The stamp key is used for table, it’s more straighforward.
-# Sort, type and conss may be None.
+# Data
+# ============================================================================
 
-Declaration = namedtuple("Declaration",
-                         ["loc",
-                          "name",
-                          "construct",
-                          "sort",
-                          "type"])
+Def = namedtuple("Def", [
+    "stamp_key",
+    "stamp",
+    "name",
+    "sort",
+    "type",
+    "conss"])
+# The stamp key is used to designate the map, it’s more straighforward. Since
+# map is a Python built‑in, the map variables will be named table. Sort, type
+# and conss may be None. Conss is a list of constructors (many cons).
+
+Declaration = namedtuple("Declaration", [
+    "loc",
+    "name",
+    "construct",
+    "sort",
+    "type"])
 
 
 DEFS = {
-    "d2con_stamp": {},
-    "d2cst_stamp": {},
-    "d2var_stamp": {},
-    "s2cst_stamp": {},
-    "s2var_stamp": {}}
+    "d2con_stamp": {},  # From d2conmap.
+    "d2cst_stamp": {},  # From d2cstmap.
+    "d2var_stamp": {},  # From d2varmap.
+    "s2cst_stamp": {},  # From s2cstmap.
+    "s2var_stamp": {}}  # From s2varmap.
+
 BASE_SORTS = set()
 STATIC_CONSTANTS = {}
 DECLARATIONS = []
 STALOADED = set()
 
+
+# Methods
+# ----------------------------------------------------------------------------
 
 def clear():
     """ Clear generated data. """
@@ -42,6 +53,73 @@ def clear():
     STATIC_CONSTANTS.clear()
     DECLARATIONS.clear()
     STALOADED.clear()
+
+
+def add_def(den):
+    """ Add `den` in `DEFS`. """
+    table = DEFS[den.stamp_key]
+    if den.stamp in table:
+        error("Duplicated stamp: %s." % repr(den.stamp))
+    table[den.stamp] = den
+
+
+def get_def(stamp_key, stamp):
+    """ Entry in `DEFS`; may be `None` if missing stamp. """
+    table = DEFS[stamp_key]
+    return table[stamp] if stamp in table else None
+
+
+def update_def(den, new_def):
+    """ Substitue `new_den` for `den` in `DEFS`. """
+    table = DEFS[den.stamp_key]
+    if den.stamp not in table:
+        error("Missing stamp: %s." % repr(den.stamp))
+    table[den.stamp] = new_def
+
+
+def collect_static_constants():
+    """ Fillup `STATIC_CONSTANTS` from previously collected defs.
+
+    `DEFS` needs to be populated, although it may still be empty after that.
+
+    """
+    for den in DEFS["s2cst_stamp"].values():
+        STATIC_CONSTANTS[den.name] = den.sort
+
+
+def add_declaration(
+        stamp_key,
+        stamp,
+        loc,
+        construct,
+        name=None,
+        sort=None,
+        typ=None):
+    """ Add a declaration possibly complented by a referred def.
+
+    `DEFS` needs to be populated, since `stamp_key` and `stamp` are used
+    as a reference in `DEFS`.
+
+    """
+    den = get_def(stamp_key, stamp)
+    if den is not None:
+        declaration = Declaration(
+            loc=loc,
+            name=name or den.name,
+            construct=construct,
+            sort=sort or den.sort,
+            type=typ or den.type)
+        DECLARATIONS.append(declaration)
+    else:
+        # error("Missing stamp: %i" % stamp)
+        # #include is buggy with stamps.
+        pass
+
+
+def add_staloaded(path):
+    """ Register a new source reference encoutered in a file. """
+    # Invoked from handle_d2cstaload.
+    STALOADED.add(path)
 
 
 # Helpers
@@ -58,16 +136,11 @@ def error(message):
     sys.exit(1)
 
 
-def add_staloaded(path):
-    """ Register a new added source. """
-    STALOADED.add(path)
-
-
 # Base sorts
 # ============================================================================
 
 def collect_base_sorts(node):
-    """ Fill BASE_SORTS. """
+    """ Fillup `BASE_SORTS`. """
     if isinstance(node, dict):
         if "S2RTbas" in node:
             BASE_SORTS.add(node["S2RTbas"][0])
@@ -79,8 +152,11 @@ def collect_base_sorts(node):
             collect_base_sorts(sub_node)
 
 
-# Stamps
+# Maps (x2xxxmap)
 # ============================================================================
+
+# General
+# ----------------------------------------------------------------------------
 
 def extract_def(entry, stamp_key, name_key, type_sort):
     """ Extract a `Def` from a JSON node given keys. """
@@ -91,41 +167,17 @@ def extract_def(entry, stamp_key, name_key, type_sort):
     return Def(stamp_key, stamp, name, sort, typ, conss)
 
 
-def add_def(den):
-    """ Add `den` in `DEFS`. """
-    table = DEFS[den.table]
-    if den.stamp in table:
-        error("Duplicated stamp: %s." % repr(den.stamp))
-    table[den.stamp] = den
-
-
-def update_def(den, new_def):
-    """ Add `den` in `DEFS`. """
-    table = DEFS[den.table]
-    if den.stamp not in table:
-        error("Missing stamp: %s." % repr(den.stamp))
-    table[den.stamp] = new_def
-
-
-def get_def(stamp_key, stamp):
-    """ Entry in DEFS, may be None if missing stamp. """
-    table = DEFS[stamp_key]
-    return table[stamp] if stamp in table else None
-
-
 def extract_and_add_defs(
         root_node,
         section_key,
         stamp_key,
         name_key,
         type_sort):
-    """ Extract and add defs given root node and keys. """
+    """ Extract and add defs iteratively from root node. """
     # type_sort is a function.
     for entry in root_node[section_key]:
         den = extract_def(entry, stamp_key, name_key, type_sort)
         add_def(den)
-        if section_key == "s2cstmap":
-            STATIC_CONSTANTS[den.name] = den.sort
 
 
 def collect_defs(root_node):
@@ -167,26 +219,29 @@ def collect_defs(root_node):
         type_sort=s2var_type_sort)
 
 
+# Specific (x2xxx_type_sort)
+# ----------------------------------------------------------------------------
+
 def d2con_type_sort(entry):
-    """ Sort from d2conmap entry."""
+    """ Sort and type from d2conmap entry."""
     type_node = entry["d2con_type"]
     return (type_node["s2exp_node"], type_node["s2exp_srt"], None)
 
 
 def d2cst_type_sort(entry):
-    """ Sort from d2cstmap entry."""
+    """ Sort and type from d2cstmap entry."""
     type_node = entry["d2cst_type"]
     return (type_node["s2exp_node"], type_node["s2exp_srt"], None)
 
 
 def d2var_type_sort(_entry):
-    """ Sort from d2varmap entry."""
-    # May be provided in a D2Cvardecs.
+    """ `(None, None, None)` from d2varmap entry."""
+    # Sort and type may be provided later in a D2Cvardecs.
     return (None, None, None)
 
 
 def s2cst_type_sort(entry):
-    """ Sort from s2cstmap entry."""
+    """ Sort and constructors list from s2cstmap entry."""
     # Static constant has a sort, no a type.
     cond_cons = entry["s2cst_dconlst"]
     conss = cond_cons[0] if cond_cons else None
@@ -198,70 +253,25 @@ def s2var_type_sort(entry):
     return (None, entry["s2var_srt"], None)
 
 
-# Declarations: general
+# Declarations
 # ============================================================================
 
-def add_declaration(
-        stamp_key,
-        stamp,
-        loc,
-        construct,
-        name=None,
-        sort=None,
-        typ=None,
-        conss=None):
-    """ Add a declaration given properties. """
-    den = get_def(stamp_key, stamp)
-    if den is not None:
-        declaration = Declaration(
-            loc=loc,
-            name=name or den.name,
-            construct=construct,
-            sort=sort or den.sort,
-            type=typ or den.type)
-        DECLARATIONS.append(declaration)
-        if stamp_key == "d2var_stamp" and not den.sort:
-            # Workaround lack of type information in d2varmap.
-            new_def = Def(
-                table=den.table,
-                stamp=den.stamp,
-                name=den.name,
-                sort=sort,
-                type=typ,
-                conss=conss)
-            update_def(den, new_def)
-    else:
-        # error("Missing stamp: %i" % stamp)
-        # #include is buggy with stamps.
-        pass
-
+# General
+# ----------------------------------------------------------------------------
 
 def collect_declarations(root_node):
     """ Collect declarations. """
+    # Also used by handle_d2cinclude.
     for entry in root_node:
         loc = entry["d2ecl_loc"]
         node = entry["d2ecl_node"]
         dispatch_declaration(loc, node)
 
 
-def collect_main_declarations(root_node):
+def collect_top_level_declarations(root_node):
     """ Collect declarations. """
     collect_declarations(root_node["d2eclist"])
 
-
-def handle_source_file(path):
-    """ Handle one source file. """
-    root_node = jsonized.get_json(path)
-    if root_node is None:
-        error("Failed to evaluate %s" % path)
-
-    collect_base_sorts(root_node)
-    collect_defs(root_node)
-    collect_main_declarations(root_node)
-
-
-# Declarations: specific
-# ============================================================================
 
 def dispatch_declaration(loc, wrapper_node):
     """ Dispatch by “D2Cxxx”. """
@@ -276,12 +286,30 @@ def dispatch_declaration(loc, wrapper_node):
     # The dispatch table is defined later, after each handler is defined.
 
 
+# Specific
+# ----------------------------------------------------------------------------
+
+def complete_var_def(stamp_key, stamp, sort, typ):
+    """ Workaround lack of type information in d2varmap. """
+    assert stamp_key == "d2var_stamp"
+    den = get_def(stamp_key, stamp)
+    assert den is not None
+    new_def = Def(
+        stamp_key=den.stamp_key,
+        stamp=den.stamp,
+        name=den.name,
+        sort=sort,
+        type=typ,
+        conss=den.conss)
+    update_def(den, new_def)
+
+
 def handle_d2cdatdecs(loc, node):
     """ Handle a D2Cdatdecs. """
     # The loc argument is that of the keyword, not of the name, and there may
-    # be multiple data construction for an say datatype keyword, as in
-    # datatype T and U and V. Unfortunately, we can’t have the loc of the
-    # name, which would be better.
+    # be multiple data construction for a say datatype keyword, as in datatype
+    # T and U and V. Unfortunately, we can’t have the loc of the name, which
+    # would be better.
     construct = ["static", "data"]
     construct_tag = node[0]
     if construct_tag == 0:
@@ -302,7 +330,7 @@ def handle_d2cdatdecs(loc, node):
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Sort in def but no type.
+        # Sort in referred def, but no type.
         den = get_def(stamp_key, stamp)
         if den is not None:
             conss = den.conss
@@ -323,8 +351,8 @@ def handle_d2cdatdecs(loc, node):
 def handle_d2cdcstdecs(loc, node):
     """ Handle a D2Cdcstdecs. """
     # The loc argument is that of the keyword, not of the name, and there may
-    # be multiple constant construction for an say extern keyword, as in val a
-    # and b. Unfortunately, we can’t have the loc of the name, which would be
+    # be multiple constant construction for a say val keyword, as in val a and
+    # b. Unfortunately, we can’t have the loc of the name, which would be
     # better.
     construct = ["dynamic", "constant"]
     construct_tag = node[1]
@@ -348,16 +376,14 @@ def handle_d2cdcstdecs(loc, node):
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Type and sort informations are in the Def.
+        # Type and sort informations are in the referred def.
 
 
 def handle_d2cexndecs(loc, node):
     """ Handle a D2Cexndecs. """
-    # The loc argument is that of the keyword, not of the name, and there may
-    # be multiple constant construction for an say extern keyword, as in
-    # exception e1 and e2. Unfortunately, we can’t have the loc of the name,
-    # which would be better.
-    construct = ["dynamic", "constructor"]
+    # The loc argument is that of the keyword, not of the name, but there
+    # is a single name per exception construct.
+    construct = ["dynamic", "constructor"]  # Exception is a () -> type.
     construct.append("exception")
     for item in node[0]:
         stamp_key = "d2con_stamp"
@@ -367,7 +393,7 @@ def handle_d2cexndecs(loc, node):
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Type and sort informations are in the def.
+        # Type and sort informations are in the referred def.
 
 
 def handle_d2cextcode(_loc, _node):
@@ -385,9 +411,9 @@ def handle_d2cextvar(_loc, _node):
 def handle_d2cfundecs(_loc, node):
     """ Handle a D2Cfundecs. """
     # The _loc argument is that of the keyword, not of the name, and there may
-    # be multiple functions for an say fun keyword, as in fun x and y and z.
-    # We can have the loc of the name, which is better, so the one passed is
-    # ignored.
+    # be multiple functions for a say fun keyword, as in fun x and y and z.
+    # Luckyly, we can have the loc of the name, which is better, so the one
+    # passed is ignored.
     construct = ["dynamic", "function"]
     construct_tag = node[0]
     if construct_tag == "FK_fn":
@@ -422,8 +448,9 @@ def handle_d2cignored(_loc, _node):
 
 def handle_d2cimpdec(_loc, node):
     """ Handle a D2Cimpdec. """
-    # The _loc argument is that of the keyword, not of the name. We can have
-    # the loc of the name, which is better, so the one passed is ignored.
+    # The _loc argument is that of the keyword, not of the name. Luckyly, we
+    # can have the loc of the name, which is better, so the one passed is
+    # ignored.
     construct = ["dynamic", "implementation"]
     construct_tag = node[0]
     if construct_tag == 1:
@@ -470,7 +497,8 @@ def handle_d2cnone(_loc, _node):
 
 def handle_d2coverload(loc, node):
     """ Handle a D2Coverload. """
-    # No stamp for the symbol.
+    # The stamp (if there is one) is that of the overladed symbol, not of the
+    # ouverloading one.
     construct = ["dynamic", "alias"]
     stamp_key = None
     stamp = None
@@ -494,15 +522,16 @@ def handle_d2coverload(loc, node):
             loc=loc,
             construct=construct,
             name=name)
-        # Either type/sort from stamp (D2ITMcst) or none (D2ITMvar).
+        # Either type and sort from referred def, if D2ITMcst or none if
+        # D2ITMvar.
 
 
 def handle_d2cstacsts(loc, node):
     """ Handle a D2Cstacsts. """
     # The loc argument is that of the keyword, not of the name, and there may
-    # be multiple constant construction for an say extern keyword, as in
-    # extern f(): int and g(): int. Unfortunately, we can’t have the loc of
-    # the name, which would be better.
+    # be multiple constant constructions for a say abstype keyword, as in
+    # abstype T = a and U = b. Unfortunately, we can’t have the loc of the
+    # name, which would be better.
     construct = ["static", "constant"]
     if len(node) == 1:
         construct.append("stacst")
@@ -514,9 +543,9 @@ def handle_d2cstacsts(loc, node):
         elif construct_tag == 1:
             construct.append("abst@ype")
         elif construct_tag == 2:
-            construct.append("absvtype")
+            construct.append("absviewtype")
         elif construct_tag == 3:
-            construct.append("absvt@ype")
+            construct.append("absviewt@ype")
         elif construct_tag == 5:
             construct.append("absprop")
         elif construct_tag == 7:
@@ -532,7 +561,7 @@ def handle_d2cstacsts(loc, node):
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Sort in def but no type.
+        # Sort in the referred def but no type.
 
 
 def handle_d2cstaload(_loc, node):
@@ -544,7 +573,6 @@ def handle_d2cstaload(_loc, node):
 
 def handle_d2cvaldecs(_loc, node):
     """ Handle a D2Cvaldecs. """
-
     construct = ["dynamic", "value"]
     construct_tag = node[0]
     if construct_tag == "VK_prval":
@@ -568,7 +596,10 @@ def handle_d2cvaldecs(_loc, node):
                 construct=construct,
                 sort=sort,
                 typ=typ)
-            # Type/sort retrieved from pattern if annotated.
+            # Type and sort retrieved from pattern if annotated.
+            if sort is not None:
+                complete_var_def(stamp_key, stamp, sort, typ)
+                # For possible later references.
 
 
 def handle_d2cvardecs(_loc, node):
@@ -592,7 +623,10 @@ def handle_d2cvardecs(_loc, node):
             construct=construct,
             sort=sort,
             typ=typ)
-        # Type/sort available if annotated.
+        # Type and sort available if annotated.
+        if sort is not None:
+            complete_var_def(stamp_key, stamp, sort, typ)
+            # For possible later references.
         construct = ["static", "value"]
         construct.append("var")
         stamp_key = "s2var_stamp"
@@ -602,8 +636,11 @@ def handle_d2cvardecs(_loc, node):
             stamp=stamp,
             loc=loc,
             construct=construct)
-        # Sort available in stamp.
+        # Sort available in the referred def.
 
+
+# Dispatch table
+# ----------------------------------------------------------------------------
 
 DISPATCH_TABLE = {
     "D2Cdatdecs": handle_d2cdatdecs,
@@ -631,6 +668,7 @@ DISPATCH_TABLE = {
 def p2at_node_p2tvars(node, type_sort=None):
     """ Yield variables from pattern. """
     # Node is a {p2at_loc, p2at_node}
+    # Passed type_sort is an initial value.
     loc = node["p2at_loc"]
     node = node["p2at_node"]
     if "P2Tann" in node:
@@ -649,7 +687,13 @@ def p2at_node_p2tvars(node, type_sort=None):
             typ = type_sort["s2exp_node"]
             sort = type_sort["s2exp_srt"]
         yield (loc, node, typ, sort)
+    else:
+        # No pattern variables here.
+        pass
 
+
+# Image of type and sort
+# ============================================================================
 
 def sort_image(node, paren_if_fun=False):
     """ Image of s2xxx_srt and S2RTfun[0][n]. """
@@ -682,7 +726,7 @@ def sort_image(node, paren_if_fun=False):
                 result += ")"
         result += sort_image(output)
     else:
-        error("Unknown case")
+        error("Unknown sort expression")
     return result
 
 
@@ -696,112 +740,164 @@ def s2var_image(stamp):
     if stamp in DEFS:
         den = DEFS["s2var_stamp"][stamp]
         return den.name + ": " + sort_image(den.sort)
-    return "*ERR*"
+    return "*ERROR*"
+
+
+def s2ecst_image(node, for_type):
+    """ Image of a S2Ecst, either as type or sort.
+
+    Type or sort, depending on `for_type`.
+
+    """
+    stamp = node["S2Ecst"][0]["s2cst_stamp"]
+    den = get_def("s2cst_stamp", stamp)
+    if den is None:
+        return "*ERROR*"
+    if for_type:
+        return den.name
+    return sort_image(den.sort)
+
+
+def s2evar_image(node, for_type):
+    """ Image of a S2Evar, either as type or sort.
+
+    Type or sort, depending on `for_type`.
+
+    """
+    stamp = node["S2Evar"][0]["s2var_stamp"]
+    den = get_def("s2var_stamp", stamp)
+    if den is None:
+        return "*ERROR*"
+    if for_type:
+        return den.name
+    return sort_image(den.sort)
+
+
+def s2eapp_image(node, key_image):
+    """ Image of an S2Eapp, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    node = node["S2Eapp"]
+    function = node[0]
+    arguments = node[1]
+    result = image(function[key])
+    result += "("
+    first = True
+    for item in arguments:
+        if not first:
+            result += ", "
+        result += image(item[key])
+        first = False
+    result += ")"
+    return result
+
+
+def s2efun_image(node, key_image, paren_if_fun):
+    """ Image of a S2Efun, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    node = node["S2Efun"]
+    inputs = node[1]
+    output = node[2]
+    result = ""
+    if paren_if_fun:
+        result += "("
+    marny_args = len(inputs) > 1
+    if marny_args:
+        result += "("
+    first = True
+    for item in inputs:
+        if not first:
+            result += ", "
+        result += image(item[key], not marny_args)
+        first = False
+    if marny_args:
+        result += ")"
+    elif first:
+        result += "()"
+    result += " -> "
+    if paren_if_fun:
+        result += ")"
+    result += image(output[key])
+    return result
+
+
+def quantifier_image(node, key_image, begin_end):
+    """ Image of an S2Eexi or of an S2Euni, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    Of an S2Eexi or of an S2Euni, depending on `begin_end` characters.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    (begin, end) = begin_end  # Two paired characters.
+    variables = node[0]
+    predicats = node[1]
+    expression = node[2]
+    result = begin
+    first = True
+    for variable in variables:
+        if not first:
+            result += "; "
+        result += s2var_image(variable["s2var_stamp"])
+        first = False
+    if predicats:
+        if variables:
+            result += " | "
+        first = True
+        for predicat in predicats:
+            if not first:
+                result += "; "
+            result += image(predicat[key])
+            first = False
+    result += end
+    result += " "
+    result += image(expression[key])
+    return result
 
 
 def dyn_image(node, for_type, paren_if_fun=False):
-    """ Image of s2exp_node. """
+    """ Image of s2exp_node, either as type or sort. """
     if for_type:
-        key = "s2exp_node"
+        key_image = ("s2exp_node", dyn_type_image)
     else:
-        key = "s2exp_srt"
-    if for_type:
-        image = dyn_type_image
+        key_image = ("s2exp_srt", sort_image)
+
+    keys = list(node.keys())
+    assert len(keys) == 1
+    key = keys[0]
+
+    if key == "S2Ecst":
+        result = s2ecst_image(node, for_type)
+    elif key == "S2Evar":
+        result = s2evar_image(node, for_type)
+    elif key == "S2Eextkind":
+        assert for_type
+        result = node[key][0]
+    elif key == "S2Eintinf":
+        assert for_type
+        result = node[key][0]
+    elif key == "S2Eapp":
+        result = s2eapp_image(node, key_image)
+    elif key == "S2Efun":
+        result = s2efun_image(node, key_image, paren_if_fun)
+    elif key == "S2Eexi":
+        node = node[key]
+        begin_end = ("[", "]")
+        result = quantifier_image(node, key_image, begin_end)
+    elif key == "S2Euni":
+        node = node[key]
+        begin_end = ("{", "}")
+        result = quantifier_image(node, key_image, begin_end)
     else:
-        image = sort_image
-    if "S2Ecst" in node:
-        stamp = node["S2Ecst"][0]["s2cst_stamp"]
-        table = DEFS["s2cst_stamp"]
-        if stamp in table:
-            den = table[stamp]
-            if for_type:
-                return den.name
-            return sort_image(den.sort)
-        return "*ERROR*"
-    elif "S2Evar" in node:
-        stamp = node["S2Evar"][0]["s2var_stamp"]
-        table = DEFS["s2var_stamp"]
-        if stamp in table:
-            den = table[stamp]
-            if for_type:
-                return den.name
-            return sort_image(den.sort)
-        return "*ERROR*"
-    elif "S2Eextkind" in node:
-        return node["S2Eextkind"][0]
-    elif "S2Eintinf" in node:
-        return node["S2Eintinf"][0]
-    elif "S2Efun" in node:
-        node = node["S2Efun"]
-        inputs = node[1]
-        output = node[2]
-        result = ""
-        if paren_if_fun:
-            result += "("
-        marny_args = len(inputs) > 1
-        if marny_args:
-            result += "("
-        first = True
-        for item in inputs:
-            if not first:
-                result += ", "
-            result += image(item[key], not marny_args)
-            first = False
-        if marny_args:
-            result += ")"
-        elif first:
-            result += "()"
-        result += " -> "
-        if paren_if_fun:
-            result += ")"
-        result += image(output[key])
-    elif "S2Eapp" in node:
-        node = node["S2Eapp"]
-        function = node[0]
-        arguments = node[1]
-        result = image(function[key])
-        result += "("
-        first = True
-        for item in arguments:
-            if not first:
-                result += ", "
-            result += image(item[key])
-            first = False
-        result += ")"
-    elif "S2Eexi" in node or "S2Euni" in node:
-        if "S2Eexi" in node:
-            node = node["S2Eexi"]
-            begin = "["
-            end = "]"
-        else:
-            node = node["S2Euni"]
-            begin = "{"
-            end = "}"
-        variables = node[0]
-        predicats = node[1]
-        expression = node[2]
-        result = begin
-        first = True
-        for variable in variables:
-            if not first:
-                result += "; "
-            result += s2var_image(variable["s2var_stamp"])
-            first = False
-        if predicats:
-            if variables:
-                result += " | "
-            first = True
-            for predicat in predicats:
-                if not first:
-                    result += "; "
-                result += image(predicat[key])
-                first = False
-        result += end
-        result += " "
-        result += image(expression[key])
-    else:
-        for key in node.keys():
-            return "?"
+        result = "?"
     return result
 
 
@@ -813,3 +909,24 @@ def dyn_type_image(node, paren_if_fun=False):
 def dyn_sort_image(node, paren_if_fun=False):
     """ Dyn image. """
     return dyn_image(node, False, paren_if_fun)
+
+
+# Main
+# ============================================================================
+
+def handle_source_file(path):
+    """ Collect declarations and others for one source file.
+
+    Clear before starting to collect.
+
+    The path is that of an ATS source file, as the compiler would expect it.
+
+    """
+    root_node = jsonized.get_json(path)
+    if root_node is None:
+        error("Failed to evaluate %s" % path)
+    clear()
+    collect_base_sorts(root_node)
+    collect_defs(root_node)
+    collect_static_constants()  # From previously collected defs.
+    collect_top_level_declarations(root_node)
