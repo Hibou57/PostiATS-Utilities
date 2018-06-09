@@ -9,10 +9,10 @@ from collections import namedtuple
 from postiats import jsonized
 
 
-Def = namedtuple("Def", ["table", "stamp", "name", "sort", "type", "cons"])
+Def = namedtuple("Def", ["table", "stamp", "name", "sort", "type", "conss"])
 # Map is a Python built‑in, so table.
 # The stamp key is used for table, it’s more straighforward.
-# Sort, type and cons may be None.
+# Sort, type and conss may be None.
 
 Declaration = namedtuple("Declaration",
                          ["loc",
@@ -85,10 +85,10 @@ def collect_base_sorts(node):
 def extract_def(entry, stamp_key, name_key, type_sort):
     """ Extract a `Def` from a JSON node given keys. """
     # type_sort is a function.
-    (typ, sort) = type_sort(entry)
+    (typ, sort, conss) = type_sort(entry)
     stamp = entry[stamp_key]
     name = entry[name_key]
-    return Def(stamp_key, stamp, name, sort, typ, None)
+    return Def(stamp_key, stamp, name, sort, typ, conss)
 
 
 def add_def(den):
@@ -97,6 +97,20 @@ def add_def(den):
     if den.stamp in table:
         error("Duplicated stamp: %s." % repr(den.stamp))
     table[den.stamp] = den
+
+
+def update_def(den, new_def):
+    """ Add `den` in `DEFS`. """
+    table = DEFS[den.table]
+    if den.stamp not in table:
+        error("Missing stamp: %s." % repr(den.stamp))
+    table[den.stamp] = new_def
+
+
+def get_def(stamp_key, stamp):
+    """ Entry in DEFS, may be None if missing stamp. """
+    table = DEFS[stamp_key]
+    return table[stamp] if stamp in table else None
 
 
 def extract_and_add_defs(
@@ -156,30 +170,32 @@ def collect_defs(root_node):
 def d2con_type_sort(entry):
     """ Sort from d2conmap entry."""
     type_node = entry["d2con_type"]
-    return (type_node["s2exp_node"], type_node["s2exp_srt"])
+    return (type_node["s2exp_node"], type_node["s2exp_srt"], None)
 
 
 def d2cst_type_sort(entry):
     """ Sort from d2cstmap entry."""
     type_node = entry["d2cst_type"]
-    return (type_node["s2exp_node"], type_node["s2exp_srt"])
+    return (type_node["s2exp_node"], type_node["s2exp_srt"], None)
 
 
 def d2var_type_sort(_entry):
     """ Sort from d2varmap entry."""
     # May be provided in a D2Cvardecs.
-    return (None, None)
+    return (None, None, None)
 
 
 def s2cst_type_sort(entry):
     """ Sort from s2cstmap entry."""
     # Static constant has a sort, no a type.
-    return (None, entry["s2cst_srt"])
+    cond_cons = entry["s2cst_dconlst"]
+    conss = cond_cons[0] if cond_cons else None
+    return (None, entry["s2cst_srt"], conss)
 
 
 def s2var_type_sort(entry):
     """ Sort from s2varmap entry."""
-    return (None, entry["s2var_srt"])
+    return (None, entry["s2var_srt"], None)
 
 
 # Declarations: general
@@ -192,11 +208,11 @@ def add_declaration(
         construct,
         name=None,
         sort=None,
-        typ=None):
+        typ=None,
+        conss=None):
     """ Add a declaration given properties. """
-    table = DEFS[stamp_key]
-    if stamp in table:
-        den = table[stamp]
+    den = get_def(stamp_key, stamp)
+    if den is not None:
         declaration = Declaration(
             loc=loc,
             name=name or den.name,
@@ -206,14 +222,14 @@ def add_declaration(
         DECLARATIONS.append(declaration)
         if stamp_key == "d2var_stamp" and not den.sort:
             # Workaround lack of type information in d2varmap.
-            new_den = Def(
+            new_def = Def(
                 table=den.table,
                 stamp=den.stamp,
                 name=den.name,
                 sort=sort,
                 type=typ,
-                cons=None)
-            table[stamp] = new_den
+                conss=conss)
+            update_def(den, new_def)
     else:
         # error("Missing stamp: %i" % stamp)
         # #include is buggy with stamps.
@@ -271,7 +287,7 @@ def handle_d2cdatdecs(loc, node):
     if construct_tag == 0:
         construct.append("datatype")
     elif construct_tag == 2:
-        construct.append("datavtype")
+        construct.append("dataviewtype")
     elif construct_tag == 5:
         construct.append("dataprop")
     elif construct_tag == 7:
@@ -287,6 +303,20 @@ def handle_d2cdatdecs(loc, node):
             loc=loc,
             construct=construct)
         # Sort in def but no type.
+        den = get_def(stamp_key, stamp)
+        if den is not None:
+            conss = den.conss
+            if conss is not None:
+                construct = construct.copy()
+                construct[1] = "constructor"
+                stamp_key = "d2con_stamp"
+                for cons in conss:
+                    stamp = cons[stamp_key]
+                    add_declaration(
+                        stamp_key=stamp_key,
+                        stamp=stamp,
+                        loc=loc,
+                        construct=construct)
 
 
 def handle_d2cdcstdecs(loc, node):
