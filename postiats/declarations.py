@@ -308,6 +308,7 @@ def handle_d2cdatdecs(loc, node):
             conss = den.conss
             if conss is not None:
                 construct = construct.copy()
+                construct[0] = "dynamic"  # Constructors not in the static.
                 construct[1] = "constructor"
                 stamp_key = "d2con_stamp"
                 for cons in conss:
