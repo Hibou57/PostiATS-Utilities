@@ -862,6 +862,7 @@ def quantifier_image(node, key_image, open_close):
 
     """
     (key, image) = key_image  # `image` is a function.
+    assert key == "s2exp_node" or key == "s2exp_srt"
     (opn, close) = open_close  # Two paired characters.
     variables = node[0]
     predicats = node[1]
@@ -886,6 +887,17 @@ def quantifier_image(node, key_image, open_close):
     result += " "
     result += image(expression[key])
     return result
+
+
+def s2ewthtype_image(node, key_image):
+    """ Image of an S2Ewthtype, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    assert key == "s2exp_node" or key == "s2exp_srt"
+    return image(node[0][key])
 
 
 def dyn_image(node, for_type, paren_if_fun=False):
@@ -922,6 +934,8 @@ def dyn_image(node, for_type, paren_if_fun=False):
         result = quantifier_image(node, key_image, open_close)
     elif key == "S2Erefarg":
         result = s2erefarg_image(node, key_image)
+    elif key == "S2Ewthtype":
+        result = s2ewthtype_image(node, key_image)
     else:
         result = "?"
     return result
