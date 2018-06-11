@@ -773,7 +773,7 @@ def s2evar_image(node, for_type):
     return sort_image(den.sort)
 
 
-def s2eapp_image(node, key_image, paren_if_fun):
+def s2eapp_image(node, key_image, paren_if_app):
     """ Image of an S2Eapp, either as type or sort.
 
     Type or sort, depending on `key_image`.
@@ -784,7 +784,7 @@ def s2eapp_image(node, key_image, paren_if_fun):
     function = node[0]
     arguments = node[1]
     result = ""
-    if paren_if_fun:
+    if paren_if_app:
         result += "("
     result += image(function[key])
     result += "("
@@ -795,7 +795,7 @@ def s2eapp_image(node, key_image, paren_if_fun):
         result += image(item[key])
         first = False
     result += ")"
-    if paren_if_fun:
+    if paren_if_app:
         result += ")"
     return result
 
@@ -850,7 +850,7 @@ def s2erefarg_image(node, key_image):
         prefix = "&"
     else:
         error("Unknown argument passing style: %i" % passing_style)
-    return prefix + image(node[1][key], paren_if_fun=True)
+    return prefix + image(node[1][key], paren_if_fun=True, paren_if_app=True)
 
 
 def quantifier_image(node, key_image, open_close):
@@ -900,7 +900,34 @@ def s2ewthtype_image(node, key_image):
     return image(node[0][key])
 
 
-def dyn_image(node, for_type, paren_if_fun=False):
+def s2etop_image(node, key_image, paren_if_app):
+    """ Image of an S2Etop, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    assert key == "s2exp_node" or key == "s2exp_srt"
+    view_status = node[0]
+    if view_status == 0:
+        # Uninitialized
+        postfix = "?"
+    elif view_status == 1:
+        # Initialized
+        postfix = "?!"
+    else:
+        error("Unknown view status: %i" % view_status)
+    result = ""
+    if paren_if_app:
+        result += "("
+    result += image(node[1][key], paren_if_app=True)
+    result += postfix
+    if paren_if_app:
+        result += ")"
+    return result
+
+
+def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     """ Image of s2exp_node, either as type or sort. """
     if for_type:
         key_image = ("s2exp_node", dyn_type_image)
@@ -923,7 +950,7 @@ def dyn_image(node, for_type, paren_if_fun=False):
         assert for_type
         result = node[0]
     elif key == "S2Eapp":
-        result = s2eapp_image(node, key_image, paren_if_fun)
+        result = s2eapp_image(node, key_image, paren_if_app)
     elif key == "S2Efun":
         result = s2efun_image(node, key_image, paren_if_fun)
     elif key == "S2Eexi":
@@ -936,19 +963,21 @@ def dyn_image(node, for_type, paren_if_fun=False):
         result = s2erefarg_image(node, key_image)
     elif key == "S2Ewthtype":
         result = s2ewthtype_image(node, key_image)
+    elif key == "S2Etop":
+        result = s2etop_image(node, key_image, paren_if_app)
     else:
         result = "?"
     return result
 
 
-def dyn_type_image(node, paren_if_fun=False):
+def dyn_type_image(node, paren_if_fun=False, paren_if_app=False):
     """ Dyn image. """
-    return dyn_image(node, True, paren_if_fun)
+    return dyn_image(node, True, paren_if_fun, paren_if_app)
 
 
-def dyn_sort_image(node, paren_if_fun=False):
+def dyn_sort_image(node, paren_if_fun=False, paren_if_app=False):
     """ Dyn image. """
-    return dyn_image(node, False, paren_if_fun)
+    return dyn_image(node, False, paren_if_fun, paren_if_app)
 
 
 # Main
