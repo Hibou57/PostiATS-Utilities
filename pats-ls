@@ -29,11 +29,11 @@ def print_loc(loc):
 HR1 = "========================="
 HR2 = "-------------------------"
 
-LABEL1 = "    Entity name: %s"
-LABEL2 = "    Entity sort: %s"
-LABEL3 = "Expression type: %s"
-LABEL4 = "Expression sort: %s"
-LABEL5 = "      Construct: %s"
+LABEL1 = "      Name: %s"
+LABEL2 = "      Sort: %s"
+LABEL3 = "      Type: %s"
+LABEL4 = " Sorts are: %s"
+LABEL5 = " Construct: %s"
 
 
 def dump(path):
