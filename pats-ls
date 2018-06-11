@@ -29,6 +29,12 @@ def print_loc(loc):
 HR1 = "========================="
 HR2 = "-------------------------"
 
+LABEL1 = "    Entity name: %s"
+LABEL2 = "    Entity sort: %s"
+LABEL3 = "Expression type: %s"
+LABEL4 = "Expression sort: %s"
+LABEL5 = "      Construct: %s"
+
 
 def dump(path):
     """ Dump declarations. """
@@ -54,19 +60,13 @@ def dump(path):
             print(HR2)
         first = False
         print_loc(value.loc)
-        print("    Entity name: %s" % value.name)
+        print(LABEL1 % value.name)
         if value.sort:
-            print(
-                "    Entity sort: %s" %
-                declarations.sta_sort_image(value.sort))
+            print(LABEL2 % declarations.sta_sort_image(value.sort))
         if value.type:
-            print(
-                "Expression type: %s" %
-                declarations.dyn_type_image(value.type))
-            print(
-                "Expression sort: %s" %
-                declarations.dyn_sort_image(value.type))
-        print("      Construct: %s" % " ".join(value.construct))
+            print(LABEL3 % declarations.dyn_type_image(value.type))
+            print(LABEL4 % declarations.dyn_sort_image(value.type))
+        print(LABEL5 % (" ".join(value.construct)))
 
 
 def main():
