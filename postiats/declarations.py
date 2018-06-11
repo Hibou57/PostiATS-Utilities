@@ -705,9 +705,9 @@ def sort_image(node, paren_if_fun=False):
         inputs = node[0]
         output = node[1]
         result = ""
+        if paren_if_fun:
+            result += "("
         if inputs:
-            if paren_if_fun:
-                result += "("
             marny_args = len(inputs) > 1
             if marny_args:
                 result += "("
@@ -722,9 +722,9 @@ def sort_image(node, paren_if_fun=False):
             elif first:
                 result += "()"
             result += " -> "
-            if paren_if_fun:
-                result += ")"
         result += sort_image(output)
+        if paren_if_fun:
+            result += ")"
     else:
         error("Unknown sort expression")
     return result
@@ -786,7 +786,7 @@ def s2eapp_image(node, key_image, paren_if_app):
     result = ""
     if paren_if_app:
         result += "("
-    result += image(function[key])
+    result += image(function[key], paren_if_fun=True)
     result += "("
     first = True
     for item in arguments:
