@@ -64,8 +64,8 @@ def dump(path):
         if value.sort:
             print(LABEL2 % declarations.sta_sort_image(value.sort))
         if value.type:
-            print(LABEL3 % declarations.dyn_type_image(value.type))
-            print(LABEL4 % declarations.dyn_sort_image(value.type))
+            print(LABEL3 % declarations.type_image(value.type))
+            print(LABEL4 % declarations.type_sorts_image(value.type))
         print(LABEL5 % (" ".join(value.construct)))
 
 

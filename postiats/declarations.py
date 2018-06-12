@@ -930,7 +930,7 @@ def s2etop_image(node, key_image, paren_if_app):
 def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     """ Image of s2exp_node, either as type or sort. """
     if for_type:
-        key_image = ("s2exp_node", dyn_type_image)
+        key_image = ("s2exp_node", type_image)
     else:
         key_image = ("s2exp_srt", sort_image)
 
@@ -970,12 +970,12 @@ def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     return result
 
 
-def dyn_type_image(node, paren_if_fun=False, paren_if_app=False):
+def type_image(node, paren_if_fun=False, paren_if_app=False):
     """ Dyn image. """
     return dyn_image(node, True, paren_if_fun, paren_if_app)
 
 
-def dyn_sort_image(node, paren_if_fun=False, paren_if_app=False):
+def type_sorts_image(node, paren_if_fun=False, paren_if_app=False):
     """ Dyn image. """
     return dyn_image(node, False, paren_if_fun, paren_if_app)
 
