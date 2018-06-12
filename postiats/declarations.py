@@ -927,6 +927,35 @@ def s2etop_image(node, key_image, paren_if_app):
     return result
 
 
+def s2etyarr_image(node, key_image, paren_if_app):
+    """ Image of an S2Etyarr, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    assert key == "s2exp_node" or key == "s2exp_srt"
+    element_type = node[0]
+    dimmensions = node[1]
+    result = ""
+    if paren_if_app:
+        result += "("
+    result += "@["
+    result += image(element_type[key])
+    result += "]"
+    result += "["
+    first = True
+    for dimmension in dimmensions:
+        if not first:
+            result += ", "
+        result += image(dimmension[key])
+        first = False
+    result += "]"
+    if paren_if_app:
+        result += ")"
+    return result
+
+
 def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     """ Image of s2exp_node, either as type or sort. """
     if for_type:
@@ -965,6 +994,8 @@ def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
         result = s2ewthtype_image(node, key_image)
     elif key == "S2Etop":
         result = s2etop_image(node, key_image, paren_if_app)
+    elif key == "S2Etyarr":
+        result = s2etyarr_image(node, key_image, paren_if_app)
     else:
         result = "?"
     return result
