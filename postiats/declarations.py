@@ -737,10 +737,10 @@ def sta_sort_image(node, paren_if_fun=False):
 
 def s2var_image(stamp):
     """ Static variable image. """
-    if stamp in DEFS:
-        den = DEFS["s2var_stamp"][stamp]
-        return den.name + ": " + sort_image(den.sort)
-    return "*ERROR*"
+    den = get_def("s2var_stamp", stamp)
+    if den is None:
+        return "*ERROR*1*"
+    return den.name + ": " + sort_image(den.sort)
 
 
 def s2ecst_image(node, for_type):
@@ -752,7 +752,7 @@ def s2ecst_image(node, for_type):
     stamp = node[0]["s2cst_stamp"]
     den = get_def("s2cst_stamp", stamp)
     if den is None:
-        return "*ERROR*"
+        return "*ERROR*2*"
     if for_type:
         return den.name
     return sort_image(den.sort)
@@ -767,7 +767,7 @@ def s2evar_image(node, for_type):
     stamp = node[0]["s2var_stamp"]
     den = get_def("s2var_stamp", stamp)
     if den is None:
-        return "*ERROR*"
+        return "*ERROR*3*"
     if for_type:
         return den.name
     return sort_image(den.sort)
