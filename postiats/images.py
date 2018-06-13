@@ -356,7 +356,7 @@ def s2ewthtype_image(node, key_image, _paren_if_fun, _paren_if_app):
 # Dispatch table
 # ----------------------------------------------------------------------------
 
-# There four special cases not in this table.
+# There five special cases not in this table.
 
 DISPATCH = {
     "S2Eapp": s2eapp_image,
@@ -383,20 +383,21 @@ def s2e_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     keys = list(node.keys())
     assert len(keys) == 1
     key = keys[0]
-    node = node[key]
+    sub_node = node[key]
 
     if key == "S2Ecst":
-        result = s2ecst_image(node, for_type)
+        result = s2ecst_image(sub_node, for_type)
     elif key == "S2Evar":
-        result = s2evar_image(node, for_type)
+        result = s2evar_image(sub_node, for_type)
     elif key == "S2Eextkind":
-        assert for_type
-        result = node[0]
+        result = sub_node[0] if for_type else "?"
+    elif key == "S2Eextype":
+        result = sub_node[0] if for_type else "?"
     elif key == "S2Eintinf":
-        assert for_type
-        result = node[0]
+        result = sub_node[0] if for_type else "?"
     elif key in DISPATCH:
-        result = DISPATCH[key](node, key_image, paren_if_fun, paren_if_app)
+        method = DISPATCH[key]
+        result = method(sub_node, key_image, paren_if_fun, paren_if_app)
     else:
         result = "?"
     return result
