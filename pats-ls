@@ -5,6 +5,7 @@ import sys
 import os
 
 from postiats import declarations
+from postiats import images
 from postiats import locations
 
 
@@ -53,7 +54,7 @@ def dump(path):
         print("Static constants defined or used:")
         for name in sorted(declarations.STATIC_CONSTANTS.keys()):
             sort = declarations.STATIC_CONSTANTS[name]
-            print("   " + name + ": " + declarations.sort_image(sort))
+            print("   " + name + ": " + images.sort_image(sort))
             first = False
     for value in declarations.DECLARATIONS:
         if not first:
@@ -62,10 +63,10 @@ def dump(path):
         print_loc(value.loc)
         print(LABEL1 % value.name)
         if value.sort:
-            print(LABEL2 % declarations.sta_sort_image(value.sort))
+            print(LABEL2 % images.sort_image(value.sort))
         if value.type:
-            print(LABEL3 % declarations.type_image(value.type))
-            print(LABEL4 % declarations.type_sorts_image(value.type))
+            print(LABEL3 % images.type_image(value.type))
+            print(LABEL4 % images.type_sorts_image(value.type))
         print(LABEL5 % (" ".join(value.construct)))
 
 
