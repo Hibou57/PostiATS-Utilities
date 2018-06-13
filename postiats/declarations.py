@@ -956,6 +956,47 @@ def s2etyarr_image(node, key_image, paren_if_app):
     return result
 
 
+def s2etyrec_image(node, key_image, paren_if_app):
+    """ Image of an S2Etyrec, either as type or sort.
+
+    Type or sort, depending on `key_image`.
+
+    """
+    (key, image) = key_image  # `image` is a function.
+    assert key == "s2exp_node" or key == "s2exp_srt"
+    kind_tag = node[0]
+    flat = True
+    if "TYRECKINDbox" in kind_tag or "TYRECKINDbox_lin" in kind_tag:
+        flat = False
+    labels = node[2]
+    result = ""
+    if paren_if_app:
+        result += "("
+    if flat:
+        result += "@{"
+    else:
+        result += "'{"
+    first = True
+    for label in labels:
+        if not first:
+            result += ", "
+        label = label["SL0ABELED"]
+        label_name = label[0]
+        if "LABint" in label_name:
+            result += str(label_name["LABint"])
+        elif "LABsym" in label_name:
+            result += label_name["LABsym"]
+        else:
+            error("Unknown label name type")
+        result += "="
+        result += image(label[2][key])
+        first = False
+    result += "}"
+    if paren_if_app:
+        result += ")"
+    return result
+
+
 def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     """ Image of s2exp_node, either as type or sort. """
     if for_type:
@@ -996,6 +1037,8 @@ def dyn_image(node, for_type, paren_if_fun=False, paren_if_app=False):
         result = s2etop_image(node, key_image, paren_if_app)
     elif key == "S2Etyarr":
         result = s2etyarr_image(node, key_image, paren_if_app)
+    elif key == "S2Etyrec":
+        result = s2etyrec_image(node, key_image, paren_if_app)
     else:
         result = "?"
     return result
