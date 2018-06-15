@@ -5,6 +5,7 @@ import sys
 from collections import namedtuple
 
 from . import constants as c
+from . import keywords as k
 from . import jsonized
 from . import tags as t
 
@@ -315,13 +316,13 @@ def handle_d2cdatdecs(loc, node):
     construct = ["static", "data"]
     construct_tag = node[0]
     if construct_tag == c.DATATYPE:
-        construct.append("datatype")
+        construct.append(k.DATATYPE)
     elif construct_tag == c.DATAVIEWTYPE:
-        construct.append("dataviewtype")
+        construct.append(k.DATAVIEWTYPE)
     elif construct_tag == c.DATAPROP:
-        construct.append("dataprop")
+        construct.append(k.DATAPROP)
     elif construct_tag == c.DATAVIEW:
-        construct.append("dataview")
+        construct.append(k.DATAVIEW)
     else:
         error("Unknown data construction: %i" % construct_tag)
     for entry in node[1]:
@@ -359,15 +360,15 @@ def handle_d2cdcstdecs(loc, node):
     construct = ["dynamic", "constant"]
     construct_tag = node[1]
     if construct_tag == c.DCKCASTFN:
-        construct.append("castfn")
+        construct.append(k.CASTFN)
     elif construct_tag == c.DCKFUN:
-        construct.append("fun")
+        construct.append(k.FUN)
     elif construct_tag == c.DCKPRAXI:
-        construct.append("praxi")
+        construct.append(k.PRAXI)
     elif construct_tag == c.DCKPRFUN:
-        construct.append("prfun")
+        construct.append(k.PRFUN)
     elif construct_tag == c.DCKVAL:
-        construct.append("val")
+        construct.append(k.VAL)
     else:
         error("Unknown constant construction: %s" % construct_tag)
     for entry in node[2]:
@@ -386,7 +387,7 @@ def handle_d2cexndecs(loc, node):
     # The loc argument is that of the keyword, not of the name, but there
     # is a single name per exception construct.
     construct = ["dynamic", "constructor"]  # Exception is a () -> type.
-    construct.append("exception")
+    construct.append(k.EXCEPTION)
     for item in node[0]:
         stamp_key = t.D2CON_STAMP
         stamp = item[stamp_key]
@@ -419,15 +420,15 @@ def handle_d2cfundecs(_loc, node):
     construct = ["dynamic", "function"]
     construct_tag = node[0]
     if construct_tag == c.FK_FN:
-        construct.append("fn")
+        construct.append(k.FN)
     elif construct_tag == c.FK_FNX:
-        construct.append("fnx")
+        construct.append(k.FNX)
     elif construct_tag == c.FK_FUN:
-        construct.append("fun")
+        construct.append(k.FUN)
     elif construct_tag == c.FK_PRFN:
-        construct.append("prfn")
+        construct.append(k.PRFN)
     elif construct_tag == c.FK_PRFUN:
-        construct.append("prfun")
+        construct.append(k.PRFUN)
     else:
         error("Unknown function construction: %s" % construct_tag)
     for entry in node[2]:
@@ -457,9 +458,9 @@ def handle_d2cimpdec(_loc, node):
     construct = ["dynamic", "implementation"]
     construct_tag = node[0]
     if construct_tag == c.IMPLEMENT:
-        construct.append("implement")
+        construct.append(k.IMPLEMENT)
     elif construct_tag == c.PRIMPLEMENT:
-        construct.append("primplement")
+        construct.append(k.PRIMPLEMENT)
     else:
         error("Unknown implementation construction: %i" % construct_tag)
     stamp_key = t.D2CST_STAMP
@@ -517,7 +518,7 @@ def handle_d2coverload(loc, node):
         pass
     else:
         error("Unknow overload case")
-    construct.append("overload")
+    construct.append(k.OVERLOAD)
     if stamp is not None:
         add_declaration(
             stamp_key=stamp_key,  # Of the overloaded entity.
@@ -537,22 +538,22 @@ def handle_d2cstacsts(loc, node):
     # name, which would be better.
     construct = ["static", "constant"]
     if len(node) == 1:
-        construct.append("stacst")
+        construct.append(k.STACST)
         declarations = node[0]
     else:
         construct_tag = node[0]
         if construct_tag == c.ABSTYPE:
-            construct.append("abstype")
+            construct.append(k.ABSTYPE)
         elif construct_tag == c.ABST0YPE:
-            construct.append("abst@ype")
+            construct.append(k.ABST0YPE)
         elif construct_tag == c.ABSVIEWTYPE:
-            construct.append("absviewtype")
+            construct.append(k.ABSVIEWTYPE)
         elif construct_tag == c.ABSVIEWT0YPE:
-            construct.append("absviewt@ype")
+            construct.append(k.ABSVIEWT0YPE)
         elif construct_tag == c.ABSPROP:
-            construct.append("absprop")
+            construct.append(k.ABSPROP)
         elif construct_tag == c.ABSVIEW:
-            construct.append("absview")
+            construct.append(k.ABSVIEW)
         else:
             error("Unknown static constant construct %i" % construct_tag)
         declarations = node[1]
@@ -579,13 +580,13 @@ def handle_d2cvaldecs(_loc, node):
     construct = ["dynamic", "value"]
     construct_tag = node[0]
     if construct_tag == c.VK_PRVAL:
-        construct.append("prval")
+        construct.append(k.PRVAL)
     elif construct_tag == c.VK_VAL:
-        construct.append("val")
+        construct.append(k.VAL)
     elif construct_tag == c.VK_VAL_NEG:
-        construct.append("val-")
+        construct.append(k.VAL_NEG)
     elif construct_tag == c.VK_VAL_POS:
-        construct.append("val+")
+        construct.append(k.VAL_POS)
     else:
         error("Unknown function construction: %s" % construct)
     for item in node[1]:
@@ -615,7 +616,7 @@ def handle_d2cvardecs(_loc, node):
         sort = None
         type_node = item[t.V2ARDEC_TYPE]
         construct = ["dynamic", "value"]
-        construct.append("var")
+        construct.append(k.VAR)
         if type_node:
             typ = type_node[0][t.S2EXP_NODE]
             sort = type_node[0][t.S2EXP_SRT]
@@ -631,7 +632,7 @@ def handle_d2cvardecs(_loc, node):
             complete_var_def(stamp_key, stamp, sort, typ)
             # For possible later references.
         construct = ["static", "value"]
-        construct.append("var")
+        construct.append(k.VAR)
         stamp_key = t.S2VAR_STAMP
         stamp = item[t.V2ARDEC_SVAR][stamp_key]
         add_declaration(
