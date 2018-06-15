@@ -3,6 +3,7 @@
 import sys
 
 from . import declarations
+from . import tags as t
 
 
 # Helpers
@@ -25,10 +26,10 @@ def error(message):
 def sort_image(node, paren_if_fun=False):
     """ Image of s2xxx_srt and S2RTfun[0][n]. """
     # Node is a {S2RTbas}|{S2RTfun}
-    if "S2RTbas" in node:
-        result = node["S2RTbas"][0]
-    elif "S2RTfun" in node:
-        node = node["S2RTfun"]
+    if t.S2RTBAS in node:
+        result = node[t.S2RTBAS][0]
+    elif t.S2RTFUN in node:
+        node = node[t.S2RTFUN]
         inputs = node[0]
         output = node[1]
         result = ""
@@ -69,7 +70,7 @@ def quantified_exp_image(node, key_image, open_close):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     (opn, close) = open_close  # Two paired characters.
     variables = node[0]
     predicats = node[1]
@@ -79,7 +80,7 @@ def quantified_exp_image(node, key_image, open_close):
     for variable in variables:
         if not first:
             result += "; "
-        result += s2var_image(variable["s2var_stamp"])
+        result += s2var_image(variable[t.S2VAR_STAMP])
         first = False
     if predicats:
         if variables:
@@ -104,7 +105,7 @@ def quantified_exp_image(node, key_image, open_close):
 
 def s2var_image(stamp):
     """ Static variable image. """
-    den = declarations.get_def("s2var_stamp", stamp)
+    den = declarations.get_def(t.S2VAR_STAMP, stamp)
     if den is None:
         return "*ERROR*1*"
     return den.name + ": " + sort_image(den.sort)
@@ -116,8 +117,8 @@ def s2ecst_image(node, for_type):
     Type or sort, depending on `for_type`.
 
     """
-    stamp = node[0]["s2cst_stamp"]
-    den = declarations.get_def("s2cst_stamp", stamp)
+    stamp = node[0][t.S2CST_STAMP]
+    den = declarations.get_def(t.S2CST_STAMP, stamp)
     if den is None:
         return "*ERROR*2*"
     if for_type:
@@ -131,8 +132,8 @@ def s2evar_image(node, for_type):
     Type or sort, depending on `for_type`.
 
     """
-    stamp = node[0]["s2var_stamp"]
-    den = declarations.get_def("s2var_stamp", stamp)
+    stamp = node[0][t.S2VAR_STAMP]
+    den = declarations.get_def(t.S2VAR_STAMP, stamp)
     if den is None:
         return "*ERROR*3*"
     if for_type:
@@ -150,7 +151,7 @@ def s2eapp_image(node, key_image, _paren_if_fun, paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     function = node[0]
     arguments = node[1]
     result = ""
@@ -188,7 +189,7 @@ def s2efun_image(node, key_image, paren_if_fun, _paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     inputs = node[1]
     output = node[2]
     result = ""
@@ -221,7 +222,7 @@ def s2erefarg_image(node, key_image, _paren_if_fun, _paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     passing_style = node[0]
     if passing_style == 0:
         # By value
@@ -241,7 +242,7 @@ def s2etop_image(node, key_image, _paren_if_fun, paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     view_status = node[0]
     if view_status == 0:
         # Uninitialized
@@ -268,7 +269,7 @@ def s2etyarr_image(node, key_image, _paren_if_fun, paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     element_type = node[0]
     dimmensions = node[1]
     result = ""
@@ -297,10 +298,10 @@ def s2etyrec_image(node, key_image, _paren_if_fun, paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     kind_tag = node[0]
     flat = True
-    if "TYRECKINDbox" in kind_tag or "TYRECKINDbox_lin" in kind_tag:
+    if t.TYRECKINDBOX in kind_tag or t.TYRECKINDBOX_LIN in kind_tag:
         flat = False
     labels = node[2]
     result = ""
@@ -314,12 +315,12 @@ def s2etyrec_image(node, key_image, _paren_if_fun, paren_if_app):
     for label in labels:
         if not first:
             result += ", "
-        label = label["SL0ABELED"]
+        label = label[t.SL0ABELED]
         label_name = label[0]
-        if "LABint" in label_name:
-            result += str(label_name["LABint"])
-        elif "LABsym" in label_name:
-            result += label_name["LABsym"]
+        if t.LABINT in label_name:
+            result += str(label_name[t.LABINT])
+        elif t.LABSYM in label_name:
+            result += label_name[t.LABSYM]
         else:
             error("Unknown label name type")
         result += "="
@@ -349,7 +350,7 @@ def s2ewthtype_image(node, key_image, _paren_if_fun, _paren_if_app):
 
     """
     (key, image) = key_image  # `image` is a function.
-    assert key == "s2exp_node" or key == "s2exp_srt"
+    assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     return image(node[0][key])
 
 
@@ -359,15 +360,15 @@ def s2ewthtype_image(node, key_image, _paren_if_fun, _paren_if_app):
 # There five special cases not in this table.
 
 DISPATCH = {
-    "S2Eapp": s2eapp_image,
-    "S2Eexi": s2eexi_image,
-    "S2Efun": s2efun_image,
-    "S2Erefarg": s2erefarg_image,
-    "S2Etop": s2etop_image,
-    "S2Etyarr": s2etyarr_image,
-    "S2Etyrec": s2etyrec_image,
-    "S2Euni": s2euni_image,
-    "S2Ewthtype": s2ewthtype_image}
+    t.S2EAPP: s2eapp_image,
+    t.S2EEXI: s2eexi_image,
+    t.S2EFUN: s2efun_image,
+    t.S2EREFARG: s2erefarg_image,
+    t.S2ETOP: s2etop_image,
+    t.S2ETYARR: s2etyarr_image,
+    t.S2ETYREC: s2etyrec_image,
+    t.S2EUNI: s2euni_image,
+    t.S2EWTHTYPE: s2ewthtype_image}
 
 
 # Main
@@ -376,24 +377,24 @@ DISPATCH = {
 def s2e_image(node, for_type, paren_if_fun=False, paren_if_app=False):
     """ Image of s2exp_node, either as type or sort. """
     if for_type:
-        key_image = ("s2exp_node", type_image)
+        key_image = (t.S2EXP_NODE, type_image)
     else:
-        key_image = ("s2exp_srt", sort_image)
+        key_image = (t.S2EXP_SRT, sort_image)
 
     keys = list(node.keys())
     assert len(keys) == 1
     key = keys[0]
     sub_node = node[key]
 
-    if key == "S2Ecst":
+    if key == t.S2ECST:
         result = s2ecst_image(sub_node, for_type)
-    elif key == "S2Evar":
+    elif key == t.S2EVAR:
         result = s2evar_image(sub_node, for_type)
-    elif key == "S2Eextkind":
+    elif key == t.S2EEXTKIND:
         result = sub_node[0] if for_type else "?"
-    elif key == "S2Eextype":
+    elif key == t.S2EEXTYPE:
         result = sub_node[0] if for_type else "?"
-    elif key == "S2Eintinf":
+    elif key == t.S2EINTINF:
         result = sub_node[0] if for_type else "?"
     elif key in DISPATCH:
         method = DISPATCH[key]

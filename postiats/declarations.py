@@ -5,6 +5,7 @@ import sys
 from collections import namedtuple
 
 from . import jsonized
+from . import tags as t
 
 
 # Data
@@ -30,11 +31,11 @@ Declaration = namedtuple("Declaration", [
 
 
 DEFS = {
-    "d2con_stamp": {},  # From d2conmap.
-    "d2cst_stamp": {},  # From d2cstmap.
-    "d2var_stamp": {},  # From d2varmap.
-    "s2cst_stamp": {},  # From s2cstmap.
-    "s2var_stamp": {}}  # From s2varmap.
+    t.D2CON_STAMP: {},  # From d2conmap.
+    t.D2CST_STAMP: {},  # From d2cstmap.
+    t.D2VAR_STAMP: {},  # From d2varmap.
+    t.S2CST_STAMP: {},  # From s2cstmap.
+    t.S2VAR_STAMP: {}}  # From s2varmap.
 
 BASE_SORTS = set()
 STATIC_CONSTANTS = {}
@@ -83,7 +84,7 @@ def collect_static_constants():
     `DEFS` needs to be populated, although it may still be empty after that.
 
     """
-    for den in DEFS["s2cst_stamp"].values():
+    for den in DEFS[t.S2CST_STAMP].values():
         STATIC_CONSTANTS[den.name] = den.sort
 
 
@@ -142,8 +143,8 @@ def error(message):
 def collect_base_sorts(node):
     """ Fillup `BASE_SORTS`. """
     if isinstance(node, dict):
-        if "S2RTbas" in node:
-            BASE_SORTS.add(node["S2RTbas"][0])
+        if t.S2RTBAS in node:
+            BASE_SORTS.add(node[t.S2RTBAS][0])
         else:
             for sub_node in node.values():
                 collect_base_sorts(sub_node)
@@ -185,37 +186,37 @@ def collect_defs(root_node):
 
     extract_and_add_defs(
         root_node=root_node,
-        section_key="d2conmap",
-        stamp_key="d2con_stamp",
-        name_key="d2con_sym",
+        section_key=t.D2CONMAP,
+        stamp_key=t.D2CON_STAMP,
+        name_key=t.D2CON_SYM,
         type_sort=d2con_type_sort)
 
     extract_and_add_defs(
         root_node=root_node,
-        section_key="d2cstmap",
-        stamp_key="d2cst_stamp",
-        name_key="d2cst_sym",
+        section_key=t.D2CSTMAP,
+        stamp_key=t.D2CST_STAMP,
+        name_key=t.D2CST_SYM,
         type_sort=d2cst_type_sort)
 
     extract_and_add_defs(
         root_node=root_node,
-        section_key="d2varmap",
-        stamp_key="d2var_stamp",
-        name_key="d2var_sym",
+        section_key=t.D2VARMAP,
+        stamp_key=t.D2VAR_STAMP,
+        name_key=t.D2VAR_SYM,
         type_sort=d2var_type_sort)
 
     extract_and_add_defs(
         root_node=root_node,
-        section_key="s2cstmap",
-        stamp_key="s2cst_stamp",
-        name_key="s2cst_sym",
+        section_key=t.S2CSTMAP,
+        stamp_key=t.S2CST_STAMP,
+        name_key=t.S2CST_SYM,
         type_sort=s2cst_type_sort)
 
     extract_and_add_defs(
         root_node=root_node,
-        section_key="s2varmap",
-        stamp_key="s2var_stamp",
-        name_key="s2var_sym",
+        section_key=t.S2VARMAP,
+        stamp_key=t.S2VAR_STAMP,
+        name_key=t.S2VAR_SYM,
         type_sort=s2var_type_sort)
 
 
@@ -224,14 +225,14 @@ def collect_defs(root_node):
 
 def d2con_type_sort(entry):
     """ Sort and type from d2conmap entry."""
-    type_node = entry["d2con_type"]
-    return (type_node["s2exp_node"], type_node["s2exp_srt"], None)
+    type_node = entry[t.D2CON_TYPE]
+    return (type_node[t.S2EXP_NODE], type_node[t.S2EXP_SRT], None)
 
 
 def d2cst_type_sort(entry):
     """ Sort and type from d2cstmap entry."""
-    type_node = entry["d2cst_type"]
-    return (type_node["s2exp_node"], type_node["s2exp_srt"], None)
+    type_node = entry[t.D2CST_TYPE]
+    return (type_node[t.S2EXP_NODE], type_node[t.S2EXP_SRT], None)
 
 
 def d2var_type_sort(_entry):
@@ -243,14 +244,14 @@ def d2var_type_sort(_entry):
 def s2cst_type_sort(entry):
     """ Sort and constructors list from s2cstmap entry."""
     # Static constant has a sort, no a type.
-    cond_cons = entry["s2cst_dconlst"]
+    cond_cons = entry[t.S2CST_DCONLST]
     conss = cond_cons[0] if cond_cons else None
-    return (None, entry["s2cst_srt"], conss)
+    return (None, entry[t.S2CST_SRT], conss)
 
 
 def s2var_type_sort(entry):
     """ Sort from s2varmap entry."""
-    return (None, entry["s2var_srt"], None)
+    return (None, entry[t.S2VAR_SRT], None)
 
 
 # Declarations
@@ -263,14 +264,14 @@ def collect_declarations(root_node):
     """ Collect declarations. """
     # Also used by handle_d2cinclude.
     for entry in root_node:
-        loc = entry["d2ecl_loc"]
-        node = entry["d2ecl_node"]
+        loc = entry[t.D2ECL_LOC]
+        node = entry[t.D2ECL_NODE]
         dispatch_declaration(loc, node)
 
 
 def collect_top_level_declarations(root_node):
     """ Collect declarations. """
-    collect_declarations(root_node["d2eclist"])
+    collect_declarations(root_node[t.D2ECLIST])
 
 
 def dispatch_declaration(loc, wrapper_node):
@@ -291,7 +292,7 @@ def dispatch_declaration(loc, wrapper_node):
 
 def complete_var_def(stamp_key, stamp, sort, typ):
     """ Workaround lack of type information in d2varmap. """
-    assert stamp_key == "d2var_stamp"
+    assert stamp_key == t.D2VAR_STAMP
     den = get_def(stamp_key, stamp)
     assert den is not None
     new_def = Def(
@@ -323,7 +324,7 @@ def handle_d2cdatdecs(loc, node):
     else:
         error("Unknown data construction: %i" % construct_tag)
     for entry in node[1]:
-        stamp_key = "s2cst_stamp"
+        stamp_key = t.S2CST_STAMP
         stamp = entry[stamp_key]
         add_declaration(
             stamp_key=stamp_key,
@@ -338,7 +339,7 @@ def handle_d2cdatdecs(loc, node):
                 construct = construct.copy()
                 construct[0] = "dynamic"  # Constructors not in the static.
                 construct[1] = "constructor"
-                stamp_key = "d2con_stamp"
+                stamp_key = t.D2CON_STAMP
                 for cons in conss:
                     stamp = cons[stamp_key]
                     add_declaration(
@@ -369,7 +370,7 @@ def handle_d2cdcstdecs(loc, node):
     else:
         error("Unknown constant construction: %s" % construct_tag)
     for entry in node[2]:
-        stamp_key = "d2cst_stamp"
+        stamp_key = t.D2CST_STAMP
         stamp = entry[stamp_key]
         add_declaration(
             stamp_key=stamp_key,
@@ -386,7 +387,7 @@ def handle_d2cexndecs(loc, node):
     construct = ["dynamic", "constructor"]  # Exception is a () -> type.
     construct.append("exception")
     for item in node[0]:
-        stamp_key = "d2con_stamp"
+        stamp_key = t.D2CON_STAMP
         stamp = item[stamp_key]
         add_declaration(
             stamp_key=stamp_key,
@@ -429,9 +430,9 @@ def handle_d2cfundecs(_loc, node):
     else:
         error("Unknown function construction: %s" % construct_tag)
     for entry in node[2]:
-        stamp_key = "d2var_stamp"
-        stamp = entry["f2undec_var"][stamp_key]
-        loc = entry["f2undec_loc"]
+        stamp_key = t.D2VAR_STAMP
+        stamp = entry[t.F2UNDEC_VAR][stamp_key]
+        loc = entry[t.F2UNDEC_LOC]
         add_declaration(
             stamp_key=stamp_key,
             stamp=stamp,
@@ -460,10 +461,10 @@ def handle_d2cimpdec(_loc, node):
         construct.append("primplement")
     else:
         error("Unknown implementation construction: %i" % construct_tag)
-    stamp_key = "d2cst_stamp"
-    stamp = node[1]["i2mpdec_cst"][stamp_key]
+    stamp_key = t.D2CST_STAMP
+    stamp = node[1][t.I2MPDEC_CST][stamp_key]
     # The stamp id is the same as that of the extern function declaration.
-    loc = node[1]["i2mpdec_loc"]
+    loc = node[1][t.I2MPDEC_LOC]
     add_declaration(
         stamp_key=stamp_key,
         stamp=stamp,
@@ -505,13 +506,13 @@ def handle_d2coverload(loc, node):
     stamp = None
     name = node[0]
     sub_node = node[2][0]  # There are never many, isn’t it?
-    if "D2ITMcst" in sub_node:
-        stamp_key = "d2cst_stamp"
-        stamp = sub_node["D2ITMcst"][0][stamp_key]
-    elif "D2ITMvar" in sub_node:
-        stamp_key = "d2var_stamp"
-        stamp = sub_node["D2ITMvar"][0][stamp_key]
-    elif "D2ITMignored" in sub_node:
+    if t.D2ITMCST in sub_node:
+        stamp_key = t.D2CST_STAMP
+        stamp = sub_node[t.D2ITMCST][0][stamp_key]
+    elif t.D2ITMVAR in sub_node:
+        stamp_key = t.D2VAR_STAMP
+        stamp = sub_node[t.D2ITMVAR][0][stamp_key]
+    elif t.D2ITMIGNORED in sub_node:
         pass
     else:
         error("Unknow overload case")
@@ -555,7 +556,7 @@ def handle_d2cstacsts(loc, node):
             error("Unknown static constant construct %i" % construct_tag)
         declarations = node[1]
     for declaration in declarations:
-        stamp_key = "s2cst_stamp"
+        stamp_key = t.S2CST_STAMP
         stamp = declaration[stamp_key]
         add_declaration(
             stamp_key=stamp_key,
@@ -587,8 +588,8 @@ def handle_d2cvaldecs(_loc, node):
     else:
         error("Unknown function construction: %s" % construct)
     for item in node[1]:
-        for (loc, var, typ, sort) in p2at_node_p2tvars(item["v2aldec_pat"]):
-            stamp_key = "d2var_stamp"
+        for (loc, var, typ, sort) in p2at_node_p2tvars(item[t.V2ALDEC_PAT]):
+            stamp_key = t.D2VAR_STAMP
             stamp = var[0][stamp_key]
             add_declaration(
                 stamp_key=stamp_key,
@@ -606,17 +607,17 @@ def handle_d2cvaldecs(_loc, node):
 def handle_d2cvardecs(_loc, node):
     """ Handle a D2Cvardecs. """
     for item in node[0]:
-        loc = item["v2ardec_loc"]
-        stamp_key = "d2var_stamp"
-        stamp = item["v2ardec_dvar"][stamp_key]
+        loc = item[t.V2ARDEC_LOC]
+        stamp_key = t.D2VAR_STAMP
+        stamp = item[t.V2ARDEC_DVAR][stamp_key]
         typ = None
         sort = None
-        type_node = item["v2ardec_type"]
+        type_node = item[t.V2ARDEC_TYPE]
         construct = ["dynamic", "value"]
         construct.append("var")
         if type_node:
-            typ = type_node[0]["s2exp_node"]
-            sort = type_node[0]["s2exp_srt"]
+            typ = type_node[0][t.S2EXP_NODE]
+            sort = type_node[0][t.S2EXP_SRT]
         add_declaration(
             stamp_key=stamp_key,
             stamp=stamp,
@@ -630,8 +631,8 @@ def handle_d2cvardecs(_loc, node):
             # For possible later references.
         construct = ["static", "value"]
         construct.append("var")
-        stamp_key = "s2var_stamp"
-        stamp = item["v2ardec_svar"][stamp_key]
+        stamp_key = t.S2VAR_STAMP
+        stamp = item[t.V2ARDEC_SVAR][stamp_key]
         add_declaration(
             stamp_key=stamp_key,
             stamp=stamp,
@@ -644,23 +645,23 @@ def handle_d2cvardecs(_loc, node):
 # ----------------------------------------------------------------------------
 
 DISPATCH_TABLE = {
-    "D2Cdatdecs": handle_d2cdatdecs,
-    "D2Cdcstdecs": handle_d2cdcstdecs,
-    "D2Cexndecs": handle_d2cexndecs,
-    "D2Cextcode": handle_d2cextcode,
-    "D2Cextvar": handle_d2cextvar,
-    "D2Cfundecs": handle_d2cfundecs,
-    "D2Cignored": handle_d2cignored,
-    "D2Cimpdec": handle_d2cimpdec,
-    "D2Cinclude": handle_d2cinclude,
-    "D2Clist": handle_d2clist,
-    "D2Clocal": handle_d2clocal,
-    "D2Cnone": handle_d2cnone,
-    "D2Coverload": handle_d2coverload,
-    "D2Cstacsts": handle_d2cstacsts,
-    "D2Cstaload": handle_d2cstaload,
-    "D2Cvaldecs": handle_d2cvaldecs,
-    "D2Cvardecs": handle_d2cvardecs}
+    t.D2CDATDECS: handle_d2cdatdecs,
+    t.D2CDCSTDECS: handle_d2cdcstdecs,
+    t.D2CEXNDECS: handle_d2cexndecs,
+    t.D2CEXTCODE: handle_d2cextcode,
+    t.D2CEXTVAR: handle_d2cextvar,
+    t.D2CFUNDECS: handle_d2cfundecs,
+    t.D2CIGNORED: handle_d2cignored,
+    t.D2CIMPDEC: handle_d2cimpdec,
+    t.D2CINCLUDE: handle_d2cinclude,
+    t.D2CLIST: handle_d2clist,
+    t.D2CLOCAL: handle_d2clocal,
+    t.D2CNONE: handle_d2cnone,
+    t.D2COVERLOAD: handle_d2coverload,
+    t.D2CSTACSTS: handle_d2cstacsts,
+    t.D2CSTALOAD: handle_d2cstaload,
+    t.D2CVALDECS: handle_d2cvaldecs,
+    t.D2CVARDECS: handle_d2cvardecs}
 
 
 # Inner nodes
@@ -670,23 +671,23 @@ def p2at_node_p2tvars(node, type_sort=None):
     """ Yield variables from pattern. """
     # Node is a {p2at_loc, p2at_node}
     # Passed type_sort is an initial value.
-    loc = node["p2at_loc"]
-    node = node["p2at_node"]
-    if "P2Tann" in node:
+    loc = node[t.P2AT_LOC]
+    node = node[t.P2AT_NODE]
+    if t.P2TANN in node:
         if not type_sort:
-            type_sort = node["P2Tann"][1]
-        yield from p2at_node_p2tvars(node["P2Tann"][0], type_sort)
-    elif "P2Trec" in node:
-        nodes = node["P2Trec"][2]
+            type_sort = node[t.P2TANN][1]
+        yield from p2at_node_p2tvars(node[t.P2TANN][0], type_sort)
+    elif t.P2TREC in node:
+        nodes = node[t.P2TREC][2]
         for item in nodes:
-            yield from p2at_node_p2tvars(item["LABP2ATnorm"][1], type_sort)
-    elif "P2Tvar" in node:
-        node = node["P2Tvar"]
+            yield from p2at_node_p2tvars(item[t.LABP2ATNORM][1], type_sort)
+    elif t.P2TVAR in node:
+        node = node[t.P2TVAR]
         typ = None
         sort = None
         if type_sort:
-            typ = type_sort["s2exp_node"]
-            sort = type_sort["s2exp_srt"]
+            typ = type_sort[t.S2EXP_NODE]
+            sort = type_sort[t.S2EXP_SRT]
         yield (loc, node, typ, sort)
     else:
         # No pattern variables here.
