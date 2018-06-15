@@ -4,6 +4,7 @@ import sys
 
 from collections import namedtuple
 
+from . import constants as c
 from . import jsonized
 from . import tags as t
 
@@ -313,13 +314,13 @@ def handle_d2cdatdecs(loc, node):
     # would be better.
     construct = ["static", "data"]
     construct_tag = node[0]
-    if construct_tag == 0:
+    if construct_tag == c.DATATYPE:
         construct.append("datatype")
-    elif construct_tag == 2:
+    elif construct_tag == c.DATAVIEWTYPE:
         construct.append("dataviewtype")
-    elif construct_tag == 5:
+    elif construct_tag == c.DATAPROP:
         construct.append("dataprop")
-    elif construct_tag == 7:
+    elif construct_tag == c.DATAVIEW:
         construct.append("dataview")
     else:
         error("Unknown data construction: %i" % construct_tag)
@@ -357,15 +358,15 @@ def handle_d2cdcstdecs(loc, node):
     # better.
     construct = ["dynamic", "constant"]
     construct_tag = node[1]
-    if construct_tag == "DCKcastfn":
+    if construct_tag == c.DCKCASTFN:
         construct.append("castfn")
-    elif construct_tag == "DCKfun":
+    elif construct_tag == c.DCKFUN:
         construct.append("fun")
-    elif construct_tag == "DCKpraxi":
+    elif construct_tag == c.DCKPRAXI:
         construct.append("praxi")
-    elif construct_tag == "DCKprfun":
+    elif construct_tag == c.DCKPRFUN:
         construct.append("prfun")
-    elif construct_tag == "DCKval":
+    elif construct_tag == c.DCKVAL:
         construct.append("val")
     else:
         error("Unknown constant construction: %s" % construct_tag)
@@ -417,15 +418,15 @@ def handle_d2cfundecs(_loc, node):
     # passed is ignored.
     construct = ["dynamic", "function"]
     construct_tag = node[0]
-    if construct_tag == "FK_fn":
+    if construct_tag == c.FK_FN:
         construct.append("fn")
-    elif construct_tag == "FK_fnx":
+    elif construct_tag == c.FK_FNX:
         construct.append("fnx")
-    elif construct_tag == "FK_fun":
+    elif construct_tag == c.FK_FUN:
         construct.append("fun")
-    elif construct_tag == "FK_prfn":
+    elif construct_tag == c.FK_PRFN:
         construct.append("prfn")
-    elif construct_tag == "FK_prfun":
+    elif construct_tag == c.FK_PRFUN:
         construct.append("prfun")
     else:
         error("Unknown function construction: %s" % construct_tag)
@@ -455,9 +456,9 @@ def handle_d2cimpdec(_loc, node):
     # ignored.
     construct = ["dynamic", "implementation"]
     construct_tag = node[0]
-    if construct_tag == 1:
+    if construct_tag == c.IMPLEMENT:
         construct.append("implement")
-    elif construct_tag == -1:
+    elif construct_tag == c.PRIMPLEMENT:
         construct.append("primplement")
     else:
         error("Unknown implementation construction: %i" % construct_tag)
@@ -540,17 +541,17 @@ def handle_d2cstacsts(loc, node):
         declarations = node[0]
     else:
         construct_tag = node[0]
-        if construct_tag == 0:
+        if construct_tag == c.ABSTYPE:
             construct.append("abstype")
-        elif construct_tag == 1:
+        elif construct_tag == c.ABST0YPE:
             construct.append("abst@ype")
-        elif construct_tag == 2:
+        elif construct_tag == c.ABSVIEWTYPE:
             construct.append("absviewtype")
-        elif construct_tag == 3:
+        elif construct_tag == c.ABSVIEWT0YPE:
             construct.append("absviewt@ype")
-        elif construct_tag == 5:
+        elif construct_tag == c.ABSPROP:
             construct.append("absprop")
-        elif construct_tag == 7:
+        elif construct_tag == c.ABSVIEW:
             construct.append("absview")
         else:
             error("Unknown static constant construct %i" % construct_tag)
@@ -577,13 +578,13 @@ def handle_d2cvaldecs(_loc, node):
     """ Handle a D2Cvaldecs. """
     construct = ["dynamic", "value"]
     construct_tag = node[0]
-    if construct_tag == "VK_prval":
+    if construct_tag == c.VK_PRVAL:
         construct.append("prval")
-    elif construct_tag == "VK_val":
+    elif construct_tag == c.VK_VAL:
         construct.append("val")
-    elif construct_tag == "VK_val_neg":
+    elif construct_tag == c.VK_VAL_NEG:
         construct.append("val-")
-    elif construct_tag == "VK_val_pos":
+    elif construct_tag == c.VK_VAL_POS:
         construct.append("val+")
     else:
         error("Unknown function construction: %s" % construct)

@@ -2,6 +2,7 @@
 
 import sys
 
+from . import constants as c
 from . import declarations
 from . import tags as t
 
@@ -224,11 +225,9 @@ def s2erefarg_image(node, key_image, _paren_if_fun, _paren_if_app):
     (key, image) = key_image  # `image` is a function.
     assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     passing_style = node[0]
-    if passing_style == 0:
-        # By value
+    if passing_style == c.BY_VALUE:
         prefix = "!"
-    elif passing_style == 1:
-        # By reference
+    elif passing_style == c.BY_REFERENCE:
         prefix = "&"
     else:
         error("Unknown argument passing style: %i" % passing_style)
@@ -244,11 +243,9 @@ def s2etop_image(node, key_image, _paren_if_fun, paren_if_app):
     (key, image) = key_image  # `image` is a function.
     assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     view_status = node[0]
-    if view_status == 0:
-        # Uninitialized
+    if view_status == c.UNINITIALIZED:
         postfix = "?"
-    elif view_status == 1:
-        # Initialized
+    elif view_status == c.INITIALIZED:
         postfix = "?!"
     else:
         error("Unknown view status: %i" % view_status)
