@@ -1,5 +1,7 @@
 """ Special values in JSON. """
 
+NO_PF = -1
+
 # D2Cdatdecs[0]
 DATATYPE = 0
 DATAVIEWTYPE = 2
@@ -37,6 +39,11 @@ VK_PRVAL = "VK_prval"
 VK_VAL = "VK_val"
 VK_VAL_NEG = "VK_val_neg"
 VK_VAL_POS = "VK_val_pos"
+
+# P2Tcon[0]
+PCKCON = "PCKcon"
+PCKFREE = "PCKfree"
+PCKUNFOLD = "PCKunfold"
 
 # S2Erefarg[0]
 BY_VALUE = 0
