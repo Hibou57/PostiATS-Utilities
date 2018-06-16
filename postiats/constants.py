@@ -34,6 +34,10 @@ ABSVIEWT0YPE = 3
 ABSPROP = 5
 ABSVIEW = 7
 
+# DCSTEXTDEFnone[0]
+STATIC = 0
+EXTERN = 1
+
 # D2Cvaldecs[0]
 VK_PRVAL = "VK_prval"
 VK_VAL = "VK_val"
@@ -52,3 +56,7 @@ BY_REFERENCE = 1
 # S2Etop[0]
 UNINITIALIZED = 0
 INITIALIZED = 1
+
+# v2ardec_knd
+VAR = 0
+PTR = 1
