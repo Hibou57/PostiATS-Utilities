@@ -59,7 +59,7 @@ Ex.
 
 ### `pats-whatis`
 
-Tell what you have in the most inner span at a text position, then at the enclosing span, then at the outer enclosing span, and so on. The result is displayed on `stdout`, from inner to most outer span, with source file locations and a readable designation of the ATS2 construct at each span.
+Tells what you have in the most inner span at a text position, then at the enclosing span, then at the outer enclosing span, and so on. The result is displayed on `stdout`, from inner to most outer span, with source file locations and a readable designation of the ATS2 construct at each span.
 
 The utility was started as an attempt to aid reading ATS2 source file. However, although it may be used for that purpose, it lacks details to really aid reading. Still, it’s useful to navigate locally in a source file.
 
