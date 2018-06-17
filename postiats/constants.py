@@ -44,6 +44,10 @@ VK_VAL = "VK_val"
 VK_VAL_NEG = "VK_val_neg"
 VK_VAL_POS = "VK_val_pos"
 
+# funclo_name
+FUNCLOCLO = "FUNCLOclo"
+FUNCLOFUN = "FUNCLOfun"
+
 # P2Tcon[0]
 PCKCON = "PCKcon"
 PCKFREE = "PCKfree"
