@@ -1,6 +1,6 @@
 # PostiATS-Utilities
 
-Messages pretty printer, JSONized files cache, `which`‑like, a `ls`‑like and a `whatis`‑like utilities for ATS/Postiats (the latter may get a better name).
+Messages pretty printer, JSONized files cache, `which`‑like, an `ls`‑like and a `whatis`‑like utilities for ATS/Postiats (the latter may get a better name).
 
 Note this is not part of the official Postiats release and as much the repository name and the package name, use the name “PostiATS”, only to make their purpose clear. The use of this name here, does not imply any recommendation or endorsement.
 
@@ -76,16 +76,16 @@ The following invokation will give the quoted results on `stdout`.
 
 `pats-whatis sample.dats 3 8`:
 
-> sample.dats:3:6: constant (dynamic)
-> sample.dats:3:5: tuple
-> sample.dats:1:1: value declaration(s)
+  * sample.dats:3:6: constant (dynamic)
+  * sample.dats:3:5: tuple
+  * sample.dats:1:1: value declaration(s)
 
 `pats-whatis sample.dats 3 15`:
 
-> sample.dats:3:14: overloaded symbol (dynamic)
-> sample.dats:3:12: function application
-> sample.dats:3:5: tuple
-> sample.dats:1:1: value declaration(s)
+  * sample.dats:3:14: overloaded symbol (dynamic)
+  * sample.dats:3:12: function application
+  * sample.dats:3:5: tuple
+  * sample.dats:1:1: value declaration(s)
 
 Note it includes implicit declarations `patsopt` may produce, like function effect annotation even if there is none is the source, and also note `patsopt` erase or ignore some things, which is also indicated as such. This utility does no syntactic analyses, it relies on JSON data produce by the ATS2 compiler.
 
