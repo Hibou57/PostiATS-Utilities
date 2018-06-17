@@ -1,6 +1,6 @@
 # PostiATS-Utilities
 
-Messages pretty printer, JSONized files cache, `which`‑like and `ls`‑like utilities for ATS/Postiats.
+Messages pretty printer, JSONized files cache, `which`‑like, a `ls`‑like and a `whatis`‑like utilities for ATS/Postiats (the latter may get a better name).
 
 Note this is not part of the official Postiats release and as much the repository name and the package name, use the name “PostiATS”, only to make their purpose clear. The use of this name here, does not imply any recommendation or endorsement.
 
@@ -55,6 +55,43 @@ This utility may be useful as a quick documentation tool to be used from a text 
 Ex.
 
         pats-ls prelude/basics_gen.sats
+
+
+### `pats-whatis`
+
+Tell what you have in the most inner span at a text position, then at the enclosing span, then at the outer enclosing span, and so on. The result is displayed on `stdout`, from inner to most outer span, with source file locations and a readable designation of the ATS2 construct at each span.
+
+The utility was started as an attempt to aid reading ATS2 source file. However, although it may be used for that purpose, it lacks details to really aid reading. Still, it’s useful to navigate locally in a source file.
+
+File names are handled the same way as with `pats-which`. Next to the file name, it takes two additional integer argument, for line and column.
+
+Ex. Suppose you have a `sample.dats` file containing this:
+
+        prval
+          (a, b) =
+            (true, 1 == 1)
+
+
+The following invokation will give the quoted results on `stdout`.
+
+`pats-whatis sample.dats 3 8`:
+
+> sample.dats:3:6: constant (dynamic)
+> sample.dats:3:5: tuple
+> sample.dats:1:1: value declaration(s)
+
+`pats-whatis sample.dats 3 15`:
+
+> sample.dats:3:14: overloaded symbol (dynamic)
+> sample.dats:3:12: function application
+> sample.dats:3:5: tuple
+> sample.dats:1:1: value declaration(s)
+
+Note it includes implicit declarations `patsopt` may produce, like function effect annotation even if there is none is the source, and also note `patsopt` erase or ignore some things, which is also indicated as such. This utility does no syntactic analyses, it relies on JSON data produce by the ATS2 compiler.
+
+It’s obviously more intended to be invoked from an IDE or text editor rather than from the command line. Some IDE or editor, allows to invoke an external program with the current line and column as parameters.
+
+If the first line tells something like “** Unsupported Xyz **”, you can tell about, opening an issue with a short source sample triggering this message, so that I can add support for the designated language construct.
 
 
 ### `pats-which`
