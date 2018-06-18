@@ -239,6 +239,12 @@ def d2ecasehead_locs_nodes(node):
         yield(loc, next_node, key)
 
 
+def d2ederef_loc_node(node):
+    """ Next locs and nodes. """
+    sub_node = node[1]
+    yield from d2exp_loc_node(sub_node)
+
+
 def d2eifhead_locs_nodes(node):
     """ Next locs and nodes. """
     sub_node = node[1]
@@ -332,6 +338,7 @@ LOCS_NODES = {
     t.D2EAPPLST: d2eapplst_locs_nodes,
     t.D2EASSGN: d2eassgn_locs_nodes,
     t.D2ECASEHEAD: d2ecasehead_locs_nodes,
+    t.D2EDEREF: d2ederef_loc_node,
     t.D2EIFHEAD: d2eifhead_locs_nodes,
     t.D2ELAM_DYN: d2elam_dyn_locs_nodes,
     t.D2ELAM_MET: d2elam_met_loc_node,
@@ -395,6 +402,7 @@ LABELS = {
     t.D2EASSGN: "assignment",
     t.D2ECASEHEAD: "case expression (dynamic)",
     t.D2ECST: "constant (dynamic)",
+    t.D2EDEREF: "dereference",
     t.D2EEMPTY: "void",
     t.D2EI0NT: "integer",
     t.D2EIFHEAD: "conditional (dynamic)",
