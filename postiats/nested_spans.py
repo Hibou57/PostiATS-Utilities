@@ -25,6 +25,47 @@ def get_loc(node, key):
     return locations.parse(loc_str)
 
 
+def get_merged_locs(node, key):
+    """ Parsed and merged locs at node. """
+    path = None
+    start_char = 0
+    start_line = 0
+    start_column = 0
+    end_char = 0
+    end_line = 0
+    end_column = 0
+    first = True
+    for item in node:
+        loc_str = item[key]
+        loc = locations.parse(loc_str)
+        if first:
+            path = loc.path
+            start_char = loc.start.char
+            start_line = loc.start.line
+            start_column = loc.start.column
+            end_char = loc.end.char
+            end_line = loc.end.line
+            end_column = loc.end.column
+            first = False
+        elif loc.start.char < start_char:
+            start_char = loc.start.char
+            start_line = loc.start.line
+            start_column = loc.start.column
+        elif loc.end.char > end_char:
+            end_char = loc.end.char
+            end_line = loc.end.line
+            end_column = loc.end.column
+    start = locations.Position(
+        char=start_char,
+        line=start_line,
+        column=start_column)
+    end = locations.Position(
+        char=end_char,
+        line=end_line,
+        column=end_column)
+    return locations.Location(path=path, start=start, end=end)
+
+
 def single_key(node):
     """ Single key of node dict. """
     count = 0
@@ -83,6 +124,12 @@ def d2eclist_locs_nodes(node):
 
 # Specific
 # ============================================================================
+
+def c2lau_pat_locs_nodes(node):
+    """ Next locs and nodes. """
+    for item in node:
+        yield from p2at_loc_node(item)
+
 
 def d2cfundecs_locs_nodes(node):
     """ Next locs and nodes. """
@@ -147,9 +194,13 @@ def d2eapplst_locs_nodes(node):
     sub_node = node[0]
     yield from d2exp_loc_node(sub_node)
     for item in node[1]:
+        # We have no loc, retrieve it from inner nodes.
         key = single_key(item)
-        next_node = item[key]
-        yield (None, next_node, key)
+        assert key in {t.D2EXPARGDYN, t.D2EXPARGSTA}
+        if key == t.D2EXPARGDYN:
+            next_node = item[key]
+            loc = get_merged_locs(next_node[2], t.D2EXP_LOC)
+            yield (loc, next_node, key)
 
 
 def d2eassgn_locs_nodes(node):
@@ -158,6 +209,26 @@ def d2eassgn_locs_nodes(node):
     yield from d2exp_loc_node(sub_node)
     sub_node = node[1]
     yield from d2exp_loc_node(sub_node)
+
+
+def d2ecasehead_locs_nodes(node):
+    """ Next locs and nodes. """
+    sub_node = node[2]
+    for item in sub_node:
+        yield from d2exp_loc_node(item)
+    sub_node = node[3]
+    for item in sub_node:
+        # loc = get_loc(item, t.C2LAU_LOC)
+        # C2LAU_LOC spans both guard and body, one would prevent to match the
+        # other, so locs are retrieved from inner nodes.
+        key = t.C2LAU_BODY
+        next_node = item[key]
+        loc = get_loc(next_node, t.D2EXP_LOC)
+        yield(loc, next_node, key)
+        key = t.C2LAU_PAT
+        next_node = item[key]
+        loc = get_merged_locs(next_node, t.P2AT_LOC)
+        yield(loc, next_node, key)
 
 
 def d2eifhead_locs_nodes(node):
@@ -240,6 +311,8 @@ def v2ardec_init_loc_node(node):
 
 
 LOCS_NODES = {
+    t.C2LAU_BODY: d2exp_loc_node,
+    t.C2LAU_PAT: c2lau_pat_locs_nodes,
     t.D2CFUNDECS: d2cfundecs_locs_nodes,
     t.D2CIMPDEC: d2cimpdec_loc_node,
     t.D2CVALDECS: d2cvaldecs_locs_nodes,
@@ -249,6 +322,7 @@ LOCS_NODES = {
     t.D2EANN_TYPE: d2eann_type_loc_node,
     t.D2EAPPLST: d2eapplst_locs_nodes,
     t.D2EASSGN: d2eassgn_locs_nodes,
+    t.D2ECASEHEAD: d2ecasehead_locs_nodes,
     t.D2EIFHEAD: d2eifhead_locs_nodes,
     t.D2ELAM_DYN: d2elam_dyn_locs_nodes,
     t.D2ELAM_MET: d2elam_met_loc_node,
@@ -282,6 +356,7 @@ LEAFS = {
     t.D2ESYM,
     t.D2EVAR,
     t.P2TANY,
+    t.P2TBOOL,
     t.P2TEMPTY,
     t.P2TVAR,
 }
@@ -291,6 +366,8 @@ LEAFS = {
 # ============================================================================
 
 LABELS = {
+    t.C2LAU_BODY: "matching clause body",
+    t.C2LAU_PAT: "matching clause guard",
     t.D2CDATDECS: "dataxxx declaration(s)",
     t.D2CDCSTDECS: "constant declaration(s) (dynamic)",
     t.D2CEXNDECS: "exception declaration",
@@ -306,6 +383,7 @@ LABELS = {
     t.D2EANN_TYPE: "type annotation",
     t.D2EAPPLST: "function application",
     t.D2EASSGN: "assignment",
+    t.D2ECASEHEAD: "case expression (dynamic)",
     t.D2ECST: "constant (dynamic)",
     t.D2EEMPTY: "void",
     t.D2EI0NT: "integer",
@@ -324,6 +402,7 @@ LABELS = {
     t.I2MPDEC_DEF: "implementation definition",
     t.P2TANN: "pattern element (annotated)",
     t.P2TANY: "wildcard pattern",
+    t.P2TBOOL: "boolean",
     t.P2TEMPTY: "empty pattern",
     t.P2TREC: "pattern record",
     t.P2TVAR: "pattern variable",
@@ -363,19 +442,14 @@ def main(path, line, col):
         declarations.error("Failed to evaluate %s" % path)
     node = root_node["d2eclist"]
     locs_nodes = d2eclist_locs_nodes
-    prev_loc = None
     found = True
     while found and locs_nodes:
         found = False
         for (loc, next_node, key) in locs_nodes(node):
-            if loc is None or in_loc(line, col, loc):
+            if in_loc(line, col, loc):
                 found = True
                 node = next_node
-                if loc:
-                    append(result, loc, key)
-                    prev_loc = loc
-                elif prev_loc:
-                    append(result, prev_loc, key)
+                append(result, loc, key)
                 if key in LOCS_NODES:
                     locs_nodes = LOCS_NODES[key]
                 elif key in LEAFS:
