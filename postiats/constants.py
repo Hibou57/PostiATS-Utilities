@@ -44,6 +44,11 @@ VK_VAL = "VK_val"
 VK_VAL_NEG = "VK_val_neg"
 VK_VAL_POS = "VK_val_pos"
 
+# D2Ecasehead[0]
+CK_CASE = "CK_case"
+CK_CASE_NEG = "CK_case_neg"
+CK_CASE_POS = "CK_case_pos"
+
 # funclo_name
 FUNCLOCLO = "FUNCLOclo"
 FUNCLOFUN = "FUNCLOfun"
