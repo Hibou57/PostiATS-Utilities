@@ -150,6 +150,14 @@ def d2cimpdec_loc_node(node):
     yield (loc, next_node, key)
 
 
+def d2clocal_locs_nodes(node):
+    """ Next locs and nodes. """
+    sub_node = node[0]
+    yield from d2eclist_locs_nodes(sub_node)
+    sub_node = node[1]
+    yield from d2eclist_locs_nodes(sub_node)
+
+
 def d2cvaldecs_locs_nodes(node):
     """ Next locs and nodes. """
     for item in node[1]:
@@ -315,6 +323,7 @@ LOCS_NODES = {
     t.C2LAU_PAT: c2lau_pat_locs_nodes,
     t.D2CFUNDECS: d2cfundecs_locs_nodes,
     t.D2CIMPDEC: d2cimpdec_loc_node,
+    t.D2CLOCAL: d2clocal_locs_nodes,
     t.D2CVALDECS: d2cvaldecs_locs_nodes,
     t.D2CVARDECS: d2cvardecs_locs_nodes,
     t.D2EANN_FUNCLO: d2eann_funclo_loc_node,
@@ -373,6 +382,7 @@ LABELS = {
     t.D2CEXNDECS: "exception declaration",
     t.D2CFUNDECS: "function declaration(s)",
     t.D2CIMPDEC: "impementation declaration",
+    t.D2CLOCAL: "local declaration(s)",
     t.D2CNONE: "erased (by pasopt)",
     t.D2COVERLOAD: "overload definition",
     t.D2CSTACSTS: "absxxx declaration(s)",
