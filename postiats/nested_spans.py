@@ -288,7 +288,15 @@ def d2elet_locs_nodes(node):
 
 def d2elist_locs_nodes(node):
     """ Next locs and nodes. """
-    for item in node[1]:
+    sub_node = node[1]
+    for item in sub_node:
+        yield from d2exp_loc_node(item)
+
+
+def d2eseq_locs_nodes(node):
+    """ Next locs and nodes. """
+    sub_node = node[0]
+    for item in sub_node:
         yield from d2exp_loc_node(item)
 
 
@@ -345,6 +353,7 @@ LOCS_NODES = {
     t.D2ELAM_STA: d2elam_sta_loc_node,
     t.D2ELET: d2elet_locs_nodes,
     t.D2ELIST: d2elist_locs_nodes,
+    t.D2ESEQ: d2eseq_locs_nodes,
     t.D2ESING: d2esing_loc_node,
     t.D2EXPARGDYN: d2expargdyn_locs_nodes,
     t.F2UNDEC_DEF: d2exp_loc_node,
@@ -412,6 +421,7 @@ LABELS = {
     t.D2ELAM_STA: "lambda (static)",
     t.D2ELET: "let expression",
     t.D2ELIST: "tuple",
+    t.D2ESEQ: "sequence of expressions",
     t.D2ESING: "singleton",
     t.D2ESYM: "overloaded symbol (dynamic)",
     t.D2EVAR: "variable (dynamic)",
