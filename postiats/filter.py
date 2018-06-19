@@ -176,7 +176,7 @@ Node = namedtuple("Node", ["token", "kind", "nodes", "end"])
 
 # Constants
 # ----------------------------------------------------------------------------
-KIND = Enum("KIND", "D2S2C3 NAME NAME_ID NUMERIC SYMBOL")
+KIND = Enum("KIND", "D2S2C3 LABEL NAME NAME_ID NUMERIC SYMBOL")
 FOLLOWED_BY = Enum("FOLLOWED_BY", "SEMI_COLON COMMA ARROW END")
 
 
@@ -259,6 +259,23 @@ def parse_name(string):
     return result
 
 
+# ### Label Token
+
+def parse_label(string):
+    """ A name= or None. """
+    result = None
+    string.push()
+    name_part = parse_name(string)
+    if name_part is not None:
+        if string.test_and_consume("="):
+            result = name_part
+    if result is not None:
+        string.unpush()
+    else:
+        string.pop()
+    return result
+
+
 # ### Name$ID Token
 
 def parse_name_id(string):
@@ -317,6 +334,7 @@ def parse_token(string):
 
     result = (
         try_token(parse_d2s2c3_name, KIND.D2S2C3) or
+        try_token(parse_label, KIND.LABEL) or
         try_token(parse_name_id, KIND.NAME_ID) or
         try_token(parse_name, KIND.NAME) or
         try_token(parse_numeric, KIND.NUMERIC) or
@@ -352,7 +370,11 @@ def parse_node(string):
     token_kind = parse_token(string)
     if token_kind is not None:
         (token, kind) = token_kind
-        if string.test_and_consume("("):
+        if kind == KIND.LABEL:
+            nodes = parse_nodes(string)
+            if nodes is not None:
+                end = get_end_kind(string)
+        elif string.test_and_consume("("):
             nodes = parse_nodes(string)
             if nodes is not None and string.test_and_consume(")"):
                 end = get_end_kind(string)
@@ -588,7 +610,11 @@ def node_image(node, level, acc, with_end=True):
     result = acc
     if not simplified_image(node, level, result):
         result.append(Word(node.token, level, WORD_TOKEN))
-        if node.nodes is not None:
+        if node.kind == KIND.LABEL:
+            result.append(Word("=", level, WORD_TOKEN))
+            for subnode in node.nodes:
+                result = node_image(subnode, level, result)
+        elif node.nodes is not None:
             result.append(Word("(", level, WORD_OPEN))
             for subnode in node.nodes:
                 result = node_image(subnode, level + 1, result)
@@ -712,6 +738,8 @@ def d2s2evar_simplified_image(node, level, acc):
 def s2eapp_simplified_image(node, level, acc):
     """ S2Eapp(name|sym; arg1, arg2) --> name(arg1, arg2) | (arg1 sym arg2).
 
+    or S2Eapp(name|sym; arg1, … argn) --> name(arg1, … argn).
+
     """
     result = False
     if node.token == "S2Eapp":
@@ -739,6 +767,22 @@ def s2eapp_simplified_image(node, level, acc):
                     acc += image3
                     acc.append(Word(")", level, WORD_CLOSE))
                 result = True
+        elif node.nodes is not None:
+            node1 = node.nodes[0]
+            if node1.end == FOLLOWED_BY.SEMI_COLON:
+                image1 = node_image(node1, level + 1, [], False)
+                acc += image1
+                acc.append(Word("(", level, WORD_OPEN))
+                first = True
+                for i in range(1, len(node.nodes)):
+                    noden = node.nodes[i]
+                    noden_image = node_image(noden, level + 1, [], False)
+                    if not first:
+                        acc.append(Word(",", level + 1, WORD_SEPARATOR))
+                    acc += noden_image
+                    first = False
+                acc.append(Word(")", level, WORD_CLOSE))
+            result = True
     return result
 
 
@@ -759,6 +803,18 @@ def s2eeqeq_simplified_image(node, level, acc):
                 acc += image2
                 acc.append(Word(")", level, WORD_CLOSE))
                 result = True
+    return result
+
+
+def s2effset_simplified_image(node, level, acc):
+    """ S2EFFset(n) --> n. """
+    result = False
+    if node.token == "S2EFFset":
+        if node.nodes is not None and len(node.nodes) == 1:
+            node1 = node.nodes[0]
+            image1 = node_image(node1, level, [], False)
+            acc += image1
+            result = True
     return result
 
 
@@ -802,13 +858,14 @@ def name_simplified_image(node, level, acc):
 # ----------------------------------------------------------------------------
 
 SIMPLIFIED_IMAGE_METHODS = [
-    s2eintinf_simplified_image,
-    s2ecst_simplified_image,
-    d2s2evar_simplified_image,
-    s2eapp_simplified_image,
-    s2eeqeq_simplified_image,
     c3nstrprop_simplified_image,
     d2esymmac_simplified_image,
+    d2s2evar_simplified_image,
+    s2eapp_simplified_image,
+    s2ecst_simplified_image,
+    s2eeqeq_simplified_image,
+    s2effset_simplified_image,
+    s2eintinf_simplified_image,
     name_simplified_image]
 
 
