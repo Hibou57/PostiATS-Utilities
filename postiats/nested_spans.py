@@ -390,8 +390,13 @@ LEAFS = {
     t.D2EVAR,
     t.P2TANY,
     t.P2TBOOL,
+    t.P2TCHAR,
     t.P2TEMPTY,
+    t.P2TI0NT,
+    t.P2TINTREP,
+    t.P2TSTRING,
     t.P2TVAR,
+    t.P2TVBOX,
 }
 
 
@@ -439,10 +444,15 @@ LABELS = {
     t.P2TANN: "pattern element (annotated)",
     t.P2TANY: "wildcard pattern",
     t.P2TBOOL: "boolean",
+    t.P2TCHAR: "character pattern literal",
     t.P2TCON: "constructor application",
     t.P2TEMPTY: "empty pattern",
+    t.P2TI0NT: "integer pattern literal",
+    t.P2TINTREP: "integer pattern literal",
     t.P2TREC: "pattern record",
+    t.P2TSTRING: "string pattern literal",
     t.P2TVAR: "pattern variable",
+    t.P2TVBOX: "vbox pattern",
     t.V2ARDEC_INIT: "variable initialisation",
 }
 
