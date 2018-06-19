@@ -318,6 +318,13 @@ def p2tann_loc_node(node):
     yield from p2at_loc_node(sub_node)
 
 
+def p2tcon_locs_nodes(node):
+    """ Next locs and nodes. """
+    sub_node = node[5]
+    for item in sub_node:
+        yield from p2at_loc_node(item)
+
+
 def p2trec_locs_nodes(node):
     """ Next locs and nodes. """
     sub_node = node[2]
@@ -359,6 +366,7 @@ LOCS_NODES = {
     t.F2UNDEC_DEF: d2exp_loc_node,
     t.I2MPDEC_DEF: d2exp_loc_node,
     t.P2TANN: p2tann_loc_node,
+    t.P2TCON: p2tcon_locs_nodes,
     t.P2TREC: p2trec_locs_nodes,
     t.V2ARDEC_INIT: v2ardec_init_loc_node,
 }
@@ -431,6 +439,7 @@ LABELS = {
     t.P2TANN: "pattern element (annotated)",
     t.P2TANY: "wildcard pattern",
     t.P2TBOOL: "boolean",
+    t.P2TCON: "constructor application",
     t.P2TEMPTY: "empty pattern",
     t.P2TREC: "pattern record",
     t.P2TVAR: "pattern variable",
