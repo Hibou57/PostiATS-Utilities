@@ -125,11 +125,17 @@ def d2eclist_locs_nodes(node):
 # Specific
 # ============================================================================
 
+# C2LAU
+# ----------------------------------------------------------------------------
+
 def c2lau_pat_locs_nodes(node):
     """ Next locs and nodes. """
     for item in node:
         yield from p2at_loc_node(item)
 
+
+# D2C
+# ----------------------------------------------------------------------------
 
 def d2cfundecs_locs_nodes(node):
     """ Next locs and nodes. """
@@ -178,6 +184,9 @@ def d2cvardecs_locs_nodes(node):
         next_node = item[key]
         yield (loc, next_node, key)
 
+
+# D2E
+# ----------------------------------------------------------------------------
 
 def d2eann_funclo_loc_node(node):
     """ Next locs and nodes. """
@@ -312,6 +321,9 @@ def d2expargdyn_locs_nodes(node):
         yield from d2exp_loc_node(item)
 
 
+# P2T
+# ----------------------------------------------------------------------------
+
 def p2tann_loc_node(node):
     """ Next locs and nodes. """
     sub_node = node[0]
@@ -338,6 +350,11 @@ def v2ardec_init_loc_node(node):
     sub_node = node[0]
     yield from d2exp_loc_node(sub_node)
 
+
+# Dispatch table
+# ----------------------------------------------------------------------------
+
+# Done with P2Txxx
 
 LOCS_NODES = {
     t.C2LAU_BODY: d2exp_loc_node,
@@ -375,6 +392,8 @@ LOCS_NODES = {
 # Leafs (no loc inside)
 # ============================================================================
 
+# Done with P2Txxx
+
 LEAFS = {
     t.D2CDATDECS,
     t.D2CDCSTDECS,
@@ -393,6 +412,7 @@ LEAFS = {
     t.P2TCHAR,
     t.P2TEMPTY,
     t.P2TI0NT,
+    t.P2TIGNORED,
     t.P2TINTREP,
     t.P2TSTRING,
     t.P2TVAR,
@@ -448,6 +468,7 @@ LABELS = {
     t.P2TCON: "constructor application",
     t.P2TEMPTY: "empty pattern",
     t.P2TI0NT: "integer pattern literal",
+    t.P2TIGNORED: "ignored pattern element",
     t.P2TINTREP: "integer pattern literal",
     t.P2TREC: "pattern record",
     t.P2TSTRING: "string pattern literal",
