@@ -782,7 +782,7 @@ def s2eapp_simplified_image(node, level, acc):
                     acc += noden_image
                     first = False
                 acc.append(Word(")", level, WORD_CLOSE))
-            result = True
+                result = True
     return result
 
 
