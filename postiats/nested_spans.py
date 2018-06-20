@@ -434,7 +434,7 @@ LABELS = {
     t.D2CLOCAL: "local declaration(s)",
     t.D2CNONE: "erased (by pasopt)",
     t.D2COVERLOAD: "overload definition",
-    t.D2CSTACSTS: "absxxx declaration(s)",
+    t.D2CSTACSTS: "absxxx/stacst declaration(s)",
     t.D2CVALDECS: "value declaration(s)",
     t.D2CVARDECS: "variable declaration(s)",
     t.D2EANN_FUNCLO: "closure annotation",
