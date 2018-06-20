@@ -49,6 +49,10 @@ CK_CASE = "CK_case"
 CK_CASE_NEG = "CK_case_neg"
 CK_CASE_POS = "CK_case_pos"
 
+# D2Erec[0], D2Etup[0]
+UNBOXED = 0
+BOXED = 1
+
 # funclo_name
 FUNCLOCLO = "FUNCLOclo"
 FUNCLOFUN = "FUNCLOfun"
@@ -69,3 +73,4 @@ INITIALIZED = 1
 # v2ardec_knd
 VAR = 0
 PTR = 1
+
