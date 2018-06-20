@@ -54,6 +54,17 @@ def sort_image(node, paren_if_fun=False):
         result += sort_image(output)
         if paren_if_fun:
             result += ")"
+    elif t.S2RTTUP in node:
+        node = node[t.S2RTTUP]
+        items = node[0]
+        result = "("
+        first = True
+        for item in items:
+            if not first:
+                result += ", "
+            result += sort_image(item)
+            first = False
+        result += ")"
     else:
         error("Unknown sort expression")
     return result
