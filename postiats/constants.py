@@ -2,6 +2,14 @@
 
 NO_PF = -1
 
+# c2lau_neg
+REACHABLE = 0  # =>
+UNREACHABLE = 1  # =/=>
+
+# c2lau_seq
+PARALLEL = 0  # =>
+SEQUENTIAL = 1  # =>>
+
 # D2Cdatdecs[0]
 DATATYPE = 0
 DATAVIEWTYPE = 2
@@ -41,17 +49,17 @@ EXTERN = 1
 # D2Cvaldecs[0]
 VK_PRVAL = "VK_prval"
 VK_VAL = "VK_val"
-VK_VAL_NEG = "VK_val_neg"
-VK_VAL_POS = "VK_val_pos"
+VK_VAL_NEG = "VK_val_neg"  # val-
+VK_VAL_POS = "VK_val_pos"  # val/val+
 
 # D2Ecasehead[0]
 CK_CASE = "CK_case"
-CK_CASE_NEG = "CK_case_neg"
-CK_CASE_POS = "CK_case_pos"
+CK_CASE_NEG = "CK_case_neg"  # case-
+CK_CASE_POS = "CK_case_pos"  # case/case+
 
 # D2Erec[0], D2Etup[0]
-UNBOXED = 0
-BOXED = 1
+UNBOXED = 0  # @(…) / @{…}
+BOXED = 1  # '(…) / '{…} / $tup(…) / $rec{…}
 
 # funclo_name
 FUNCLOCLO = "FUNCLOclo"
@@ -63,8 +71,8 @@ PCKFREE = "PCKfree"
 PCKUNFOLD = "PCKunfold"
 
 # S2Erefarg[0]
-BY_VALUE = 0
-BY_REFERENCE = 1
+BY_VALUE = 0  # !arg
+BY_REFERENCE = 1  # &arg
 
 # S2Etop[0]
 UNINITIALIZED = 0
