@@ -3,12 +3,12 @@
 NO_PF = -1
 
 # c2lau_neg
-REACHABLE = 0  # =>
-UNREACHABLE = 1  # =/=>
+REACHABLE = 0  # => and =>>
+UNREACHABLE = 1  # =/=> and =/=>>
 
 # c2lau_seq
-PARALLEL = 0  # =>
-SEQUENTIAL = 1  # =>>
+PARALLEL = 0  # => and =/=>
+SEQUENTIAL = 1  # =>> and =/=>>
 
 # D2Cdatdecs[0]
 DATATYPE = 0
