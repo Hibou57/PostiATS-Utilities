@@ -128,6 +128,13 @@ def d2eclist_locs_nodes(node):
 # C2LAU
 # ----------------------------------------------------------------------------
 
+def c2lau_gua_locs_nodes(node):
+    """ Next locs and nodes. """
+    for item in node:
+        sub_item = item[t.GM2AT_EXP]
+        yield from d2exp_loc_node(sub_item)
+
+
 def c2lau_pat_locs_nodes(node):
     """ Next locs and nodes. """
     for item in node:
@@ -246,6 +253,10 @@ def d2ecasehead_locs_nodes(node):
         next_node = item[key]
         loc = get_merged_locs(next_node, t.P2AT_LOC)
         yield(loc, next_node, key)
+        key = t.C2LAU_GUA
+        next_node = item[key]
+        loc = get_merged_locs(next_node, t.GM2AT_LOC)
+        yield(loc, next_node, key)
 
 
 def d2ederef_loc_node(node):
@@ -358,6 +369,7 @@ def v2ardec_init_loc_node(node):
 
 LOCS_NODES = {
     t.C2LAU_BODY: d2exp_loc_node,
+    t.C2LAU_GUA: c2lau_gua_locs_nodes,
     t.C2LAU_PAT: c2lau_pat_locs_nodes,
     t.D2CFUNDECS: d2cfundecs_locs_nodes,
     t.D2CIMPDEC: d2cimpdec_loc_node,
@@ -425,7 +437,8 @@ LEAFS = {
 
 LABELS = {
     t.C2LAU_BODY: "matching clause body",
-    t.C2LAU_PAT: "matching clause guard",
+    t.C2LAU_GUA: "case‑clause when‑guard",
+    t.C2LAU_PAT: "case‑clause pattern",
     t.D2CDATDECS: "dataxxx declaration(s)",
     t.D2CDCSTDECS: "constant declaration(s) (dynamic)",
     t.D2CEXNDECS: "exception declaration",
