@@ -459,6 +459,8 @@ def handle_d2cimpdec(_loc, node):
     construct_tag = node[0]
     if construct_tag == c.IMPLEMENT:
         construct.append(k.IMPLEMENT)
+    elif construct_tag == c.IMPLMNT:
+        construct.append(k.IMPLMNT)
     elif construct_tag == c.PRIMPLEMENT:
         construct.append(k.PRIMPLEMENT)
     else:

@@ -32,6 +32,7 @@ FK_PRFUN = "FK_prfun"
 
 # D2Cimpdec[0]
 IMPLEMENT = 1
+IMPLMNT = 0
 PRIMPLEMENT = -1
 
 # D2Cstacsts[0]
