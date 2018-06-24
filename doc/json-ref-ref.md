@@ -84,7 +84,6 @@ which appears directly in the table entries, defines the ID of the table
 entries. When the stamps appears elsewhere, they are to be interpreted as
 references to these table entries.
 
-
 The node name ending with “_loc” has a string value of a special format. You
 probably already since this format for source location in error messages
 from Postiats. There is a module, `postiats/locations.py` in this repository,
@@ -96,3 +95,8 @@ values are listed in the module `postiats/constants.py`.
 
 The dictionary keys appearing in JSON output from Postiats, are also listed
 in `postiats/tags.py`.
+
+The node “/” does not exists in JSON output, it just represents the root node.
+
+Node names like “${abcd}” does not appear in JSON output, there are used
+and defined like macro, since the same appears often at many places.
