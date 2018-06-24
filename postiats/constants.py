@@ -3,12 +3,12 @@
 NO_PF = -1
 
 # c2lau_neg
-REACHABLE = 0  # => and =>>
-UNREACHABLE = 1  # =/=> and =/=>>
+REACHABLE_CLAUSE = 0  # => and =>>
+UNREACHABLE_CLAUSE = 1  # =/=> and =/=>>
 
 # c2lau_seq
-PARALLEL = 0  # => and =/=>
-SEQUENTIAL = 1  # =>> and =/=>>
+PARALLEL_CLAUSE = 0  # => and =/=>
+SEQUENTIAL_CLAUSE = 1  # =>> and =/=>>
 
 # D2Cdatdecs[0]
 DATATYPE = 0
@@ -22,6 +22,10 @@ DCKFUN = "DCKfun"
 DCKPRAXI = "DCKpraxi"
 DCKPRFUN = "DCKprfun"
 DCKVAL = "DCKval"
+
+# D2Cinclude[0]
+INCLUDE_IN_STATIC = 0
+INCLUDE_IN_DYNAMIC = 1
 
 # D2Cfundecs[0]
 FK_FN = "FK_fn"
@@ -43,10 +47,6 @@ ABSVIEWT0YPE = 3
 ABSPROP = 5
 ABSVIEW = 7
 
-# DCSTEXTDEFnone[0]
-STATIC = 0
-EXTERN = 1
-
 # D2Cvaldecs[0]
 VK_PRVAL = "VK_prval"
 VK_VAL = "VK_val"
@@ -58,28 +58,36 @@ CK_CASE = "CK_case"
 CK_CASE_NEG = "CK_case_neg"  # case-
 CK_CASE_POS = "CK_case_pos"  # case/case+
 
-# D2Erec[0], D2Etup[0]
-UNBOXED = 0  # @(…) / @{…}
+# D2Erec[0], D2Etup[0], P2Trec[0]
+FLAT = 0  # @(…) / @{…}
 BOXED = 1  # '(…) / '{…} / $tup(…) / $rec{…}
 
+# DCSTEXTDEFnone[0]
+IMPLIED_STA = 0  # Rarely used, using an explicit "sta#…" is more common.
+EXTERN = 1  # Explicit extern or implied by staload
+
+# funclo_arglst[0]
+CLOREF = -1
+CLOPTR = 1
+
 # funclo_name
-FUNCLOCLO = "FUNCLOclo"
-FUNCLOFUN = "FUNCLOfun"
+FUNCLOCLO = "FUNCLOclo"  # -<cloref>, closure
+FUNCLOFUN = "FUNCLOfun"  # -<fun>, non‑closure
 
 # P2Tcon[0]
-PCKCON = "PCKcon"
-PCKFREE = "PCKfree"
-PCKUNFOLD = "PCKunfold"
+PCKCON = "PCKcon"  # normal constructor
+PCKFREE = "PCKfree"  # freeing, prefixed with a tild sign
+# PCKLINCON = "PCKlincon"  # linear constructor, should not occur in JSON
+PCKUNFOLD = "PCKunfold"  # unfold, prefixed with an at sign
 
 # S2Erefarg[0]
 BY_VALUE = 0  # !arg
 BY_REFERENCE = 1  # &arg
 
 # S2Etop[0]
-UNINITIALIZED = 0
-INITIALIZED = 1
+NO_DATA_PART = 0
+DATA_PART = 1
 
 # v2ardec_knd
 VAR = 0
 PTR = 1
-
