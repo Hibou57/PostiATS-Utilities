@@ -75,6 +75,35 @@ investigations would needed, but I failed to.
 Data was inferred with analyses, testing and some comments ATS2 source.
 
 
+Macro‑like nodes
+------------------------------------------------------------------------------
+
+Node names like “${abcd}” does not appear in JSON output, there are used
+and defined like macro, since the same appears often at many places. As an
+exemple, something like this often occurs in produced JSON data:
+
+        foo:
+           [0]: …
+           [1]:
+              + s2exp_node
+              + s2exp_srt
+           [2]: …
+
+The type of “[1]” was turned into ${s2exp} in “json-ref.txt”, since if occurs
+at multiple place, and it is somewhere defined like this:
+
+        ${s2exp}:
+           + s2ex_node
+           + s2exp_srt
+
+And instead of the former, you will see this:
+
+        foo:
+           [0]: …
+           [1]: ${s2exp}
+           [2]: …
+
+
 More on some nodes
 ------------------------------------------------------------------------------
 
@@ -97,6 +126,3 @@ The dictionary keys appearing in JSON output from Postiats, are also listed
 in `postiats/tags.py`.
 
 The node “/” does not exists in JSON output, it just represents the root node.
-
-Node names like “${abcd}” does not appear in JSON output, there are used
-and defined like macro, since the same appears often at many places.

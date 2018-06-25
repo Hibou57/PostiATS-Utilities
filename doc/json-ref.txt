@@ -91,7 +91,7 @@ D2Cdatdecs: -- dataxxx declaration(s)
 
 D2Cdcstdecs: -- dynamic constant(s) declaration(s)
    [0]: int -- 0/1: "sta#…"/others
-   [1]: str -- "DCKcastfn" | "DCKfun" | "DCKpraxi" | "DCKprfun" | "DCKval"
+   [1]: str -- "DCKcastfn" / "DCKfun" / "DCKpraxi" / "DCKprfun" / "DCKval"
    [2]: [d2cst_stamp] 1…n -- for extern f and g and h …
 
 D2Cexndecs: -- exception declaration
@@ -99,7 +99,7 @@ D2Cexndecs: -- exception declaration
 
 D2Cextcode: -- embeded foreign language
    [0]: int -- 0/1: %{#/others
-   [1]: int -- 0/1/10/99: %{#/%{^/%{/%{$
+   [1]: int -- 0/1/10/99: %{# / %{^/ %{ / %{$
    [2]: str -- source snippet
 
 D2Cextvar: -- external variable assignment
@@ -111,7 +111,7 @@ D2Cextype: -- external variable
    [1]: ${s2exp} -- type
 
 D2Cfundecs: -- function(s) definitions(s)
-   [0]: str -- "FK_fn" | "FK_fnx" | "FK_fun" | "FK_prfn" | "FK_prfun"
+   [0]: str -- "FK_fn" / "FK_fnx" / "FK_fun" / "FK_prfn" / "FK_prfun"
    [1]: {}
    [2]: [
          + f2undec_ann
@@ -176,7 +176,7 @@ D2Cstaload:
    [1]: str -- absolute path
 
 D2Cvaldecs: -- value(s) declaration(s)
-   [0]: VK_prval | VK_val | VK_val_neg | VK_val_pos
+   [0]: str -- VK_prval / VK_val / VK_val_neg / VK_val_pos
    [1]: [
          + v2aldec_ann
          + v2aldec_def
@@ -303,7 +303,7 @@ D2Ec0har: -- character
    [0]: int
 
 D2Ecasehead: -- dynamic case expression
-   [0]: str -- "CK_case" | "CK_case_neg" | "CK_case_pos"
+   [0]: str -- "CK_case" / "CK_case_neg" / "CK_case_pos"
    [1]: {}
    [2]: [${d2exp}] 1…n -- expressions to match, ex. (x, y, …)
    [3]: [
@@ -360,7 +360,7 @@ D2Eintrep: -- integer
 
 D2Elam_dyn: -- dynamic lambda, not always a closure
    [0]: int -- 0/1 non‑linear/linear
-   [1]: int -- nb pf, -1 means 0
+   [1]: int -- nb of proofs, -1 means 0
    [2]: [${p2at}] 0…n -- arguments
    [3]: ${d2exp} -- body
 
@@ -378,12 +378,13 @@ D2Elet: -- let-expression
    [1]: ${d2exp} -- expression in “in … end”
 
 D2Elist: -- expression list
-   [0]: int -- nb pf, -1 means 0
-   [1]: [${d2exp}] 2…n -- D2Eempty instead of D2Elist 0, D2Exxx instead of D2Elist 1
+   [0]: int -- nb of proofs, -1 means 0
+   [1]: [${d2exp}] 2…n -- D2Eempty instead of empty D2Elist,
+                       -- D2Exxx instead of D2Elist with singleton
 
 D2Erec: -- record expression
    [0]: int -- 0/1 unboxed/boxed
-   [1]: int -- nb of pf, -1 means 0
+   [1]: int -- nb of proofs, -1 means 0
    [2]: [DL0ABELED] 1…n -- components
 
 D2Es0tring: -- string literal
@@ -407,7 +408,7 @@ D2Esym: -- overloaded symbol
 
 D2Etup: -- tuple expression
    [0]: int -- 0/1 unboxed/boxed
-   [1]: int -- nb of pf, -1 means 0
+   [1]: int -- nb of proofs, -1 means 0
    [2]: [${d2exp}] 0…n
 
 D2Evar: -- variable
@@ -422,8 +423,8 @@ D2Exchng: -- exchange
    [1]: ${d2exp}
 
 D2EXPARGdyn: -- dynamic argument(s)
-   [0]: int -- nb pf, -1 means 0
-   [1]: str -- loc of the arguments expression, duplicate of an outer d2exp_loc
+   [0]: int -- nb of proofs, -1 means 0
+   [1]: str -- loc of the arguments expression, duplicate of outer d2exp_loc
    [2]: [${d2exp}] 0…n -- arguments
 
 D2EXPARGsta: -- ?
@@ -637,7 +638,7 @@ P2Tcon: -- constructor application
    [1]: d2con_stamp -- constructor
    [2]: {}
    [3]: {}
-   [4]: -1 -- nb of pf, -1 means 0
+   [4]: -1 -- nb of proofs, -1 means 0
    [5]: [${p2at}] 0…n -- constructor arguments (patterns list)
 
 P2Tempty: -- empty pattern
@@ -660,7 +661,7 @@ P2Tintrep: -- pattern integer literal from #define
 
 P2Trec: -- pattern record or tuple
    [0]: int -- 0/1: flat/boxed
-   [1]: int -- nb pf in (pf1, pf2, … | a, b, …) = …, -1 means 0
+   [1]: int -- nb of proofs in (pf1, pf2, … | a, b, …) = …, -1 means 0
    [2]: [LABP2ATnorm] 1…n -- element for val (a, b, c, …) = …
 
 P2Trefas: -- sub‑pattern reference
@@ -767,7 +768,7 @@ S2Eextype: -- external type
    [0]: str -- external type name
 
 S2Efun: -- static function
-   [0]: int -- nb pf in ex. typedef tf = (pf | a) int, -1 means 0
+   [0]: int -- nb of proofs in ex. typedef tf = (pf | a) int, -1 means 0
    [1]: [${s2exp}] 0…n -- arguments, of ${prop-type-view} sort
    [2]: ${s2exp} -- result, of ${prop-type-view} sort
 
@@ -802,13 +803,14 @@ S2Etyrec: -- record type
       | TYRECKINDflt0
       | TYRECKINDflt1
       | TYRECKINDflt_ext
-   [1]: int -- nb of pf, -1 means 0
+   [1]: int -- nb of proofs, -1 means 0
    [2]: [SL0ABELED] 1…n -- labels
 
 S2Euni: -- universal quantification
    [0]: [s2var_stamp] 0…n -- quantified variables
    [1]: [${s2exp}] 0…n -- quantified variables predicats, of bool sort
-   [2]: ${s2exp} -- static formula, of prop, t@ype or type sort, not ${prop-type-view} ?
+   [2]: ${s2exp}  -- static formula, of prop, t@ype or type sort,
+                  -- not of ${prop-type-view} sort ?
 
 S2Evararg: -- type of function arguments of sort `types` (variadic arguments)
    [0]: ${s2exp}
@@ -873,7 +875,7 @@ SL0ABELED -- Record types components
 
 SL0ABELED: -- record type component
    [0]: ${lab} -- component label
-   [1]: [] -- ?
+   [1]: []
    [2]: ${s2exp} -- component type, of ${prop-type-view} sort
 
 
