@@ -104,6 +104,10 @@ And instead of the former, you will see this:
            [2]: …
 
 
+Something similar in done with comments, as indicated in a comment at the top
+of “json-ref.txt”
+
+
 More on some nodes
 ------------------------------------------------------------------------------
 

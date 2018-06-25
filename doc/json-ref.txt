@@ -1,5 +1,12 @@
 -- For explanations, see json-ref-ref.md
 
+-- Note the following mentionned in comments, is to be read as indicated:
+--
+--   * ${type} sort as t@ype, type, viewt@ype or viewtype sort.
+--   * ${type-view} as view or ${type} sort.
+--   * ${prop-type-view} as prop or ${type-view} sort.
+
+
 Root
 ==============================================================================
 
@@ -712,11 +719,6 @@ s2cst_sym:
 S2E -- Static expressions
 ==============================================================================
 
--- Note: here, ${type-or-view} sort mentionned in comments, means
--- t@ype, type, view, viewt@ype or viewtype sort. Similarly, when ${type} sort
--- is mentionned, it means t@ype, type, viewt@ype or viewtype sort. Last,
--- ${prop-type-view} means prop or ${type-or-view} sort.
-
 ${s2exp}: -- static expression
    + s2exp_node
    + s2exp_srt
@@ -750,7 +752,7 @@ S2Eapp: -- static application
    [1]: [${s2exp}] 0…n -- arguments, of any sort
 
 S2Eat: -- at‑view
-   [0]: ${s2exp} -- type, of ${type-or-view} sort
+   [0]: ${s2exp} -- type, of ${type-view} sort
    [1]: ${s2exp} -- location, of addr sort
 
 S2Ecst: -- static constant
@@ -779,11 +781,11 @@ S2Eintinf: -- unbounded integer
    [0]: str -- integer image
 
 S2Einvar: -- ? could not figure “handling type unification”
-   [0]: ${s2exp} -- expression of ${type-or-view} sort
+   [0]: ${s2exp} -- expression of ${type-view} sort
 
 S2Erefarg: -- applied argument passing mode
    [0]: int -- 0/1 by‑value/by‑reference
-   [1]: ${s2exp} -- argument type of ${type-or-view} sort
+   [1]: ${s2exp} -- argument type of ${type-view} sort
 
 S2Esizeof: -- applied sizeof
    [0]: ${s2exp} -- type of t@ype sort
@@ -947,7 +949,7 @@ ${wths2explst}: -- how to summarise this ?
 
 WTHS2EXPLSTcons_invar: -- INV(x)
    [0]: int -- 0/1 by‑value/by‑reference
-   [1]: ${s2exp} -- ${type-or-view} sort
+   [1]: ${s2exp} -- ${type-view} sort
    [2]: ${wths2explst} -- next, like in a cons linked list
 
 WTHS2EXPLSTcons_none:
