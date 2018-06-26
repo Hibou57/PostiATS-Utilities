@@ -398,7 +398,7 @@ D2Elist: -- Expressions list. Not the same as D2Eseq!
                        -- a D2Exxx instead of D2Elist with singleton.
 
 D2Erec: -- Record expression.
-   [0]: int -- 0/1: unboxed/boxed.
+   [0]: int -- 0/1: flat/boxed.
    [1]: int -- Nb of proofs components, -1 means 0.
    [2]: [DL0ABELED] 1…n -- Components.
 
