@@ -127,7 +127,12 @@ The node name ending with “_loc” has a string value of a special format. You
 probably already seen this format for source location in error messages
 from Postiats. There is a module, `postiats/locations.py` in this repository,
 to deal with this format. Note “_loc” information are noticeably missing from
-static expressions. Also note the “_loc” information is sometimes wrong.
+static expressions. The “_loc” information is sometimes wrong. Note there is
+a particular case named “i2mpdec_locid” which coexists along an “i2mpdec_loc”.
+
+In comments, “loc” is used as an abbreviation for “source span location”. The
+abbreviation was choose in reference to the “*_loc” dictionary keys which
+hold them.
 
 Some node has special values to be further interpreted, like integers with
 special meanings. The interpretation is given in comments and these special

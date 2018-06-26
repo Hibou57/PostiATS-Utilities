@@ -32,7 +32,7 @@ c2lau_gua: -- Case-clause when‑guard.
       + gm2at_pat
    ] 0…n -- When e1 and e2 and ….
 
-c2lau_loc: -- Source location.
+c2lau_loc: -- Loc of the clause, excluding the “|” symbol.
    str
 
 c2lau_neg: -- Clause reachability.
@@ -125,7 +125,7 @@ D2Cfundecs: -- Function(s) definitions(s).
    [2]: [
          + f2undec_ann
          + f2undec_def
-         + f2undec_loc -- Loc of all but the keyword.
+         + f2undec_loc
          + f2undec_var
       ] 1…n -- Ex. fun x and y and z ….
 
@@ -216,8 +216,8 @@ ${d2ecl}: -- Declaration.
 d2eclist: -- Declarations list.
    [${d2ecl}] 0…n
 
-d2ecl_loc:
-   str
+d2ecl_loc: -- Loc of the whole declaration, including the keyword which
+   str     -- introduce it.
 
 d2ecl_node: -- Declaration option.
    | D2Cdatdecs
@@ -247,8 +247,9 @@ ${d2exp}: -- Dynamic expression, possibly type annotated.
    + d2exp_loc
    + d2exp_node
 
-d2exp_loc:
-   str
+d2exp_loc: -- Loc of the whole expression. For function body, the function
+   str     -- name is excluded, the quantifier, metrics and arguments tuple
+           -- are included.
 
 d2exp_node: -- Dynamic expression option.
    | D2Eann_funclo
@@ -471,8 +472,8 @@ D2LABind: -- Array‑like field selection, not the same as LABint!
 D2LABlab: -- Named field selection.
    [0]: ${lab}
 
-d2lab_loc:
-   str
+d2lab_loc: -- Loc of the selector “expression”, including the “.” or “->”,
+   str     -- also including the “[” and “]” when there are.
 
 
 D2SYM -- Dynamic symbols
@@ -531,7 +532,8 @@ f2undec_def: -- Function body.
    ${d2exp}
 
 f2undec_loc:
-   str -- Loc of name.
+   str -- Loc of function name and body, excluding the keyword and generic
+       -- arguments.
 
 f2undec_var: -- Function name.
    d2var_stamp -- Reference to corresponding value definition (gives name).
@@ -553,7 +555,7 @@ GM2AT -- Case‑clause guards
 gm2at_exp: -- Case clause guard’s `when` part.
    ${d2exp} -- The `g` in `| p when g => e`
 
-gm2at_loc:
+gm2at_loc: -- Loc of the guard exp and pat, excluding the `when` keyword.
    str
 
 gm2at_pat: Case clause guard’s `as` part. Not the same as P2Trefas!
@@ -572,10 +574,11 @@ i2mpdec_def: -- Implementation definition, does not include generic params.
 i2mpdec_imparg: -- Static variables ?
    {}
 
-i2mpdec_loc:
-   str
+i2mpdec_loc: -- Loc of the function implementation, excluding the keyword and
+   str       -- and the generic parameters, including the name, quantifiers,
+             -- metric, arguments tuple and body.
 
-i2mpdec_locid:
+i2mpdec_locid: -- Loc of the implemented name, including generic arguments.
    str
 
 i2mpdec_tmparg: -- Static arguments ?
@@ -614,7 +617,7 @@ ${p2at}: -- A pattern.
    + p2at_loc
    + p2at_node
 
-p2at_loc:
+p2at_loc: -- Loc of the pattern, including any `as` (alias) part.
    str
 
 p2at_node: -- Pattern option.
@@ -761,7 +764,7 @@ S2Eapp: -- Static application.
 
 S2Eat: -- At‑view expression.
    [0]: ${s2exp} -- Type, of ${type-view} sort.
-   [1]: ${s2exp} -- Location, of addr sort.
+   [1]: ${s2exp} -- Memory address, of addr sort.
 
 S2Ecst: -- Static constant as expression.
    [0]: s2cst_stamp -- Constant name and more (reference to).
@@ -918,7 +921,7 @@ v2aldec_def: -- Value for v2aldec_pat.
    ${d2exp}
 
 v2aldec_loc:
-   str -- Loc of all but the keyword.
+   str -- Loc of all except, the keyword.
 
 v2aldec_pat: -- Variables and possibly their types.
    ${p2at}
@@ -936,7 +939,7 @@ v2ardec_init: -- Variable initialisation expression.
 v2ardec_knd: -- Variable access mode.
    int -- 0/1: var/ptr.
 
-v2ardec_loc: -- Loc of all but the keyword.
+v2ardec_loc: -- Loc of all, except the keyword.
    str
 
 v2ardec_svar: -- Corresponding static `addr` (variable’s address).
