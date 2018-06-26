@@ -10,131 +10,130 @@
 Root
 ==============================================================================
 
-/: -- each item is always present, even if empty (ie. value is an empty list)
+/: -- Each table is always present, even if empty.
    + d2conmap
    + d2cstmap
    + d2varmap
    + s2cstmap
    + s2varmap
-
    + d2eclist
 
 
 C2L -- Case clauses
 ==============================================================================
 
-c2lau_body: -- matching clause body
+c2lau_body: -- Matching clause body.
    ${d2exp}
 
-c2lau_gua: -- case-clause when‑guard
+c2lau_gua: -- Case-clause when‑guard.
    [
       + gm2at_exp
       + gm2at_loc
       + gm2at_pat
-   ] 0…n -- when e1 and e2 and …
+   ] 0…n -- When e1 and e2 and ….
 
-c2lau_loc: -- source location
+c2lau_loc: -- Source location.
    str
 
-c2lau_neg: -- clause reachability
+c2lau_neg: -- Clause reachability.
    int -- 0/1: => / =/=> (or =>> / =/=>>)
 
-c2lau_pat: -- case-clause pattern
-   [${p2at}] 1…n -- matching patterns, ex. (x, y, …)
+c2lau_pat: -- Case-clause pattern.
+   [${p2at}] 1…n -- Matching patterns, ex. (x, y, …).
 
-c2lau_seq: -- clause sequentiality
+c2lau_seq: -- Clause sequentiality.
    int -- 0/1: => / =>> (or =/=> / =/=>>)
 
 
 D2CON -- Dynamic constructors
 ==============================================================================
 
-d2conmap: -- constructors table
+d2conmap: -- Dynamic constructors table.
    [
       + d2con_stamp
       + d2con_sym
       + d2con_type
    ] 0…n
 
-d2con_stamp: -- reference to or id of d2conmap entry
+d2con_stamp: -- Reference to or ID of a d2conmap entry.
    int
 
-d2con_sym: -- constructor name
+d2con_sym: -- Constructor name.
    str
 
-d2con_type: -- constructor type
-   ${s2exp} -- of type sort, a functional type returning something of prop,
+d2con_type: -- Constructor type.
+   ${s2exp} -- Of type sort, a functional type returning something of prop,
             -- type, view or viewtype sort, possibly under universal
-            -- quantification (not existantial quantification)
+            -- quantification (not existantial quantification).
 
 
 D2CST -- Dynamic constants
 ==============================================================================
 
-d2cst_extdef: -- not extern or how it is extern
+d2cst_extdef: -- Not extern or how it is extern.
    | DCSTEXTDEFnone
    | DCSTEXTDEFsome_ext
    | DCSTEXTDEFsome_mac
    | DCSTEXTDEFsome_sta
 
-d2cstmap: -- dynamic constants table
+d2cstmap: -- Dynamic constants table.
    [
       + d2cst_extdef
       + d2cst_stamp
       + d2cst_sym
       + d2cst_type
-   ] 0…n -- ex. an “extern val v:int”
+   ] 0…n -- Ex. an “extern val v:int”.
 
-d2cst_stamp: -- reference to or id of d2cstmap entry
+d2cst_stamp: -- Reference to or ID of a d2cstmap entry.
    int
 
-d2cst_sym: -- constant name
+d2cst_sym: -- Constant name.
    str
 
-d2cst_type: -- dynamic constant “type“ (may be of sort prop)
-   ${s2exp} -- of sort prop, t@ype or type, possibly under quantification.
+d2cst_type: -- Dynamic constant “type“ (may be of sort prop).
+   ${s2exp} -- Of sort prop, t@ype or type, possibly under quantification.
             -- The type expression can be a static variable (S2Evar) ?
 
-D2Cdatdecs: -- dataxxx declaration(s)
-   [0]: int -- 0/2/5/7: datatype/dataviewtype/dataprop/dataview
-   [1]: [s2cst_stamp] 1…n -- for datatype T and U and V …
+D2Cdatdecs: -- DataXXX declaration(s).
+   [0]: int -- 0/2/5/7: datatype/dataviewtype/dataprop/dataview.
+   [1]: [s2cst_stamp] 1…n -- For datatype T and U and V ….
 
-D2Cdcstdecs: -- dynamic constant(s) declaration(s)
+D2Cdcstdecs: -- Dynamic constant(s) declaration(s).
    [0]: int -- 0/1: "sta#…"/others
-   [1]: str -- "DCKcastfn" / "DCKfun" / "DCKpraxi" / "DCKprfun" / "DCKval"
-   [2]: [d2cst_stamp] 1…n -- for extern f and g and h …
+   [1]: str -- "DCKcastfn" / "DCKfun" / "DCKpraxi" / "DCKprfun" / "DCKval".
+   [2]: [d2cst_stamp] 1…n -- For extern f and g and h ….
 
-D2Cexndecs: -- exception declaration
-   [0]: [d2con_stamp] 1…n -- for exception e1 and e2 …
+D2Cexndecs: -- Exception declaration.
+   [0]: [d2con_stamp] 1…n -- For exception e1 and e2 ….
 
-D2Cextcode: -- embeded foreign language
+D2Cextcode: -- Embeded foreign language.
    [0]: int -- 0/1: %{#/others
    [1]: int -- 0/1/10/99: %{# / %{^/ %{ / %{$
-   [2]: str -- source snippet
+   [2]: str -- Source snippet.
 
-D2Cextvar: -- external variable assignment
-   [0]: str -- name
-   [1]: ${d2exp} -- value
+D2Cextvar: -- External variable assignment.
+   [0]: str -- Name.
+   [1]: ${d2exp} -- Value.
 
-D2Cextype: -- external variable
-   [0]: str -- name
-   [1]: ${s2exp} -- type of viewtype sort (only ?)
+D2Cextype: -- External variable.
+   [0]: str -- Name.
+   [1]: ${s2exp} -- Type of viewtype sort (only ?).
 
-D2Cfundecs: -- function(s) definitions(s)
-   [0]: str -- "FK_fn" / "FK_fnx" / "FK_fun" / "FK_prfn" / "FK_prfun"
+D2Cfundecs: -- Function(s) definitions(s).
+   [0]: str -- "FK_fn" / "FK_fnx" / "FK_fun" / "FK_prfn" / "FK_prfun".
    [1]: {}
    [2]: [
          + f2undec_ann
          + f2undec_def
-         + f2undec_loc -- loc of all but the keyword
+         + f2undec_loc -- Loc of all but the keyword.
          + f2undec_var
-      ] 1…n -- ex. fun x and y and z …
+      ] 1…n -- Ex. fun x and y and z ….
 
-D2Cignored: -- ignored by patsopt
+D2Cignored: -- Ignored by patsopt.
    []
 
-D2Cimpdec: -- impementation
-   [0]: int -- -1/0/+1: primplmnt/implmnt/implement
+D2Cimpdec: -- Impementation of an extern or SATS declaration.
+   [0]: int -- -1/0/+1: primplmnt/implmnt/implement.
    [1]:
       + i2mpdec_cst
       + i2mpdec_def
@@ -144,57 +143,59 @@ D2Cimpdec: -- impementation
       + i2mpdec_tmparg
       + i2mpdec_tmpgua
 
-D2Cinclude: -- include
-   [0]: int -- 0/1: from static/from dynamic (include from static or dynamic)
-   [1]: [${d2ecl}] 0…n -- declarations/definitions from included ile
+D2Cinclude: -- Include.
+   [0]: int -- 0/1: from static/from dynamic (include from static or dynamic).
+   [1]: [${d2ecl}] 0…n -- Declarations/definitions from included file.
 
 D2Clist:
-   [0]: [${d2ecl}] 0…n -- declarations/definitions
+   [0]: [${d2ecl}] 0…n -- Declarations/definitions.
 
-D2Clocal: -- local declaration(s)
-   [0]: [${d2ecl}] 0…n -- local … in
-   [1]: [${d2ecl}] 0…n -- in … end
+D2Clocal: -- Local declaration(s).
+   [0]: [${d2ecl}] 0…n -- Local … in.
+   [1]: [${d2ecl}] 0…n -- In … end.
 
-D2Cnone: -- erased by pasopt
+D2Cnone: -- Erased by pasopt.
    []
 
-D2Coverload: -- overload definition
-   [0]: str -- symbol or name
-   [1]: int -- “overload x with y of nnn”, kind of precedence of x
+D2Coverload: -- Overload definition.
+   [0]: str -- Symbol or name.
+   [1]: int -- “overload x with y of nnn”, kind of precedence of x.
    [2]: [
          | D2ITMcst
          | D2ITMignored
          | D2ITMvar
-      ] 0…1 -- empty on error
+      ] 0…1 -- Empty on error.
 
-D2Cstacsts: -- stacst declaration(s)
-   [0]: [s2cst_stamp] 1…n -- stacst, for stacst x and y …
+D2Cstacsts: -- Stacst declaration(s).
+   [0]: [s2cst_stamp] 1…n -- Stacst, for stacst x and y ….
 
-D2Cstacsts: -- absxxx declaration(s)
+D2Cstacsts: -- AbsXXX declaration(s).
    [0]: int
-         -- 0/1/2/3/5/7
-         -- 0: abstype
-         -- 1: abst@ype
-         -- 2: absvtype
-         -- 3: absvt@ype
-         -- 5: absprop
-         -- 7: absview
-   [1]: [s2cst_stamp] 1…n -- absxxx x and y …
+         -- 0/1/2/3/5/7.
+         --
+         --   * 0: abstype;
+         --   * 1: abst@ype;
+         --   * 2: absvtype;
+         --   * 3: absvt@ype;
+         --   * 5: absprop;
+         --   * 7: absview.
+         --
+   [1]: [s2cst_stamp] 1…n -- AbsXXX x and y ….
 
-D2Cstaload:
-   [0]: [str] 0…1 -- str is $prefix
-   [1]: str -- absolute path
+D2Cstaload: -- Staload declaration.
+   [0]: [str] 0…1 -- String for the $prefix.
+   [1]: str -- Absolute path.
 
-D2Cvaldecs: -- value(s) declaration(s)
-   [0]: str -- VK_prval / VK_val / VK_val_neg / VK_val_pos
+D2Cvaldecs: -- Value(s) declaration(s).
+   [0]: str -- "VK_prval" / "VK_val" / "VK_val_neg" / "VK_val_pos".
    [1]: [
          + v2aldec_ann
          + v2aldec_def
          + v2aldec_loc
          + v2aldec_pat
-      ] 1…n -- for val a and b and c …
+      ] 1…n -- For val a and b and c ….
 
-D2Cvardecs: -- variable(s) déclaration(s)
+D2Cvardecs: -- Variable(s) déclaration(s).
    [0]: [
          + v2ardec_dvar
          + v2ardec_init
@@ -202,23 +203,23 @@ D2Cvardecs: -- variable(s) déclaration(s)
          + v2ardec_loc
          + v2ardec_svar
          + v2ardec_type
-      ] 1…n element for var a and b and c …
+      ] 1…n -- Element for var a and b and c ….
 
 
 D2ECL -- Dynamic declarations
 ==============================================================================
 
-${d2ecl}: -- declaration
+${d2ecl}: -- Declaration.
    + d2ecl_loc
    + d2ecl_node
 
-d2eclist:
+d2eclist: -- Declarations list.
    [${d2ecl}] 0…n
 
 d2ecl_loc:
    str
 
-d2ecl_node:
+d2ecl_node: -- Declaration option.
    | D2Cdatdecs
    | D2Cdcstdecs
    | D2Cexndecs
@@ -242,14 +243,14 @@ d2ecl_node:
 D2E -- Dynamic expressions
 ==============================================================================
 
-${d2exp}: -- dynamic expression, possibly type annotated
+${d2exp}: -- Dynamic expression, possibly type annotated.
    + d2exp_loc
    + d2exp_node
 
 d2exp_loc:
    str
 
-d2exp_node:
+d2exp_node: -- Dynamic expression option.
    | D2Eann_funclo
    | D2Eann_seff
    | D2Eann_type
@@ -284,39 +285,39 @@ d2exp_node:
    | D2Ewhere
    | D2Exchng
 
-D2Eann_funclo: -- closure annotation
-   [0]: ${d2exp} -- annotated expression
-   [1]: -- annotation
-      + funclo_arglst -- empty when funclo_name is FUNCLOfun
+D2Eann_funclo: -- Closure annotation.
+   [0]: ${d2exp} -- Annotated expression, a D2Eann_seff.
+   [1]: -- Annotation.
+      + funclo_arglst -- Empty when funclo_name is "FUNCLOfun".
       + funclo_name
 
-D2Eann_seff: -- effect(s) annotation
-   [0]: ${d2exp} -- annotated expression
-   [1]: {} -- should be a ${s2exp} ?
+D2Eann_seff: -- Effect(s) annotation.
+   [0]: ${d2exp} -- Annotated function or lambda body.
+   [1]: {} -- Should be a ${s2exp} ?
 
-D2Eann_type: -- “type” annotated dynamic expression (may be of prop sort)
-   [0]: ${d2exp} -- annotated expression
-   [1]: ${s2exp} -- “type” of ${prop-type-view} sort, possibly under
-                 -- quantification
+D2Eann_type: -- “Type” annotated dynamic expression (may be of prop sort).
+   [0]: ${d2exp} -- Annotated expression.
+   [1]: ${s2exp} -- “Type” of ${prop-type-view} sort, possibly under
+                 -- quantification.
 
-D2Eapplst: -- function application
-   [0]: ${d2exp} -- what is applied
+D2Eapplst: -- Dynamic function application.
+   [0]: ${d2exp} -- What is applied.
    [1]: [
          | D2EXPARGdyn
          | D2EXPARGsta
-      ] 1…n -- arguments
+      ] 1…n -- Arguments.
 
-D2Eassgn: -- assignment
-   [0]: ${d2exp} -- l-value
-   [1]: ${d2exp} -- r-value
+D2Eassgn: -- Assignment.
+   [0]: ${d2exp} -- L-value, ex a D2Ederef, D2Eselab or D2Evar.
+   [1]: ${d2exp} -- R-value.
 
-D2Ec0har: -- character
-   [0]: int
+D2Ec0har: -- Character literal.
+   [0]: int -- Character code, always in 0…255, Postiats is not Unicode aware.
 
-D2Ecasehead: -- dynamic case expression
-   [0]: str -- "CK_case" / "CK_case_neg" / "CK_case_pos"
+D2Ecasehead: -- Dynamic case expression.
+   [0]: str -- "CK_case" / "CK_case_neg" / "CK_case_pos".
    [1]: {}
-   [2]: [${d2exp}] 1…n -- expressions to match, ex. (x, y, …)
+   [2]: [${d2exp}] 1…n -- Expressions to match, ex. (x, y, …).
    [3]: [
          + c2lau_body
          + c2lau_gua
@@ -324,120 +325,121 @@ D2Ecasehead: -- dynamic case expression
          + c2lau_neg
          + c2lau_pat
          + c2lau_seq
-      ] 1…n -- clauses list
+      ] 1…n -- Clauses list.
 
-D2Ecst: -- dynamic constant
+D2Ecst: -- Dynamic constant.
    [0]: d2cst_stamp
 
-D2Ederef: -- dereference
+D2Ederef: -- Dereference.
    [0]: d2sym_sym -- always "!" ?
-   [1]: ${d2exp} -- dereferenced reference expression
+   [1]: ${d2exp} -- Dereferenced reference expression.
 
-D2Eempty: -- void, expression list of zero element
+D2Eempty: -- Void, expression list of zero element.
    []
 
-D2Eextfcall: -- external function call
-   [0]: ${s2exp} -- result type of ${type} sort (never quantified type ?)
-   [1]: str -- external function name
-   [2]: [${d2exp}] 0…n -- arguments
+D2Eextfcall: -- External function call.
+   [0]: ${s2exp} -- Result type of ${type} sort. Never quantified type ?.
+   [1]: str -- External function name.
+   [2]: [${d2exp}] 0…n -- Arguments.
 
-D2Eextmcall: -- external method call
-   [0]: ${s2exp} -- result type of ${type} sort (never quantified type ?)
-   [1]: ${d2exp} -- object
-   [2]: str -- method name
-   [3]: [${d2exp}] 0…n -- arguments
+D2Eextmcall: -- External method call.
+   [0]: ${s2exp} -- Result type of ${type} sort. Never quantified type ?
+   [1]: ${d2exp} -- Object.
+   [2]: str -- Method name.
+   [3]: [${d2exp}] 0…n -- Arguments.
 
-D2Eextval: -- external variable access (read)
-   [0]: ${s2exp} -- variable type of ${type} sort (never quantified type ?)
-   [1]: str -- external variable name or foreigh language literal/exp as text
+D2Eextval: -- External variable read‑access.
+   [0]: ${s2exp} -- Variable type of ${type} sort. Never quantified type ?
+   [1]: str -- External variable name or foreign language expression as text.
 
-D2Ef0loat: -- float/real
-   [0]: str -- ex. "10.0f", "0.0l", "2.0L", "3.1416", "7.", …
+D2Ef0loat: -- Float/real image.
+   [0]: str -- Ex. "10.0f", "0.0l", "2.0L", "3.1416", "7.", ….
 
-D2Ei0nt: -- integer
-   [0]: str -- ex. "0xFFFFU", "1", …
+D2Ei0nt: -- Integer image.
+   [0]: str -- Ex. "0xFFFFU", "1", ….
 
-D2Eifhead: -- dynamic conditional
+D2Eifhead: -- Dynamic conditional (if‑statement).
    [0]: {}
-   [1]: ${d2exp} -- cond
-   [2]: ${d2exp} -- then part
-   [3]: [${d2exp}] 0…1 -- else part
+   [1]: ${d2exp} -- Condition boolean expression.
+   [2]: ${d2exp} -- Then part.
+   [3]: [${d2exp}] 0…1 -- Else part.
 
-D2Eignored: -- ignored by patsopt
+D2Eignored: -- Ignored by patsopt.
    []
 
-D2Eintrep: -- integer
-   [0]: str -- ex. "0x0", "0", "128", …
+D2Eintrep: -- Integer image.
+   [0]: str -- Ex. "0x0", "0", "128", ….
 
-D2Elam_dyn: -- dynamic lambda, not always a closure
-   [0]: int -- 0/1 non‑linear/linear
-   [1]: int -- nb of proofs, -1 means 0
-   [2]: [${p2at}] 0…n -- arguments
-   [3]: ${d2exp} -- body
+D2Elam_dyn: -- Dynamic lambda, not always a closure.
+   [0]: int -- 0/1: non‑linear/linear
+   [1]: int -- Nb of proofs in arguments, -1 means 0.
+   [2]: [${p2at}] 0…n -- Arguments.
+   [3]: ${d2exp} -- Lambda body.
 
-D2Elam_met: -- lambda with termination metric, ex. under a D2Elam_sta
-   [0]: [${s2exp}] 0…n -- metric’s static arguments of a predicative sort ?
-   [1]: ${d2exp} -- abstraction body
+D2Elam_met: -- Lambda with termination metric, ex. under a D2Elam_sta.
+   [0]: [${s2exp}] 0…n -- Metric’s static arguments. Of a predicative sort ?
+   [1]: ${d2exp} -- Lambda body.
 
-D2Elam_sta: -- static lambda, ex. wrapping a function with termination metric
-   [0]: [s2var_stamp] 0…n -- static variables
-   [1]: [${s2exp}] 0…n -- static expressions of sort bool
-   [2]: ${d2exp} -- body, a D2Eann_type, D2Elam_dyn, D2Elam_met or another
-                 -- nested D2Elam_sta
+D2Elam_sta: -- Static lambda, ex. wrapping a function with termination metric.
+   [0]: [s2var_stamp] 0…n -- Static variables.
+   [1]: [${s2exp}] 0…n -- Static expressions of sort bool.
+   [2]: ${d2exp} -- Lambda body, a D2Eann_type, D2Elam_dyn, D2Elam_met or
+                 -- another nested D2Elam_sta.
 
-D2Elet: -- let-expression
-   [0]: [${d2ecl}] 0…n -- declaratuons in “let … in”
-   [1]: ${d2exp} -- expression in “in … end”
+D2Elet: -- Let-expression.
+   [0]: [${d2ecl}] 0…n -- Inner declarations in “let … in”.
+   [1]: ${d2exp} -- Resulting expression in “in … end”.
 
-D2Elist: -- expression list
-   [0]: int -- nb of proofs, -1 means 0
-   [1]: [${d2exp}] 2…n -- D2Eempty instead of empty D2Elist,
-                       -- D2Exxx instead of D2Elist with singleton
+D2Elist: -- Expressions list. Not the same as D2Eseq!
+   [0]: int -- Nb of proofs in expressions list, -1 means 0.
+   [1]: [${d2exp}] 2…n -- Expressions list. At least two expressions. There
+                       -- will be a D2Eempty instead of empty D2Elist, and
+                       -- a D2Exxx instead of D2Elist with singleton.
 
-D2Erec: -- record expression
-   [0]: int -- 0/1 unboxed/boxed
-   [1]: int -- nb of proofs, -1 means 0
-   [2]: [DL0ABELED] 1…n -- components
+D2Erec: -- Record expression.
+   [0]: int -- 0/1: unboxed/boxed.
+   [1]: int -- Nb of proofs components, -1 means 0.
+   [2]: [DL0ABELED] 1…n -- Components.
 
-D2Es0tring: -- string literal
+D2Es0tring: -- String literal.
    [0]: str
 
-D2Eselab: -- field selection
-   [0]: ${d2exp} -- entity to which field selection is applied
+D2Eselab: -- Field selection.
+   [0]: ${d2exp} -- What field selection is applied to. May be overloaded ?
    [1]: [
          + d2lab_loc
          + d2lab_node
-      ] 1…n -- path elements, for e.x.y. …
+      ] 1…n -- Field path elements, ex. e.x.y. ….
 
-D2Eseq: -- sequence of expressions, like (x; y; z; …)
-   [0]: [${d2exp}] 2…n
+D2Eseq: -- Expressions sequence, like (x; y; z; …). Not the same as D2Elist!
+   [0]: [${d2exp}] 2…n -- A sequence takes at least two expressions.
 
-D2Esing: -- singleton, expression list of one element
+D2Esing: -- Singleton, ie. an expression list or tuple of one element.
    [0]: ${d2exp}
 
-D2Esym: -- overloaded symbol
+D2Esym: -- Overloaded symbol.
    [0]: d2sym_sym
 
-D2Etup: -- tuple expression
-   [0]: int -- 0/1 unboxed/boxed
-   [1]: int -- nb of proofs, -1 means 0
-   [2]: [${d2exp}] 0…n
+D2Etup: -- Tuple expression.
+   [0]: int -- 0/1: unboxed/boxed.
+   [1]: int -- Nb of proofs components, -1 means 0.
+   [2]: [${d2exp}] 0…n -- May be empty!
 
-D2Evar: -- variable
+D2Evar: -- Dynamic variable.
    [0]: d2var_stamp
 
-D2Ewhere: -- where-expression
-   [0]: ${d2exp}
-   [1]: [${d2ecl}] 1…n
+D2Ewhere: -- Where-expression.
+   [0]: ${d2exp} -- Resulting expression.
+   [1]: [${d2ecl}] 0…n -- Inner declarations. May be empty!
 
-D2Exchng: -- exchange
-   [0]: ${d2exp}
-   [1]: ${d2exp}
+D2Exchng: -- Exchange operator, like `a :=: b`
+   [0]: ${d2exp} -- An R and L‑value, ex. a D2Evar.
+   [1]: ${d2exp} -- An R and L‑value, ex. a D2Evar.
 
-D2EXPARGdyn: -- dynamic argument(s)
-   [0]: int -- nb of proofs, -1 means 0
-   [1]: str -- loc of the arguments expression, duplicate of outer d2exp_loc
-   [2]: [${d2exp}] 0…n -- arguments
+D2EXPARGdyn: -- Dynamic argument(s).
+   [0]: int -- Nb of proofs arguments, -1 means 0
+   [1]: str -- Loc of the arguments expression, duplicate of outer d2exp_loc.
+   [2]: [${d2exp}] 0…n -- Arguments.
 
 D2EXPARGsta: -- ?
    []
@@ -446,37 +448,37 @@ D2EXPARGsta: -- ?
 D2ITM -- Dynamic overloading
 ==============================================================================
 
-D2ITMcst: -- overloading with dynamic constant (d2cst)
+D2ITMcst: -- Overloading with dynamic constant (d2cst).
    [0]: d2cst_stamp
 
-D2ITMignored: -- ignored by patsopt
+D2ITMignored: -- Ignored by patsopt.
    []
 
-D2ITMvar: -- overloading with dynamic variable (d2var)
+D2ITMvar: -- Overloading with dynamic variable (d2var).
    [0]: d2var_stamp
 
 
 D2LAB -- Dynamic component selectors
 ==============================================================================
 
-d2lab_node: -- field selector path element
+d2lab_node: -- Field selector path element.
    | D2LABind
    | D2LABlab
 
-D2LABind: -- array‑like field selection, not the same as LABint!
-   [0]: [${d2exp}] 1…n -- indexes list
+D2LABind: -- Array‑like field selection, not the same as LABint!
+   [0]: [${d2exp}] 1…n -- Indexes list, ex in “[1, 2, 3]”.
 
-D2LABlab: -- named field selection
+D2LABlab: -- Named field selection.
    [0]: ${lab}
 
 d2lab_loc:
    str
 
 
-d2sym_sym -- Dynamic symbols
+D2SYM -- Dynamic symbols
 ==============================================================================
 
-d2sym_sym: -- a dynamic symbol
+d2sym_sym: -- Dynamic symbol name.
    str
 
 
@@ -491,7 +493,7 @@ d2varmap: [
 d2var_stamp:
    int
 
-d2var_sym:
+d2var_sym: -- Dynamic variable name.
    str
 
 
@@ -499,75 +501,75 @@ DCSTEXTDEF -- Dynamic extern constants
 ==============================================================================
 
 DCSTEXTDEFnone:
-   [0]: int -- 0/1: static (implied "sta#") / extern (implied in SATS)
+   [0]: int -- 0/1: static (implicit "sta#") / extern (implicit in SATS).
 
-DCSTEXTDEFsome_ext: -- "ext#…", extern C function/entity
+DCSTEXTDEFsome_ext: -- "ext#…", extern C function/entity.
    [0]: str -- name
 
-DCSTEXTDEFsome_mac: -- "mac#…", extern C macro
+DCSTEXTDEFsome_mac: -- "mac#…", extern C macro.
    [0]: str -- name
 
-DCSTEXTDEFsome_sta: -- "sta#…", extern C static function/entity
+DCSTEXTDEFsome_sta: -- "sta#…", extern C static function/entity.
    [0]: str -- name
 
 
 DL0ABELED -- Record literal components
 ==============================================================================
 
-DL0ABELED: -- record literal component
-   [0]: ${lab} -- component label
-   [1]: ${d2exp} -- component value
+DL0ABELED: -- Record literal component.
+   [0]: ${lab} -- Component label.
+   [1]: ${d2exp} -- Component value.
 
 
 F2UN -- Function definitions
 ==============================================================================
 
-f2undec_ann: -- `withtype` annotation
-   [${s2exp}] 0…1 -- type annotation, of type sort
+f2undec_ann: -- `withtype` annotation.
+   [${s2exp}] 0…1 -- Type annotation, of type sort.
 
-f2undec_def: -- function body expression
+f2undec_def: -- Function body.
    ${d2exp}
 
 f2undec_loc:
-   str -- loc of name
+   str -- Loc of name.
 
-f2undec_var: -- function name
+f2undec_var: -- Function name.
    d2var_stamp
 
 
 FUNCLO -- Closures
 ==============================================================================
 
-funclo_arglst: -- closure kind
-   [int] 0…1 -- -1/+1 cloref/cloptr, not a closure if empty
+funclo_arglst: -- Closure kind.
+   [int] 0…1 -- -1/+1: cloref/cloptr, not a closure if empty.
 
-funclo_name: -- function kind
-   str -- "FUNCLOclo" / "FUNCLOfun": closure / non‑closure
+funclo_name: -- Function kind.
+   str -- "FUNCLOclo" / "FUNCLOfun": closure / non‑closure.
 
 
 GM2AT -- Case‑clause guards
 ==============================================================================
 
-gm2at_exp: -- where expression part
-   ${d2exp}
+gm2at_exp: -- Case clause guard’s `when` part.
+   ${d2exp} -- The `g` in `| p when g => e`
 
 gm2at_loc:
    str
 
-gm2at_pat: where “as” pattern part
-   [${p2at}] 0…1
+gm2at_pat: Case clause guard’s `as` part. Not the same as P2Trefas!
+   [${p2at}] 0…1 -- The `p2` in `| p1 when g as p2 => e`
 
 
 I2MPDEC -- Implementations
 ==============================================================================
 
-i2mpdec_cst: -- name of the implemented extern
+i2mpdec_cst: -- Name of the implemented extern.
    d2cst_stamp
 
-i2mpdec_def: -- implementation definition, does not include generic params
+i2mpdec_def: -- Implementation definition, does not include generic params.
    ${d2exp}
 
-i2mpdec_imparg: -- static variables ?
+i2mpdec_imparg: -- Static variables ?
    {}
 
 i2mpdec_loc:
@@ -576,46 +578,46 @@ i2mpdec_loc:
 i2mpdec_locid:
    str
 
-i2mpdec_tmparg: -- static arguments ?
+i2mpdec_tmparg: -- Static arguments ?
    {}
 
-i2mpdec_tmpgua: -- static guards ?
+i2mpdec_tmpgua: -- Static guards ?
    {}
 
 
 LAB -- Record labels
 ==============================================================================
 
-${lab}: -- label
+${lab}: -- Label.
    | LABint
    | LABsym
 
-LABint: -- integer as record label, not the same as D2LABind!
+LABint: -- Integer as record label, not the same as D2LABind!
    int
 
-LABsym: -- name as record label
+LABsym: -- Name as record label, the most common.
    str
 
 
-LABP2AT -- Pattern for record elements (records in patterns)
+LABP2AT -- Pattern for record components (records in patterns)
 ==============================================================================
 
-LABP2ATnorm: -- pattern for record element
-   [0]: ${lab}
-   [1]: ${p2at}
+LABP2ATnorm: -- Pattern for record component.
+   [0]: ${lab} -- Record component selection.
+   [1]: ${p2at} -- The pattern to match with the record component.
 
 
 P2AT -- Patterns
 ==============================================================================
 
-${p2at}: -- pattern
+${p2at}: -- A pattern.
    + p2at_loc
    + p2at_node
 
 p2at_loc:
    str
 
-p2at_node:
+p2at_node: -- Pattern option.
    | P2Tann
    | P2Tany
    | P2Tbool
@@ -632,72 +634,73 @@ p2at_node:
    | P2Tvar
    | P2Tvbox
 
-P2Tann: -- annotated pattern element
-   [0]: ${p2at} -- element
-   [1]: ${s2exp} -- type annotation, of ${prop-type-view} sort
+P2Tann: -- Annotated pattern expression.
+   [0]: ${p2at} -- Pattern expression.
+   [1]: ${s2exp} -- Type annotation, of ${prop-type-view} sort.
 
-P2Tany: -- wildcard pattern
+P2Tany: -- Wildcard pattern.
    []
 
-P2Tbool: -- pattern boolean literal
-   [0]: bool -- boolean literal
+P2Tbool: -- Boolean literal pattern.
+   [0]: bool -- Boolean literal.
 
-P2Tchar: -- pattern character literal
-   [0]: int
+P2Tchar: -- Character literal pattern.
+   [0]: int -- Character code in 0…255 (Postiats is not Unicode aware).
 
-P2Tcon: -- constructor application
-   [0]: str -- "PCKcon" / "PCKfree" / "PCKunfold": C(…) / ~C(…) / @C(…)
-   [1]: d2con_stamp -- constructor
+P2Tcon: -- Constructor application pattern.
+   [0]: str -- "PCKcon" / "PCKfree" / "PCKunfold": `C(…)` / `~C(…)` / `@C(…)`.
+   [1]: d2con_stamp -- Constructor.
    [2]: {}
    [3]: {}
-   [4]: -1 -- nb of proofs, -1 means 0
-   [5]: [${p2at}] 0…n -- constructor arguments (patterns list)
+   [4]: -1 -- Nb of proofs in constructor arguments, -1 means 0
+   [5]: [${p2at}] 0…n -- Constructor arguments (sub‑patterns list).
 
-P2Tempty: -- empty pattern
+P2Tempty: -- Empty/void pattern.
    []
 
-P2Tf0loat: -- pattern float literal
-   [0]: str -- float image
+P2Tf0loat: -- Float literal pattern. Unsigned! Not the same as P2Tfloat.
+   [0]: str -- Float image.
 
-P2Tfloat: -- pattern float literal from #define
-   [0]: str -- float image
+P2Tfloat: -- Float literal “#defined”, pattern. May be signed.
+   [0]: str -- Float image.
 
-P2Ti0nt: -- pattern integer literal
-   [0]: str -- int image
+P2Ti0nt: -- Natural number pattern. Unsigned! Note the same as P2Tintrep.
+   [0]: str -- Natural number image.
 
-P2Tignored: -- ignored pattern element
+P2Tignored: -- Pattern ignored by patsopt.
    []
 
-P2Tintrep: -- pattern integer literal from #define
-   [0]: str -- int image
+P2Tintrep: -- Integer literal “#defined”, pattern. May be signed.
+   [0]: str -- Integer image.
 
-P2Trec: -- pattern record or tuple
-   [0]: int -- 0/1: flat/boxed
-   [1]: int -- nb of proofs in (pf1, pf2, … | a, b, …) = …, -1 means 0
-   [2]: [LABP2ATnorm] 1…n -- element for val (a, b, c, …) = …
+P2Trec: -- Record or tuple pattern.
+   [0]: int -- 0/1: flat/boxed.
+   [1]: int -- Nb of proofs in the tuple or record, -1 means 0
+   [2]: [LABP2ATnorm] 0…n -- Tuple/record components patterns. May be empty!
 
-P2Trefas: -- sub‑pattern reference
-   [0]: d2var_stamp -- pattern alias name
-   [1]: ${p2at} -- pattern
+P2Trefas: -- Sub‑pattern reference. Not the same as gm2at_pat!
+   [0]: d2var_stamp -- Pattern alias name.
+   [1]: ${p2at} -- Aliased pattern.
 
-P2Tstring: -- pattern string literal
-   [0]: str
+P2Tstring: -- String literal pattern.
+   [0]: str -- Reminder: Postiats is not Unicode aware.
 
-P2Tvar: -- pattern variable
+P2Tvar: -- Pattern variable.
    [0]: d2var_stamp
 
-P2Tvbox: -- vbox pattern
+P2Tvbox: -- `vbox` pattern.
    [0]: d2var_stamp
 
 
 S2CST -- Static constants
 ==============================================================================
 
-s2cst_dconlst: -- type’s constructors list
-   [ [d2con_stamp] 1…n ] 0…1
+s2cst_dconlst: -- A dataXXX list is the static constant is.
+   [ [d2con_stamp] 1…n ] 0…1 -- Nothing (none) when it’s ex. an absXXX.
+   -- Note this is a list (1…n) wrapped in an optional list (0…1)!
 
 s2cst_extdef:
-   [str] 0…1 -- name of $extype
+   [str] 0…1 -- Name of $extype if it is one.
 
 s2cstmap: [
       + s2cst_dconlst
@@ -708,7 +711,7 @@ s2cstmap: [
       + s2cst_sym
    ] 0…n
 
-s2cst_srt:
+s2cst_srt: -- Static constant sort.
    ${s2rt}
 
 s2cst_stamp:
@@ -717,18 +720,18 @@ s2cst_stamp:
 s2cst_supcls: -- ?
    []
 
-s2cst_sym:
+s2cst_sym: -- Static constant name.
    str
 
 
 S2E -- Static expressions
 ==============================================================================
 
-${s2exp}: -- static expression, often a type expression
+${s2exp}: -- Static expression (often a type expression).
    + s2exp_node
    + s2exp_srt
 
-s2exp_node:
+s2exp_node: -- Static expression option.
    | S2Eapp
    | S2Eat
    | S2Ecst
@@ -749,85 +752,85 @@ s2exp_node:
    | S2Evar
    | S2Ewthtype
 
-s2exp_srt: -- expression sort, often type sort
+s2exp_srt: -- Static expression sort (often t@ype or type sort).
    ${s2rt}
 
-S2Eapp: -- static application
-   [0]: ${s2exp} -- applied expression, of functional sort
-   [1]: [${s2exp}] 0…n -- arguments, of any sort
+S2Eapp: -- Static application.
+   [0]: ${s2exp} -- Applied expression, of functional sort.
+   [1]: [${s2exp}] 0…n -- Arguments, of any sort.
 
-S2Eat: -- at‑view
-   [0]: ${s2exp} -- type, of ${type-view} sort
-   [1]: ${s2exp} -- location, of addr sort
+S2Eat: -- At‑view expression.
+   [0]: ${s2exp} -- Type, of ${type-view} sort.
+   [1]: ${s2exp} -- Location, of addr sort.
 
-S2Ecst: -- static constant
+S2Ecst: -- Static constant as expression.
    [0]: s2cst_stamp
 
-S2Eexi: -- existential quantification
-   [0]: [s2var_stamp] 0…n -- quantified variables
-   [1]: [${s2exp}] 0…n -- quantified variables predicats, of bool sort
-   [2]: ${s2exp} -- static formula, of ${prop-type-view} sort
+S2Eexi: -- Existential quantification.
+   [0]: [s2var_stamp] 0…n -- Quantified variables.
+   [1]: [${s2exp}] 0…n -- Quantified variables predicats, of bool sort.
+   [2]: ${s2exp} -- Static formula, of ${prop-type-view} sort.
 
-S2Eextkind: -- external tkind
-   [0]: str -- external tkind name
+S2Eextkind: -- External tkind.
+   [0]: str -- External tkind name.
 
-S2Eextype: -- external type
-   [0]: str -- external type name
+S2Eextype: -- External type.
+   [0]: str -- External type name.
 
-S2Efun: -- static function
-   [0]: int -- nb of proofs in ex. typedef tf = (pf | a) int, -1 means 0
-   [1]: [${s2exp}] 0…n -- arguments, of ${prop-type-view} sort
-   [2]: ${s2exp} -- result, of ${prop-type-view} sort
+S2Efun: -- Static function.
+   [0]: int -- Nb of proofs in ex. `typedef tf = (pf | a) int`, -1 means 0.
+   [1]: [${s2exp}] 0…n -- Arguments, of any sort.
+   [2]: ${s2exp} -- Result, of any sort.
 
-S2Eignored: -- ignore by patsopt
+S2Eignored: -- Ignored by patsopt.
    []
 
-S2Eintinf: -- unbounded integer
-   [0]: str -- integer image
+S2Eintinf: -- Unbounded natural number.
+   [0]: str -- Natual number image.
 
-S2Einvar: -- ? could not figure “handling type unification”
-   [0]: ${s2exp} -- expression of ${type-view} sort
+S2Einvar: -- ? Could not figure “handling type unification”.
+   [0]: ${s2exp} -- Expression of ${type-view} sort.
 
-S2Erefarg: -- applied argument passing mode
-   [0]: int -- 0/1 by‑value/by‑reference
-   [1]: ${s2exp} -- argument type of ${type-view} sort
+S2Erefarg: -- Applied argument passing mode.
+   [0]: int -- 0/1 by‑value/by‑reference.
+   [1]: ${s2exp} -- Argument type of ${type-view} sort.
 
-S2Esizeof: -- applied sizeof
-   [0]: ${s2exp} -- type of t@ype sort
+S2Esizeof: -- Applied `sizeof`.
+   [0]: ${s2exp} -- Type of `t@ype` sort.
 
-S2Etop: -- applied data part mode
-   [0]: int -- 0/1 no-data-part/data-part-only, alias topization/typization
-   [1]: ${s2exp} -- type of ${type} sort
+S2Etop: -- Applied data part mode.
+   [0]: int -- 0/1 no-data-part/data-part-only, alias topization/typization.
+   [1]: ${s2exp} -- Type of ${type} sort.
 
-S2Etyarr: -- array type
-   [0]: ${s2exp} -- element type, of ${type} sort
-   [1]: [${s2exp}] 0…n -- dimmensions, of int sort
+S2Etyarr: -- Array type expression.
+   [0]: ${s2exp} -- Element type, of ${type} sort.
+   [1]: [${s2exp}] 0…n -- Dimmensions, of `int` sort.
 
-S2Etyrec: -- record type
-   [0]: -- kind (boxed or flat)
+S2Etyrec: -- Record type expression.
+   [0]: -- Kind (about boxed or flat).
       | TYRECKINDbox
       | TYRECKINDbox_lin
       | TYRECKINDflt0
       | TYRECKINDflt1
       | TYRECKINDflt_ext
-   [1]: int -- nb of proofs, -1 means 0
-   [2]: [SL0ABELED] 1…n -- labels
+   [1]: int -- Nb of proofs components, -1 means 0.
+   [2]: [SL0ABELED] 1…n -- Labels.
 
-S2Euni: -- universal quantification
-   [0]: [s2var_stamp] 0…n -- quantified variables
-   [1]: [${s2exp}] 0…n -- quantified variables predicats, of bool sort
-   [2]: ${s2exp}  -- static formula, of prop, t@ype or type sort,
-                  -- not of ${prop-type-view} sort ?
+S2Euni: -- Universal quantification.
+   [0]: [s2var_stamp] 0…n -- Quantified variables.
+   [1]: [${s2exp}] 0…n -- Quantified variables predicats, of bool sort.
+   [2]: ${s2exp}  -- Static formula, of `prop`, `t@ype` or `type` sort.
+                  -- Not of ${prop-type-view} sort ?
 
-S2Evararg: -- type of function arguments of sort `types` (variadic arguments)
-   [0]: ${s2exp}
+S2Evararg: -- Type of function arguments of sort `types` (variadic arguments).
+   [0]: ${s2exp} -- Type expression of `types` sort.
 
-S2Evar: -- static variable
+S2Evar: -- Static variable.
    [0]: s2var_stamp
 
-S2Ewthtype: -- internally generated return type annotations involving proofs
-   [0]: ${s2exp} -- returned type, of ${prop-type-view} sort
-   [1]: -- internal representation, can be ignored when documenting
+S2Ewthtype: -- Internally generated return type annotations involving proofs.
+   [0]: ${s2exp} -- Returned type, of ${prop-type-view} sort.
+   [1]: -- internal Representation, can be ignored when documenting.
       | WTHS2EXPLSTcons_invar
       | WTHS2EXPLSTcons_none
       | WTHS2EXPLSTcons_trans
@@ -837,131 +840,131 @@ S2Ewthtype: -- internally generated return type annotations involving proofs
 S2RT -- Sorts
 ==============================================================================
 
-${s2rt}: -- sort expression
+${s2rt}: -- Sort expression option.
    | S2RTbas
    | S2RTerr
    | S2RTfun
    | S2RTtup
 
-S2RTbas: -- sort name (not necessarily basic)
+S2RTbas: -- Sort name. Not necessarily a base sort!
    [0]: str
 
-S2RTerr: -- subsituted for errors by patsopt
+S2RTerr: -- Subsituted for errors by patsopt, not a real sort expression.
    []
 
-S2RTfun: -- functional sort
-   [0]: [${s2rt}] 0…n -- arguments sorts
-   [1]: ${s2rt} -- returned sort
+S2RTfun: -- Functional sort.
+   [0]: [${s2rt}] 0…n -- Arguments sorts.
+   [1]: ${s2rt} -- Returned sort.
 
-S2RTtup: -- tuple sort (there is no label with this)
-   [0]: [${s2rt}] 0…n -- elements sorts
+S2RTtup: -- Tuple sort (there is no label with static tuples).
+   [0]: [${s2rt}] 0…n -- Components sorts.
 
 
 S2VAR -- Static variables
 ==============================================================================
 
-s2varmap: -- static variables table
+s2varmap: -- Static variables table.
    [
       + s2var_srt
       + s2var_stamp
       + s2var_sym
    ] 0…n
 
-s2var_srt: -- static variable sort
+s2var_srt: -- Static variable sort.
    ${s2rt}
 
 s2var_stamp:
    int
 
-s2var_sym: -- static variable name
+s2var_sym: -- Static variable name.
    str
 
 
 SL0ABELED -- Record types components
 ==============================================================================
 
-SL0ABELED: -- record type component
-   [0]: ${lab} -- component label
+SL0ABELED: -- Record type component.
+   [0]: ${lab} -- Component label.
    [1]: []
-   [2]: ${s2exp} -- component type, of ${prop-type-view} sort
+   [2]: ${s2exp} -- Component type, of ${prop-type-view} sort.
 
 
 TYRECKIND -- Record kinds
 ==============================================================================
 
-TYRECKINDbox: -- boxed
+TYRECKINDbox: -- Boxed.
    []
 
-TYRECKINDbox_lin: -- linear boxed ?
+TYRECKINDbox_lin: -- Linear boxed ?
    []
 
-TYRECKINDflt_ext: -- flat external struct
-   [0]: str -- external struct name
+TYRECKINDflt_ext: -- Flat external struct.
+   [0]: str -- External struct name.
 
-TYRECKINDflt0: -- flat
+TYRECKINDflt0: -- Flat.
    []
 
-TYRECKINDflt1: -- flat ?
+TYRECKINDflt1: -- What variation of flat ?
    [0]: ?
 
 
 V2ALDEC -- Values
 ==============================================================================
 
-v2aldec_ann: -- should be the val withtype annotation, always missing ?
+v2aldec_ann: -- Should be the `val` `withtype` annotation: always missing ?
    {}
 
-v2aldec_def: -- value for v2aldec_pat
+v2aldec_def: -- Value for v2aldec_pat.
    ${d2exp}
 
 v2aldec_loc:
-   str -- loc of all but the keyword
+   str -- Loc of all but the keyword.
 
-v2aldec_pat: -- variables and possibly their types
+v2aldec_pat: -- Variables and possibly their types.
    ${p2at}
 
 
-V2ARDEC -- Variables
+V2ARDEC -- Variables (`var`, not `val`!)
 ==============================================================================
 
-v2ardec_dvar: -- variable name
+v2ardec_dvar: -- Variable name.
    d2var_stamp
 
-v2ardec_init: -- variable initialisation
+v2ardec_init: -- Variable initialisation expression.
    [0]: ${d2exp}
 
-v2ardec_knd: -- access mode
-   int -- 0/1: var/ptr
+v2ardec_knd: -- Variable access mode.
+   int -- 0/1: var/ptr.
 
-v2ardec_loc: -- loc of all but the keyword
+v2ardec_loc: -- Loc of all but the keyword.
    str
 
-v2ardec_svar: -- corresponding addr
+v2ardec_svar: -- Corresponding static `addr` (variable’s address).
    s2var_stamp
 
-v2ardec_type: -- variable type
-   [${s2exp}] 0…1 -- 1 when type annotated
+v2ardec_type: -- Variable type.
+   [${s2exp}] 0…1 -- Option available when type annotated.
 
 
 WTHS2EXPLST
 ==============================================================================
 
-${wths2explst}: -- how to summarise this ?
+${wths2explst}: -- How to summarise this ?
    | WTHS2EXPLSTcons_invar
    | WTHS2EXPLSTcons_none
    | WTHS2EXPLSTcons_trans
    | WTHS2EXPLSTnil
 
-WTHS2EXPLSTcons_invar: -- INV(x)
-   [0]: int -- 0/1 by‑value/by‑reference
+WTHS2EXPLSTcons_invar: -- `INV(x)`
+   [0]: int -- 0/1 by‑value/by‑reference.
    [1]: ${s2exp} -- ${type-view} sort
-   [2]: ${wths2explst} -- next, like in a cons linked list
+   [2]: ${wths2explst} -- Next, like in a “cons” linked list.
 
 WTHS2EXPLSTcons_none:
    [0]: ${wths2explst}
 
-WTHS2EXPLSTcons_trans: -- assignment, x := y
-   [0]: int -- 0/1 by‑value/by‑reference
+WTHS2EXPLSTcons_trans: -- Assignment, x := y.
+   [0]: int -- 0/1 by‑value/by‑reference.
    [1]: ${s2exp}
    [2]: ${wths2explst}
 
