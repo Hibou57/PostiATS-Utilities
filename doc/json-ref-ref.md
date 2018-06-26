@@ -120,7 +120,8 @@ references to these table entries.
 The node name ending with “_loc” has a string value of a special format. You
 probably already since this format for source location in error messages
 from Postiats. There is a module, `postiats/locations.py` in this repository,
-to deal with this format.
+to deal with this format. Note “_loc” information are noticeably missing from
+static expressions. Also note the “_loc” information is sometimes wrong.
 
 Some node has special value to be further interpreted, like integers with
 special meanings. The interpretation is given in comments and these special

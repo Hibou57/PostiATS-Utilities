@@ -63,7 +63,9 @@ d2con_sym: -- constructor name
    str
 
 d2con_type: -- constructor type
-   ${s2exp}
+   ${s2exp} -- of type sort, a functional type returning something of prop,
+            -- type, view or viewtype sort, possibly under universal
+            -- quantification (not existantial quantification)
 
 
 D2CST -- Dynamic constants
@@ -75,13 +77,13 @@ d2cst_extdef: -- not extern or how it is extern
    | DCSTEXTDEFsome_mac
    | DCSTEXTDEFsome_sta
 
-d2cstmap: -- constants table
+d2cstmap: -- dynamic constants table
    [
       + d2cst_extdef
       + d2cst_stamp
       + d2cst_sym
       + d2cst_type
-   ] 0…n
+   ] 0…n -- ex. an “extern val v:int”
 
 d2cst_stamp: -- reference to or id of d2cstmap entry
    int
@@ -89,8 +91,9 @@ d2cst_stamp: -- reference to or id of d2cstmap entry
 d2cst_sym: -- constant name
    str
 
-d2cst_type: -- constant type
-   ${s2exp}
+d2cst_type: -- dynamic constant “type“ (may be of sort prop)
+   ${s2exp} -- of sort prop, t@ype or type, possibly under quantification.
+            -- The type expression can be a static variable (S2Evar) ?
 
 D2Cdatdecs: -- dataxxx declaration(s)
    [0]: int -- 0/2/5/7: datatype/dataviewtype/dataprop/dataview
@@ -115,7 +118,7 @@ D2Cextvar: -- external variable assignment
 
 D2Cextype: -- external variable
    [0]: str -- name
-   [1]: ${s2exp} -- type
+   [1]: ${s2exp} -- type of viewtype sort (only ?)
 
 D2Cfundecs: -- function(s) definitions(s)
    [0]: str -- "FK_fn" / "FK_fnx" / "FK_fun" / "FK_prfn" / "FK_prfun"
@@ -239,7 +242,7 @@ d2ecl_node:
 D2E -- Dynamic expressions
 ==============================================================================
 
-${d2exp}: -- dynamic expression
+${d2exp}: -- dynamic expression, possibly type annotated
    + d2exp_loc
    + d2exp_node
 
@@ -289,11 +292,12 @@ D2Eann_funclo: -- closure annotation
 
 D2Eann_seff: -- effect(s) annotation
    [0]: ${d2exp} -- annotated expression
-   [1]: {}
+   [1]: {} -- should be a ${s2exp} ?
 
-D2Eann_type: -- type annotation
+D2Eann_type: -- “type” annotated dynamic expression (may be of prop sort)
    [0]: ${d2exp} -- annotated expression
-   [1]: ${s2exp} -- annotation
+   [1]: ${s2exp} -- “type” of ${prop-type-view} sort, possibly under
+                 -- quantification
 
 D2Eapplst: -- function application
    [0]: ${d2exp} -- what is applied
@@ -333,18 +337,18 @@ D2Eempty: -- void, expression list of zero element
    []
 
 D2Eextfcall: -- external function call
-   [0]: ${s2exp} -- result type
+   [0]: ${s2exp} -- result type of ${type} sort (never quantified type ?)
    [1]: str -- external function name
-   [2]: [${d2exp}] 0…n -- argumens
+   [2]: [${d2exp}] 0…n -- arguments
 
 D2Eextmcall: -- external method call
-   [0]: ${s2exp} -- result type
+   [0]: ${s2exp} -- result type of ${type} sort (never quantified type ?)
    [1]: ${d2exp} -- object
    [2]: str -- method name
    [3]: [${d2exp}] 0…n -- arguments
 
 D2Eextval: -- external variable access (read)
-   [0]: ${s2exp} -- variable type
+   [0]: ${s2exp} -- variable type of ${type} sort (never quantified type ?)
    [1]: str -- external variable name or foreigh language literal/exp as text
 
 D2Ef0loat: -- float/real
@@ -371,14 +375,15 @@ D2Elam_dyn: -- dynamic lambda, not always a closure
    [2]: [${p2at}] 0…n -- arguments
    [3]: ${d2exp} -- body
 
-D2Elam_met: -- lambda with termination metric
-   [0]: [${s2exp}] 0…n
-   [1]: ${d2exp} -- body
+D2Elam_met: -- lambda with termination metric, ex. under a D2Elam_sta
+   [0]: [${s2exp}] 0…n -- metric’s static arguments of a predicative sort ?
+   [1]: ${d2exp} -- abstraction body
 
-D2Elam_sta: -- static lambda
-   [0]: [s2var_stamp] 0…n
-   [1]: [${s2exp}] 0…n
-   [2]: ${d2exp} -- body
+D2Elam_sta: -- static lambda, ex. wrapping a function with termination metric
+   [0]: [s2var_stamp] 0…n -- static variables
+   [1]: [${s2exp}] 0…n -- static expressions of sort bool
+   [2]: ${d2exp} -- body, a D2Eann_type, D2Elam_dyn, D2Elam_met or another
+                 -- nested D2Elam_sta
 
 D2Elet: -- let-expression
    [0]: [${d2ecl}] 0…n -- declaratuons in “let … in”
@@ -518,7 +523,7 @@ F2UN -- Function definitions
 ==============================================================================
 
 f2undec_ann: -- `withtype` annotation
-   [${s2exp}] 0…1 -- type annotation
+   [${s2exp}] 0…1 -- type annotation, of type sort
 
 f2undec_def: -- function body expression
    ${d2exp}
@@ -629,7 +634,7 @@ p2at_node:
 
 P2Tann: -- annotated pattern element
    [0]: ${p2at} -- element
-   [1]: ${s2exp} -- type annotation
+   [1]: ${s2exp} -- type annotation, of ${prop-type-view} sort
 
 P2Tany: -- wildcard pattern
    []
@@ -719,7 +724,7 @@ s2cst_sym:
 S2E -- Static expressions
 ==============================================================================
 
-${s2exp}: -- static expression
+${s2exp}: -- static expression, often a type expression
    + s2exp_node
    + s2exp_srt
 
