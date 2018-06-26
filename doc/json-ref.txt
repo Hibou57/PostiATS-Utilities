@@ -339,7 +339,7 @@ D2Eempty: -- Void, expression list of zero element.
    []
 
 D2Eextfcall: -- External function call.
-   [0]: ${s2exp} -- Result type of ${type} sort. Never quantified type ?.
+   [0]: ${s2exp} -- Result type of ${type} sort. Never quantified type ?
    [1]: str -- External function name.
    [2]: [${d2exp}] 0…n -- Arguments.
 
