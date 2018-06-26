@@ -328,7 +328,7 @@ D2Ecasehead: -- Dynamic case expression.
       ] 1…n -- Clauses list.
 
 D2Ecst: -- Dynamic constant.
-   [0]: d2cst_stamp
+   [0]: d2cst_stamp -- Reference to dynamic constant definition.
 
 D2Ederef: -- Dereference.
    [0]: d2sym_sym -- always "!" ?
@@ -382,7 +382,7 @@ D2Elam_met: -- Lambda with termination metric, ex. under a D2Elam_sta.
 
 D2Elam_sta: -- Static lambda, ex. wrapping a function with termination metric.
    [0]: [s2var_stamp] 0…n -- Static variables.
-   [1]: [${s2exp}] 0…n -- Static expressions of sort bool.
+   [1]: [${s2exp}] 0…n -- Static expressions of bool sort.
    [2]: ${d2exp} -- Lambda body, a D2Eann_type, D2Elam_dyn, D2Elam_met or
                  -- another nested D2Elam_sta.
 
@@ -426,7 +426,7 @@ D2Etup: -- Tuple expression.
    [2]: [${d2exp}] 0…n -- May be empty!
 
 D2Evar: -- Dynamic variable.
-   [0]: d2var_stamp
+   [0]: d2var_stamp -- Variable name (reference to).
 
 D2Ewhere: -- Where-expression.
    [0]: ${d2exp} -- Resulting expression.
@@ -449,13 +449,13 @@ D2ITM -- Dynamic overloading
 ==============================================================================
 
 D2ITMcst: -- Overloading with dynamic constant (d2cst).
-   [0]: d2cst_stamp
+   [0]: d2cst_stamp -- Overloaded constant definition (reference to).
 
 D2ITMignored: -- Ignored by patsopt.
    []
 
 D2ITMvar: -- Overloading with dynamic variable (d2var).
-   [0]: d2var_stamp
+   [0]: d2var_stamp -- Overloaded variable name (reference to).
 
 
 D2LAB -- Dynamic component selectors
@@ -490,7 +490,7 @@ d2varmap: [
       + d2var_sym
    ] 0…n
 
-d2var_stamp:
+d2var_stamp: -- Reference to or ID of a d2varmap entry.
    int
 
 d2var_sym: -- Dynamic variable name.
@@ -534,7 +534,7 @@ f2undec_loc:
    str -- Loc of name.
 
 f2undec_var: -- Function name.
-   d2var_stamp
+   d2var_stamp -- Reference to corresponding value definition (gives name).
 
 
 FUNCLO -- Closures
@@ -564,7 +564,7 @@ I2MPDEC -- Implementations
 ==============================================================================
 
 i2mpdec_cst: -- Name of the implemented extern.
-   d2cst_stamp
+   d2cst_stamp -- Corresponding constant definition (reference to).
 
 i2mpdec_def: -- Implementation definition, does not include generic params.
    ${d2exp}
@@ -649,7 +649,7 @@ P2Tchar: -- Character literal pattern.
 
 P2Tcon: -- Constructor application pattern.
    [0]: str -- "PCKcon" / "PCKfree" / "PCKunfold": `C(…)` / `~C(…)` / `@C(…)`.
-   [1]: d2con_stamp -- Constructor.
+   [1]: d2con_stamp -- Reference to constructor definition (name and type).
    [2]: {}
    [3]: {}
    [4]: -1 -- Nb of proofs in constructor arguments, -1 means 0
@@ -679,17 +679,17 @@ P2Trec: -- Record or tuple pattern.
    [2]: [LABP2ATnorm] 0…n -- Tuple/record components patterns. May be empty!
 
 P2Trefas: -- Sub‑pattern reference. Not the same as gm2at_pat!
-   [0]: d2var_stamp -- Pattern alias name.
+   [0]: d2var_stamp -- Pattern alias name (reference to).
    [1]: ${p2at} -- Aliased pattern.
 
 P2Tstring: -- String literal pattern.
    [0]: str -- Reminder: Postiats is not Unicode aware.
 
 P2Tvar: -- Pattern variable.
-   [0]: d2var_stamp
+   [0]: d2var_stamp -- Variable name (reference to).
 
 P2Tvbox: -- `vbox` pattern.
-   [0]: d2var_stamp
+   [0]: d2var_stamp -- Proof variable name (reference to).
 
 
 S2CST -- Static constants
@@ -714,7 +714,7 @@ s2cstmap: [
 s2cst_srt: -- Static constant sort.
    ${s2rt}
 
-s2cst_stamp:
+s2cst_stamp: -- Reference to or ID of a s2cstmap entry.
    int
 
 s2cst_supcls: -- ?
@@ -764,7 +764,7 @@ S2Eat: -- At‑view expression.
    [1]: ${s2exp} -- Location, of addr sort.
 
 S2Ecst: -- Static constant as expression.
-   [0]: s2cst_stamp
+   [0]: s2cst_stamp -- Constant name and more (reference to).
 
 S2Eexi: -- Existential quantification.
    [0]: [s2var_stamp] 0…n -- Quantified variables.
@@ -826,7 +826,7 @@ S2Evararg: -- Type of function arguments of sort `types` (variadic arguments).
    [0]: ${s2exp} -- Type expression of `types` sort.
 
 S2Evar: -- Static variable.
-   [0]: s2var_stamp
+   [0]: s2var_stamp -- Variable name and sort (reference to).
 
 S2Ewthtype: -- Internally generated return type annotations involving proofs.
    [0]: ${s2exp} -- Returned type, of ${prop-type-view} sort.
@@ -873,7 +873,7 @@ s2varmap: -- Static variables table.
 s2var_srt: -- Static variable sort.
    ${s2rt}
 
-s2var_stamp:
+s2var_stamp: -- Reference to or ID of a s2varmap entry.
    int
 
 s2var_sym: -- Static variable name.
@@ -928,7 +928,7 @@ V2ARDEC -- Variables (`var`, not `val`!)
 ==============================================================================
 
 v2ardec_dvar: -- Variable name.
-   d2var_stamp
+   d2var_stamp -- Variable name (reference to).
 
 v2ardec_init: -- Variable initialisation expression.
    [0]: ${d2exp}
@@ -940,7 +940,7 @@ v2ardec_loc: -- Loc of all but the keyword.
    str
 
 v2ardec_svar: -- Corresponding static `addr` (variable’s address).
-   s2var_stamp
+   s2var_stamp -- Reference to static variable.
 
 v2ardec_type: -- Variable type.
    [${s2exp}] 0…1 -- Option available when type annotated.
