@@ -34,7 +34,7 @@ May be a dictionary with a single key, and there may be multiple options for
 this key, like if the key was a discriminant. These keys appears as “| name”.
 
 Sometime an empty list or an empty dictionary appears, which means it’s always
-an empty list of an empty dictionary in the JSON output. This may
+an empty list or an empty dictionary in the JSON output. This may
 be an omission of the JSON output or a case I could not meet.
 
 Fake examples with explanations:
@@ -42,10 +42,10 @@ Fake examples with explanations:
 
         function: -- a record of three indexed fields
            [0]: str -- member of type str
-           [1]: -- record made of multiple components
+           [1]: -- record made of two components
               + argument1 -- this is always provided
               + argument2 -- this is always provided
-           [2]: -- record made of either one of these single components
+           [2]: -- record made of either one of these two options
               | result -- this may be this
               | nothing -- or this
 
@@ -63,23 +63,29 @@ Fake examples with explanations:
 
 
 Note each key is separately described, although it may have additional
-comments where it occurs.
+comments where it occurs. The key descriptions are listed in lexical order.
+To search for a description, search for its name at the start of a line
+followed by a “:”. But there may be additional descriptions elsewhere, at the
+place a key occurs.
 
 Note the description as type given in “json-ref.txt” are for the most general
 cases, when a node appears in a precise context, its actual type may be a
-subtype.
+subtype. Ex. in the above fake example, “function/[2]” could be “result” only
+and never “nothing”.
 
 Where a question mark appears in a comment, it means more clarifications or
-investigations would needed, but I failed to.
+investigations would needed, but I failed to. The documentation will updated
+from time to time.
 
-Data was inferred with analyses, testing and some comments ATS2 source.
+Data was inferred with analyses of a reasonable set of ATS2 sources, testing
+and some comments in ATS2 source.
 
 
 Macro‑like nodes
 ------------------------------------------------------------------------------
 
-Node names like “${abcd}” does not appear in JSON output, there are used
-and defined like macro, since the same appears often at many places. As an
+Node names like “${abcd}” does not appear in JSON output, they are used and
+defined like macro, beceause the same appears often at many places. As an
 exemple, something like this often occurs in produced JSON data:
 
         foo:
@@ -112,18 +118,18 @@ More on some nodes
 ------------------------------------------------------------------------------
 
 The nodes name ending with “map”, are like symbol tables. There contains keys
-whose name ends with “_stamp”. Do not mix stamps between table! The stamps
-which appears directly in the table entries, defines the ID of the table
+whose name ends with “_stamp”. Do not mix stamps between tables! The stamps
+which appears directly in the table entries, defines the IDs of the table
 entries. When the stamps appears elsewhere, they are to be interpreted as
 references to these table entries.
 
 The node name ending with “_loc” has a string value of a special format. You
-probably already since this format for source location in error messages
+probably already seen this format for source location in error messages
 from Postiats. There is a module, `postiats/locations.py` in this repository,
 to deal with this format. Note “_loc” information are noticeably missing from
 static expressions. Also note the “_loc” information is sometimes wrong.
 
-Some node has special value to be further interpreted, like integers with
+Some node has special values to be further interpreted, like integers with
 special meanings. The interpretation is given in comments and these special
 values are listed in the module `postiats/constants.py`.
 
