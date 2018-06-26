@@ -219,7 +219,7 @@ d2eclist: -- Declarations list.
 d2ecl_loc: -- Loc of the whole declaration, including the keyword which
    str     -- introduce it.
 
-d2ecl_node: -- Declaration option.
+d2ecl_node: -- Declaration kind.
    | D2Cdatdecs
    | D2Cdcstdecs
    | D2Cexndecs
@@ -251,7 +251,7 @@ d2exp_loc: -- Loc of the whole expression. For function body, the function
    str     -- name is excluded, the quantifier, metrics and arguments tuple
            -- are included.
 
-d2exp_node: -- Dynamic expression option.
+d2exp_node: -- Dynamic expression kind.
    | D2Eann_funclo
    | D2Eann_seff
    | D2Eann_type
@@ -620,7 +620,7 @@ ${p2at}: -- A pattern.
 p2at_loc: -- Loc of the pattern, including any `as` (alias) part.
    str
 
-p2at_node: -- Pattern option.
+p2at_node: -- Pattern kind.
    | P2Tann
    | P2Tany
    | P2Tbool
@@ -667,7 +667,7 @@ P2Tf0loat: -- Float literal pattern. Unsigned! Not the same as P2Tfloat.
 P2Tfloat: -- Float literal “#defined”, pattern. May be signed.
    [0]: str -- Float image.
 
-P2Ti0nt: -- Natural number pattern. Unsigned! Note the same as P2Tintrep.
+P2Ti0nt: -- Natural number pattern. Unsigned! Not the same as P2Tintrep.
    [0]: str -- Natural number image.
 
 P2Tignored: -- Pattern ignored by patsopt.
@@ -734,7 +734,7 @@ ${s2exp}: -- Static expression (often a type expression).
    + s2exp_node
    + s2exp_srt
 
-s2exp_node: -- Static expression option.
+s2exp_node: -- Static expression kind.
    | S2Eapp
    | S2Eat
    | S2Ecst
@@ -843,7 +843,7 @@ S2Ewthtype: -- Internally generated return type annotations involving proofs.
 S2RT -- Sorts
 ==============================================================================
 
-${s2rt}: -- Sort expression option.
+${s2rt}: -- Sort expression kind.
    | S2RTbas
    | S2RTerr
    | S2RTfun
