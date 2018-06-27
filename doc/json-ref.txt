@@ -19,7 +19,7 @@ Root
    + d2eclist
 
 
-C2L -- Case clauses
+C2LAU -- Case clauses
 ==============================================================================
 
 c2lau_body: -- Matching clause body.
