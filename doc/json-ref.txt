@@ -61,10 +61,11 @@ d2con_stamp: -- Reference to or ID of a d2conmap entry.
 d2con_sym: -- Constructor name.
    str
 
-d2con_type: -- Constructor type.
+d2con_type: -- Dynamic constructor type.
    ${s2exp} -- Of type sort, a functional type returning something of prop,
-            -- type, view or viewtype sort, possibly under universal
-            -- quantification (not existantial quantification).
+            -- type, t@ype, view or viewtype sort (not viewt@ype ?), taking
+            -- arguments of ${prop-type-view} sort, the whole possibly under
+            -- universal quantification (not existantial quantification).
 
 
 D2CST -- Dynamic constants
