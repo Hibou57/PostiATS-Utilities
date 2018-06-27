@@ -132,7 +132,7 @@ def s2ecst_image(node, for_type):
     stamp = node[0][t.S2CST_STAMP]
     den = declarations.get_def(t.S2CST_STAMP, stamp)
     if den is None:
-        return "*ERROR*2*"
+        return "anonymous‑type"
     if for_type:
         return den.name
     return sort_image(den.sort)
