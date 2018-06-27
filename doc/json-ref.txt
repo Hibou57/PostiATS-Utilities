@@ -850,7 +850,7 @@ ${s2rt}: -- Sort expression kind.
    | S2RTfun
    | S2RTtup
 
-S2RTbas: -- Sort name. Not necessarily a base sort!
+S2RTbas: -- Sort name. Not necessarily a predefined sort!
    [0]: str
 
 S2RTerr: -- Subsituted for errors by patsopt, not a real sort expression.
