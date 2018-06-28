@@ -82,6 +82,7 @@ def quantified_exp_image(node, key_image, open_close):
 
     """
     (key, image) = key_image  # `image` is a function.
+    for_type = image == type_image
     assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     (opn, close) = open_close  # Two paired characters.
     variables = node[0]
@@ -92,7 +93,7 @@ def quantified_exp_image(node, key_image, open_close):
     for variable in variables:
         if not first:
             result += "; "
-        result += s2var_image(variable[t.S2VAR_STAMP])
+        result += s2var_image(variable[t.S2VAR_STAMP], for_type)
         first = False
     if predicats:
         if variables:
@@ -115,12 +116,16 @@ def quantified_exp_image(node, key_image, open_close):
 # Special cases
 # ----------------------------------------------------------------------------
 
-def s2var_image(stamp):
+def s2var_image(stamp, for_type):
     """ Static variable image. """
     den = declarations.get_def(t.S2VAR_STAMP, stamp)
     if den is None:
         return "*ERROR*1*"
-    return den.name + ": " + sort_image(den.sort)
+    result = ""
+    if for_type:
+        result = den.name + ": "
+    result += sort_image(den.sort)
+    return result
 
 
 def s2ecst_image(node, for_type):
@@ -254,9 +259,9 @@ def s2etop_image(node, key_image, _paren_if_fun, paren_if_app):
     (key, image) = key_image  # `image` is a function.
     assert key == t.S2EXP_NODE or key == t.S2EXP_SRT
     view_status = node[0]
-    if view_status == c.UNINITIALIZED:
+    if view_status == c.NO_DATA_PART:
         postfix = "?"
-    elif view_status == c.INITIALIZED:
+    elif view_status == c.DATA_PART:
         postfix = "?!"
     else:
         error("Unknown view status: %i" % view_status)
