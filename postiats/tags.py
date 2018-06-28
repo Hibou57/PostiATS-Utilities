@@ -4,6 +4,8 @@ Note some node does not have a tag and appears only as list item,
 
 """
 
+# Real keys
+
 C2LAU_BODY = "c2lau_body"
 C2LAU_GUA = "c2lau_gua"
 C2LAU_LOC = "c2lau_loc"
@@ -186,3 +188,8 @@ WTHS2EXPLSTCONS_INVAR = "WTHS2EXPLSTcons_invar"
 WTHS2EXPLSTCONS_NONE = "WTHS2EXPLSTcons_none"
 WTHS2EXPLSTCONS_TRANS = "WTHS2EXPLSTcons_trans"
 WTHS2EXPLSTNIL = "WTHS2EXPLSTnil"
+
+
+# Virtual kays
+
+C2LAU = "D2Ecasehead[3][n]"

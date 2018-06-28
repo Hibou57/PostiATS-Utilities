@@ -128,6 +128,22 @@ def d2eclist_locs_nodes(node):
 # C2LAU
 # ----------------------------------------------------------------------------
 
+def c2lau_locs_nodes(node):
+    """ Next locs and nodes. """
+    key = t.C2LAU_BODY
+    next_node = node[key]
+    loc = get_loc(next_node, t.D2EXP_LOC)
+    yield(loc, next_node, key)
+    key = t.C2LAU_PAT
+    next_node = node[key]
+    loc = get_merged_locs(next_node, t.P2AT_LOC)
+    yield(loc, next_node, key)
+    key = t.C2LAU_GUA
+    next_node = node[key]
+    loc = get_merged_locs(next_node, t.GM2AT_LOC)
+    yield(loc, next_node, key)
+
+
 def c2lau_gua_locs_nodes(node):
     """ Next locs and nodes. """
     for item in node:
@@ -242,21 +258,9 @@ def d2ecasehead_locs_nodes(node):
         yield from d2exp_loc_node(item)
     sub_node = node[3]
     for item in sub_node:
-        # loc = get_loc(item, t.C2LAU_LOC)
-        # C2LAU_LOC spans both guard and body, one would prevent to match the
-        # other, so locs are retrieved from inner nodes.
-        key = t.C2LAU_BODY
-        next_node = item[key]
-        loc = get_loc(next_node, t.D2EXP_LOC)
-        yield(loc, next_node, key)
-        key = t.C2LAU_PAT
-        next_node = item[key]
-        loc = get_merged_locs(next_node, t.P2AT_LOC)
-        yield(loc, next_node, key)
-        key = t.C2LAU_GUA
-        next_node = item[key]
-        loc = get_merged_locs(next_node, t.GM2AT_LOC)
-        yield(loc, next_node, key)
+        key = t.C2LAU
+        loc = get_loc(item, t.C2LAU_LOC)
+        yield(loc, item, key)
 
 
 def d2ederef_loc_node(node):
@@ -368,6 +372,7 @@ def v2ardec_init_loc_node(node):
 # Done with P2Txxx
 
 LOCS_NODES = {
+    t.C2LAU: c2lau_locs_nodes,
     t.C2LAU_BODY: d2exp_loc_node,
     t.C2LAU_GUA: c2lau_gua_locs_nodes,
     t.C2LAU_PAT: c2lau_pat_locs_nodes,
@@ -436,7 +441,8 @@ LEAFS = {
 # ============================================================================
 
 LABELS = {
-    t.C2LAU_BODY: "matching clause body",
+    t.C2LAU: "case‑clause",
+    t.C2LAU_BODY: "case‑clause body",
     t.C2LAU_GUA: "case‑clause when‑guard",
     t.C2LAU_PAT: "case‑clause pattern",
     t.D2CDATDECS: "dataxxx declaration(s)",
@@ -477,14 +483,14 @@ LABELS = {
     t.P2TANN: "pattern element (annotated)",
     t.P2TANY: "wildcard pattern",
     t.P2TBOOL: "boolean",
-    t.P2TCHAR: "character pattern literal",
+    t.P2TCHAR: "character pattern",
     t.P2TCON: "constructor application",
     t.P2TEMPTY: "empty pattern",
-    t.P2TI0NT: "integer pattern literal",
+    t.P2TI0NT: "natural number pattern",
     t.P2TIGNORED: "ignored pattern element",
-    t.P2TINTREP: "integer pattern literal",
+    t.P2TINTREP: "integer pattern",
     t.P2TREC: "pattern record",
-    t.P2TSTRING: "string pattern literal",
+    t.P2TSTRING: "string pattern",
     t.P2TVAR: "pattern variable",
     t.P2TVBOX: "vbox pattern",
     t.V2ARDEC_INIT: "variable initialisation",
