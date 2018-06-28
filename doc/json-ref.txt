@@ -95,9 +95,13 @@ d2cst_stamp: -- Reference to or ID of a d2cstmap entry.
 d2cst_sym: -- Constant name.
    str
 
-d2cst_type: -- Dynamic constant “type“ (may be of sort prop).
-   ${s2exp} -- Of sort prop, t@ype or type, possibly under quantification.
+d2cst_type: -- Dynamic constant “type“ (may be of prop sort).
+   ${s2exp} -- Of prop, t@ype or type sort, possibly under quantification.
             -- The type expression can be a static variable (S2Evar) ?
+
+
+D2C -- Dynamic declaration nodes
+==============================================================================
 
 D2Cdatdecs: -- DataXXX declaration(s).
    [0]: int -- 0/2/5/7: datatype/dataviewtype/dataprop/dataview.
@@ -112,7 +116,7 @@ D2Cexndecs: -- Exception declaration.
    [0]: [d2con_stamp] 1…n -- For exception e1 and e2 ….
 
 D2Cextcode: -- Embeded foreign language.
-   [0]: int -- 0/1: %{#/others
+   [0]: int -- 0/1: %{# / others
    [1]: int -- 0/1/10/99: %{# / %{^/ %{ / %{$
    [2]: str -- Source snippet.
 
