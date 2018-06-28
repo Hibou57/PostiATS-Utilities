@@ -22,6 +22,7 @@ export C_INCLUDE_PATH="$HOME/apps/z3/include"
 export LIBRARY_PATH="$HOME/apps/z3/lib"
 # Values: 1 means Yes, 0 means No.
 INSTALL_BUILD_DEPENDENCIES=0
+WITH_POSTIATS_UTILITIES=1
 WITH_PATSOLVE_Z3=0
 WITH_PATSOLVE_SMT2=1
 WITH_ATSCC2JS=1
@@ -80,6 +81,12 @@ get_or_update_git_clone
 DIR=ATS2-contrib
 URL=https://github.com/githwxi/ATS-Postiats-contrib.git
 get_or_update_git_clone
+
+if [ "$WITH_POSTIATS_UTILITIES" -eq 1 ]; then
+   DIR=PostiATS-Utilities
+   URL=https://github.com/Hibou57/PostiATS-Utilities.git
+   get_or_update_git_clone
+fi
 
 ######
 #
@@ -158,6 +165,20 @@ if [ "$WITH_ATSCC2PHP" -eq 1 ]; then
    (cd ATS2/contrib/CATS-atscc2php && mv -f bin/atscc2php $PATSHOME/bin); exit_if_failed
    ln -s "../lib/$PATSHOME_NAME/bin/atscc2php" "$INST_DIR/bin/atscc2php"
 fi;
+#
+# For installing PostiATS-Utilities
+#
+if [ "$WITH_POSTIATS_UTILITIES" -eq 1 ]; then
+   cp -ar "PostiATS-Utilities/doc" "$INST_DIR/doc/Hibou57"
+   cp "PostiATS-Utilities/README.md" "$INST_DIR/doc/Hibou57/"
+   cp -ar "PostiATS-Utilities/postiats" "$INST_DIR/bin/"
+   if [ ! -d "$INST_DIR/bin/postiats" ]; then
+      mkdir -p "$INST_DIR/bin/postiats"
+   fi
+   for f in "PostiATS-Utilities/pats-"*; do
+      cp -a $f "$INST_DIR/bin/"
+   done
+fi
 #
 # Safely strip executables and libraries
 #
