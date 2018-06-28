@@ -100,7 +100,7 @@ d2cst_type: -- Dynamic constant “type“ (may be of prop sort).
             -- The type expression can be a static variable (S2Evar) ?
 
 
-D2C -- Dynamic declaration nodes
+D2C -- Dynamic declaration kinds
 ==============================================================================
 
 D2Cdatdecs: -- DataXXX declaration(s).
@@ -215,7 +215,7 @@ D2Cvardecs: -- Variable(s) déclaration(s).
       ] 1…n -- Element for var a and b and c ….
 
 
-D2ECL -- Dynamic declarations
+D2ECL -- Dynamic declaration nodes
 ==============================================================================
 
 ${d2ecl}: -- Declaration.
@@ -249,7 +249,7 @@ d2ecl_node: -- Declaration kind.
    | D2Cvardecs
 
 
-D2E -- Dynamic expressions
+D2EXP -- Dynamic expression nodes
 ==============================================================================
 
 ${d2exp}: -- Dynamic expression, possibly type annotated.
@@ -294,6 +294,10 @@ d2exp_node: -- Dynamic expression kind.
    | D2Evar
    | D2Ewhere
    | D2Exchng
+
+
+D2E -- Dynamic expression kinds
+==============================================================================
 
 D2Eann_funclo: -- Closure annotation.
    [0]: ${d2exp} -- Annotated expression, a D2Eann_seff.
@@ -619,7 +623,7 @@ LABP2ATnorm: -- Pattern for record component.
    [1]: ${p2at} -- The pattern to match with the record component.
 
 
-P2AT -- Patterns
+P2AT -- Pattern nodes
 ==============================================================================
 
 ${p2at}: -- A pattern.
@@ -645,6 +649,10 @@ p2at_node: -- Pattern kind.
    | P2Tstring
    | P2Tvar
    | P2Tvbox
+
+
+P2T -- Pattern kinds
+==============================================================================
 
 P2Tann: -- Annotated pattern expression.
    [0]: ${p2at} -- Pattern expression.
@@ -736,7 +744,7 @@ s2cst_sym: -- Static constant name.
    str
 
 
-S2E -- Static expressions
+S2EXP -- Static expression nodes
 ==============================================================================
 
 ${s2exp}: -- Static expression (often a type expression).
@@ -766,6 +774,10 @@ s2exp_node: -- Static expression kind.
 
 s2exp_srt: -- Static expression sort (often t@ype or type sort).
    ${s2rt}
+
+
+S2E -- Static expression kinds
+==============================================================================
 
 S2Eapp: -- Static application.
    [0]: ${s2exp} -- Applied expression, of functional sort.
@@ -849,7 +861,7 @@ S2Ewthtype: -- Internally generated return type annotations involving proofs.
       -- Like ${wths2explst} less WTHS2EXPLSTcons_nil
 
 
-S2RT -- Sorts
+S2RT (1/2) -- Sort nodes
 ==============================================================================
 
 ${s2rt}: -- Sort expression kind.
@@ -857,6 +869,10 @@ ${s2rt}: -- Sort expression kind.
    | S2RTerr
    | S2RTfun
    | S2RTtup
+
+
+S2RT (2/2) -- Sort kinds
+==============================================================================
 
 S2RTbas: -- Sort name. Not necessarily a predefined sort!
    [0]: str
