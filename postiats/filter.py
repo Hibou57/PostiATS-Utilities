@@ -31,17 +31,23 @@ Message = namedtuple("Message", ["location", "level", "text"])
 # Sample message with location:
 #     UTF_8.dats: 5235(line=167, offs=53) -- 5237(line=167, offs=55): \
 #     error(3): static arity mismatch: more arguments are expected.
+#
+# Sample `showtype` or `$showtype` message:
+#     **SHOWTYPE[UP]**(foo.dats: 768(line=46,\ offs=27) -- 769(line=46, \
+#     offs=28)): S2Eapp(S2Ecst(T); S2EVar(0)): S2RTbas(S2RTBASimp(0; type))
 
 END_OF_LOCATION = locations.END_OF_END  # ")"
 START_OF_MSG_LEVEL = ": "
 END_OF_MSG_LEVEL = ": "
+SHOWTYPE_START = "**SHOWTYPE[UP]**("
+SHOWTYPE_END = "): "
 
 
 # Methods
 # ----------------------------------------------------------------------------
 
 def is_message_with_location(line):
-    """ True is line is a message with location. """
+    """ True if line is a message with location. """
     result = False
     i = line.find(END_OF_LOCATION + START_OF_MSG_LEVEL)
     if i != -1:
@@ -50,7 +56,16 @@ def is_message_with_location(line):
             i += len(START_OF_MSG_LEVEL)
             i = line.find(END_OF_MSG_LEVEL, i)
             result = i != -1
+    return result
 
+
+def is_showtype_message(line):
+    """ True if line is a showtype message (with location). """
+    result = False
+    if line.startswith(SHOWTYPE_START):
+        i = line.find(SHOWTYPE_END)
+        if i != -1:
+            result = locations.is_location(line[len(SHOWTYPE_START):i])
     return result
 
 
@@ -88,7 +103,25 @@ def parse_message_with_location(line):
         location=location,
         level=level,
         text=text)
+    return result
 
+
+def parse_showtype_message(line):
+    """ Parse `line` as a `Message`. """
+    assert is_showtype_message(line)
+
+    i = line.find(SHOWTYPE_END)
+    location = locations.parse(line[len(SHOWTYPE_START):i])
+
+    j = i + len(SHOWTYPE_END)
+    level = 3
+
+    text = "$showtype: " + line[j:]
+
+    result = Message(
+        location=location,
+        level=level,
+        text=text)
     return result
 
 
@@ -339,7 +372,6 @@ def parse_token(string):
         try_token(parse_name, KIND.NAME) or
         try_token(parse_numeric, KIND.NUMERIC) or
         try_token(parse_symbol, KIND.SYMBOL))
-
     return result
 
 
@@ -584,9 +616,7 @@ def format_lines(lines):
                 result += sublines
                 changed = True
                 continue
-
             result.append(line)
-
     return result
 
 
@@ -949,6 +979,11 @@ def main():
         line = line.strip()
         if is_message_with_location(line):
             message = parse_message_with_location(line)
+        elif is_showtype_message(line):
+            message = parse_showtype_message(line)
+        else:
+            message = None
+        if message:
             text = pretty_printed(message.text)
             location = message.location
             output = "%s: %s" % (
@@ -963,11 +998,3 @@ def main():
                 print()  # Separate from messages with blank lines.
             print(output, end="")
             message_before = False
-
-
-TEST1 = (
-    "/home/yannick/Bureau/Test/utils/foo.dats: 14(line=1, " +
-    "offs=14) -- 17(line=1, offs=17): error(2): the static " +
-    "expression is of the sort [S2RTbasXXX(S2RTBASimpZZZ(1; t@ype))] " +
-    "but it is expected to be of the sort " +
-    "[S2RTbas(S2RTBASpre(int))].")
