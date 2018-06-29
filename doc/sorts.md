@@ -34,7 +34,7 @@ Predicative
 
 Predicative built‑in base sorts, after `pats_staexp2_sort.dats`:
 
-  * `addr` (also note agz, the subset of not null addr)
+  * `addr` (also note `agz`, its not null subset, derived)
   * `bool`
   * `cls`
   * `eff`: function effects
