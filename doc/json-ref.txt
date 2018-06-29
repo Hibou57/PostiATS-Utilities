@@ -69,7 +69,7 @@ d2con_type: -- Dynamic constructor type.
             -- existential quantification). The returned type either refers to
             -- a base sort or a functional sort (for indexed types). In the
             -- latter case, the returned type is the static application of
-            -- this functional sort (its indexes are instantiated).
+            -- this functional sort.
 
 
 D2CST -- Dynamic constants
@@ -108,7 +108,7 @@ D2Cdatdecs: -- DataXXX declaration(s).
    [1]: [s2cst_stamp] 1…n -- For datatype T and U and V ….
 
 D2Cdcstdecs: -- Dynamic constant(s) declaration(s).
-   [0]: int -- 0/1: "sta#…"/others
+   [0]: int -- 0/1: static/extern
    [1]: str -- "DCKcastfn" / "DCKfun" / "DCKpraxi" / "DCKprfun" / "DCKval".
    [2]: [d2cst_stamp] 1…n -- For extern f and g and h ….
 

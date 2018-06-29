@@ -16,6 +16,10 @@ DATAVIEWTYPE = 2
 DATAPROP = 5
 DATAVIEW = 7
 
+# D2Cdcstdecs[0]
+STATIC_DCST = 0
+EXTERN_DCST = 1
+
 # D2Cdcstdecs[1]
 DCKCASTFN = "DCKcastfn"
 DCKFUN = "DCKfun"
