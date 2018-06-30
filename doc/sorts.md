@@ -42,9 +42,9 @@ Predicative sorts
 
 Predicative built‑in base sorts, after `pats_staexp2_sort.dats`:
 
-  * `addr` (also note `agz`, its not null subset, derived).
+  * `addr` (also note `agz`, its derived not null subset).
   * `bool`: `false_bool` and `true_bool`.
-  * `cls`: hierarchical ordering of nominal types (specifying OO APIs).
+  * `cls`: hierarchical ordering of nominal types (ex. specifying OO APIs).
   * `eff`: function effects.
   * `float`: without equality or comparison operators.
   * `int`: without negative literals, however with a negate operator.
