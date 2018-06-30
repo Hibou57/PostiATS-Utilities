@@ -40,7 +40,7 @@ Predicative built‑in base sorts, after `pats_staexp2_sort.dats`:
   * `eff`: function effects.
   * `float`
   * `int`: without negative literals, however with a negate operator.
-  * `real`
+  * `real`: experimental, for verification involving real numbers.
   * `string`
   * `tkind`: algebraic (no quantifiers), like an abstract type, template args.
 
