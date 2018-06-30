@@ -1,35 +1,43 @@
 Sorts
 ==============================================================================
 
-Impredicative
+Impredicative sorts
 ------------------------------------------------------------------------------
 
 Impredicative built‑in base sorts, after `pats_staexp2_sort.dats`:
 
   * `prop`: theorem proving, internalizing constraint‑solving.
-  * `prop+`
-  * `prop-`
   * `type`: boxed types.
-  * `type+`
-  * `type-`
-  * `t0ype`: flat types.
-  * `t0ype+`
-  * `t0ype-`
+  * `t@ype`: flat types.
   * `types`: variadic arguments.
   * `view`: linear `prop` (possibly linear).
-  * `view+`
-  * `view-`
-  * `vtype`: linear `type` (possibly linear).
-  * `vtype+`
-  * `vtype-`
-  * `vt0ype`: linear `t@ype` (possibly linear).
-  * `vt0ype+`
-  * `vt0ype-`
-
-Where `+` is for covariance and `-` is for contravariance.
+  * `viewtype`: linear `type` (possibly linear).
+  * `viewt@ype`: linear `t@ype` (possibly linear).
 
 
-Predicative
+With these variations:
+
+  * “${sort}+“ (ex. `t@ype+`) for covariance.
+  * “${sort}-“ (ex. `t@ype-`) for contravariance.
+
+
+With these relations:
+
+  * `prop` < `t@ype` < `type`.
+  * `view` < `view@type` < `viewtype`.
+  * `view` < `prop`.
+  * `viewt@ype` < `t@ype`.
+  * `viewtype` < `type`.
+
+
+With these aliases:
+
+  * `t@ype`: `t0ype`.
+  * `viewtype`: `vtype`.
+  * `viewt@ype`: `viewt0ype`, `vt@ype` and `vt0ype`.
+
+
+Predicative sorts
 ------------------------------------------------------------------------------
 
 Predicative built‑in base sorts, after `pats_staexp2_sort.dats`:
