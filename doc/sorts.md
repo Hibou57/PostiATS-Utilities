@@ -46,10 +46,10 @@ Predicative built‑in base sorts, after `pats_staexp2_sort.dats`:
   * `bool`: `false_bool` and `true_bool`.
   * `cls`: hierarchical ordering of nominal types (specifying OO APIs).
   * `eff`: function effects.
-  * `float`
+  * `float`: without equality or comparison operators.
   * `int`: without negative literals, however with a negate operator.
   * `real`: experimental, for verification involving real numbers.
-  * `string`
+  * `string`: without equality or comparison operators.
   * `tkind`: algebraic (no quantifiers), like an abstract type, template args.
 
 Note “char” used to be but is not anymore.
