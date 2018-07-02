@@ -166,7 +166,7 @@ Keep in mind the order matters.
   * `T_COLONLT`: ":<"
   * `T_IDENT_sym`: ":" `SYMBOLIC`* -- see note #1.
   * `T_IDENT_sym`: "." `SYMBOLIC`+ -- see note #1.
-  * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ [`E` [`SIGN`] `DIGIT`+] [`FL`]
+  * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ (`E` (`SIGN`)? `DIGIT`+)? `FL`?
   * `T_DOTINT`: "." `DIGIT`+
   * `T_IDENT_dlr`: "$" `IDENTFST` `IDENTRST`* -- see note #1.
   * `T_IDENT_sym`: "$" `SYMBOLIC`* -- see note #1.
@@ -174,7 +174,7 @@ Keep in mind the order matters.
   * `T_IDENT_srp`: "#" `IDENTFST` `IDENTRST`* -- see note #1.
   * `T_IDENT_sym`: "#" `SYMBOLIC`* -- see note #1.
   * `T_PERCENTLPAREN`: "%("
-  * `T_EXTCODE`: SOL "%{" ["#"|"^"["2"]|"$"["2"]] `IC`* SOL "%}"
+  * `T_EXTCODE`: SOL "%{" ("#" | "^" "2"? | "$" "2"?)? `IC`* SOL "%}"
   * `T_IDENT_sym`: "%" `SYMBOLIC`* -- see note #1.
   * `T_QUOTELPAREN`: "'("
   * `T_QUOTELBRACKET`: "'["
@@ -251,15 +251,15 @@ Keep in mind the order matters.
   * `FIX`: "fix"
   * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* -- see note #1.
   * `T_IDENT_sym`: `SYMBOLIC`+: -- see note #1.
-  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* [`P` [`SIGN`] `DIGIT`+] [`FL`] -- see note #3.
-  * `T_FLOAT_hex`: "0" `X` `P` [`SIGN`] `DIGIT`+ [`FL`] -- see note #3.
-  * `T_INT_hex`: "0" `X` `XDIGIT`* [`LU`] -- see note #3.
-  * `T_INT_oct`: "0" `OCTAL`+ [`LU`]
-  * `T_FLOAT_dec`: "0" "." `DIDIT`* [`E` [`SIGN`] `DIGIT`+] [`FL`] -- see note #3 and note #5.
-  * `T_FLOAT_dec`: "0" `E` [`SIGN`] `DIGIT`+ [`FL`] -- see note #5.
+  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* (`P` `SIGN`? `DIGIT`+)? `FL`? -- see note #3.
+  * `T_FLOAT_hex`: "0" `X` `P` `SIGN`? `DIGIT`+ `FL`? -- see note #3.
+  * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? -- see note #3.
+  * `T_INT_oct`: "0" `OCTAL`+ `LU`?
+  * `T_FLOAT_dec`: "0" "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? -- see note #3 and note #5.
+  * `T_FLOAT_dec`: "0" `E` `SIGN`? `DIGIT`+ `FL`? -- see note #5.
   * `T_INTZERO`: "0"
-  * `T_FLOAT_dec`: `DIGIT`+ "." `DIDIT`* [`E` [`SIGN`] `DIGIT`+] [`FL`] -- see note #3.
-  * `T_FLOAT_dec`: `DIGIT`+ `E` [`SIGN`] `DIGIT`+ [`FL`]
+  * `T_FLOAT_dec`: `DIGIT`+ "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? -- see note #3.
+  * `T_FLOAT_dec`: `DIGIT`+ `E` `SIGN`? `DIGIT`+ `FL`?
   * `T_INT_dec`: `DIGIT`+
   * `T_EOF`: EOF
   * `T_ERR`: `IC` -- any character which matched nothing.
