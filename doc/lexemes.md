@@ -167,7 +167,8 @@ Keep in mind the order matters.
   * `T_COLONLT`: ":<"
   * `T_IDENT_sym`: ":" `SYMBOLIC`* — see note #1.
   * `T_IDENT_sym`: "." `SYMBOLIC`+ — see note #1.
-  * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ (`E` (`SIGN`)? `DIGIT`+)? `FL`?
+  * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+    note #6.
   * `T_DOTINT`: "." `DIGIT`+
   * `T_IDENT_dlr`: "$" `IDENTFST` `IDENTRST`* — see note #1.
   * `T_IDENT_sym`: "$" `SYMBOLIC`* — see note #1.
@@ -315,6 +316,15 @@ either hexadecimal or octal.
 ### Note #5
 
 Decimal: there is no octal floating point.
+
+
+### Note #6
+
+There must be a space before the dot. Two examples to have in mind:
+
+  * `foo .123` will be parsed as the identifier `foo` and the float `0.123`.
+  * `foo.123` will be parsed as the identifier `foo` and the dot‑identifier
+    `.123`.
 
 
 Predefined symbols
