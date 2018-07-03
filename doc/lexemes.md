@@ -21,7 +21,8 @@ Comments do not count as a space and are not like zero width space neither.
 
 A star sign indicates zero or more. A plus sign indicates one or more. The
 notation “{m,n}” indicates *m* to *n* repetitions (any one in the range). A
-question mark indicates an optional element, like if it was “{0,1}”
+question mark indicates an optional element, like if it was “{0,1}”. A “—”
+introduces a comment.
 
 The lexical rules presents some corner cases consequence which can be ignored
 (see the first paragraph) while still may be worth to know for some people.
@@ -97,9 +98,9 @@ To summarize:
 
 Where:
 
-  * `COMMENT_block_c`: "/*" `IC`* "*/" -- not recursive! (unlike ML comments)
-  * `T_COMMENT_rest`: "////" `IC`* EOF -- up to the end of the source file.
-  * `T_COMMENT_line`: "//" `IC_LEOL`* EOL -- up to the end of the line.
+  * `COMMENT_block_c`: "/*" `IC`* "*/" — not recursive! (unlike ML comments)
+  * `T_COMMENT_rest`: "////" `IC`* EOF — up to the end of the source file.
+  * `T_COMMENT_line`: "//" `IC_LEOL`* EOL — up to the end of the line.
 
 
 ### Corner case
@@ -149,7 +150,7 @@ Keep in mind the order matters.
 **This list is not a list of the keywords!**
 
 
-  * `COMMENT_block_ml`: "(*" `COMMENT_block_ml` "*)" -- recursive.
+  * `COMMENT_block_ml`: "(*" `COMMENT_block_ml` "*)" — recursive.
   * `T_LPAREN`: "("
   * `T_RPAREN`: ")"
   * `T_LBRACKET`: "["
@@ -162,20 +163,20 @@ Keep in mind the order matters.
   * `T_ATLPAREN`: "@("
   * `T_ATLBRACKET`: "@["
   * `T_ATLBRACE`: "@{"
-  * `T_IDENT_sym`: "@" `SYMBOLIC`* -- see note #1.
+  * `T_IDENT_sym`: "@" `SYMBOLIC`* — see note #1.
   * `T_COLONLT`: ":<"
-  * `T_IDENT_sym`: ":" `SYMBOLIC`* -- see note #1.
-  * `T_IDENT_sym`: "." `SYMBOLIC`+ -- see note #1.
+  * `T_IDENT_sym`: ":" `SYMBOLIC`* — see note #1.
+  * `T_IDENT_sym`: "." `SYMBOLIC`+ — see note #1.
   * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ (`E` (`SIGN`)? `DIGIT`+)? `FL`?
   * `T_DOTINT`: "." `DIGIT`+
-  * `T_IDENT_dlr`: "$" `IDENTFST` `IDENTRST`* -- see note #1.
-  * `T_IDENT_sym`: "$" `SYMBOLIC`* -- see note #1.
+  * `T_IDENT_dlr`: "$" `IDENTFST` `IDENTRST`* — see note #1.
+  * `T_IDENT_sym`: "$" `SYMBOLIC`* — see note #1.
   * `T_HASHLBRACKET`: "#["
-  * `T_IDENT_srp`: "#" `IDENTFST` `IDENTRST`* -- see note #1.
-  * `T_IDENT_sym`: "#" `SYMBOLIC`* -- see note #1.
+  * `T_IDENT_srp`: "#" `IDENTFST` `IDENTRST`* — see note #1.
+  * `T_IDENT_sym`: "#" `SYMBOLIC`* — see note #1.
   * `T_PERCENTLPAREN`: "%("
   * `T_EXTCODE`: SOL "%{" ("#" | "^" "2"? | "$" "2"?)? `IC`* SOL "%}"
-  * `T_IDENT_sym`: "%" `SYMBOLIC`* -- see note #1.
+  * `T_IDENT_sym`: "%" `SYMBOLIC`* — see note #1.
   * `T_QUOTELPAREN`: "'("
   * `T_QUOTELBRACKET`: "'["
   * `T_QUOTELBRACE`: "'{"
@@ -183,86 +184,90 @@ Keep in mind the order matters.
   * `T_CHAR`: "'\\" `X` `XDIGIT`+ "'"
   * `T_CHAR`: "'\\" `OCTAL`+ "'"
   * `T_CHAR`: "'" `IC_LQ` "'"
-  * `T_STRING`: '"' ("\\" EOL|"\\" `ESCAPED`|"\\" `X` `XDIGIT`{1,2}|"\\" `OCTAL`{1,3}|`IC_LDQ`)* '"' -- see note #4.
-  * `T_BQUOTELPAREN`: "\`(" -- macro syntax
-  * `T_IDENT_sym`: "\`" `SYMBOLIC`* -- see note #1.
+  * `T_STRING`: '"' ("\\" EOL|"\\" `ESCAPED`|"\\" `X` `XDIGIT`{1,2}|"\\"
+    `OCTAL`{1,3}|`IC_LDQ`)* '"' — see note #4.
+  * `T_BQUOTELPAREN`: "\`(" — macro syntax
+  * `T_IDENT_sym`: "\`" `SYMBOLIC`* — see note #1.
   * `T_BACKSLASH`: "\\"
   * `T_IDENT_tmp`: `IDENTFST` `IDENTRST`* "<"
   * `T_IDENT_arr`: `IDENTFST` `IDENTRST`* "["
   * `T_IDENT_ext`: `IDENTFST` `IDENTRST`* "!"
-  * `ABST0YPE`: "abst@ype" -- see note #2.
-  * `ABSVIEWT0YPE`: "absvt@ype" -- see note #2.
-  * `ABSVIEWT0YPE`: "absviewt@ype" -- see note #2.
-  * `CASE_pos`: "case+" -- see note #2.
-  * `CASE_neg`: "case-" -- see note #2.
+  * `ABST0YPE`: "abst@ype" — see note #2.
+  * `ABSVIEWT0YPE`: "absvt@ype" — see note #2.
+  * `ABSVIEWT0YPE`: "absviewt@ype" — see note #2.
+  * `CASE_pos`: "case+" — see note #2.
+  * `CASE_neg`: "case-" — see note #2.
   * `CASE`: "case"
-  * `PROP_pos`: "prop+" -- see note #2.
-  * `PROP_neg`: "prop-" -- see note #2.
+  * `PROP_pos`: "prop+" — see note #2.
+  * `PROP_neg`: "prop-" — see note #2.
   * `PROP`: "prop"
-  * `T0YPE_pos`: "t@ype+" -- see note #2.
-  * `T0YPE_neg`: "t@ype-" -- see note #2.
-  * `T0YPE`: "t@ype" -- see note #2.
-  * `TYPE_pos`: "type+" -- see note #2.
-  * `TYPE_neg`: "type-" -- see note #2.
+  * `T0YPE_pos`: "t@ype+" — see note #2.
+  * `T0YPE_neg`: "t@ype-" — see note #2.
+  * `T0YPE`: "t@ype" — see note #2.
+  * `TYPE_pos`: "type+" — see note #2.
+  * `TYPE_neg`: "type-" — see note #2.
   * `TYPE`: "type"
-  * `T0YPE_pos`: "t0ype+" -- see note #2.
-  * `T0YPE_neg`: "t0ype-" -- see note #2.
+  * `T0YPE_pos`: "t0ype+" — see note #2.
+  * `T0YPE_neg`: "t0ype-" — see note #2.
   * `T9YPE`: "t0ype"
-  * `VIEWT0YPE_pos`: "vt@ype+" -- see note #2.
-  * `VIEWT0YPE_neg`: "vt@ype-" -- see note #2.
-  * `VIEWT0YPE`: "vt@ype" -- see note #2.
-  * `VIEWT0YPE_pos`: "vtype+" -- see note #2.
-  * `VIEWT0YPE_neg`: "vtype-" -- see note #2.
+  * `VIEWT0YPE_pos`: "vt@ype+" — see note #2.
+  * `VIEWT0YPE_neg`: "vt@ype-" — see note #2.
+  * `VIEWT0YPE`: "vt@ype" — see note #2.
+  * `VIEWT0YPE_pos`: "vtype+" — see note #2.
+  * `VIEWT0YPE_neg`: "vtype-" — see note #2.
   * `VIEWT0YPE`: "vtype"
-  * `VIEWT0YPE_pos`: "vt0ype+" -- see note #2.
-  * `VIEWT0YPE_neg`: "vt0ype-" -- see note #2.
+  * `VIEWT0YPE_pos`: "vt0ype+" — see note #2.
+  * `VIEWT0YPE_neg`: "vt0ype-" — see note #2.
   * `VIEWT0YPE`: "vt0ype"
-  * `T_VIEWAT`: "view@" -- see note #2.
-  * `VIEW_pos`: "view+" -- see note #2.
-  * `VIEW_neg`: "view-" -- see note #2.
+  * `T_VIEWAT`: "view@" — see note #2.
+  * `VIEW_pos`: "view+" — see note #2.
+  * `VIEW_neg`: "view-" — see note #2.
   * `VIEW`: "view"
-  * `VIEWT0YPE_pos`: "viewt@ype+" -- see note #2.
-  * `VIEWT0YPE_neg`: "viewt@ype-" -- see note #2.
-  * `VIEWT0YPE`: "viewt@ype" -- see note #2.
-  * `VIEWTYPE_pos`: "viewtype+" -- see note #2.
-  * `VIEWTYPE_neg`: "viewtype-" -- see note #2.
+  * `VIEWT0YPE_pos`: "viewt@ype+" — see note #2.
+  * `VIEWT0YPE_neg`: "viewt@ype-" — see note #2.
+  * `VIEWT0YPE`: "viewt@ype" — see note #2.
+  * `VIEWTYPE_pos`: "viewtype+" — see note #2.
+  * `VIEWTYPE_neg`: "viewtype-" — see note #2.
   * `VIEWTYPE`: "viewtype"
-  * `VIEWT0YPE_pos`: "viewt0ype+" -- see note #2.
-  * `VIEWT0YPE_neg`: "viewt0ype-" -- see note #2.
+  * `VIEWT0YPE_pos`: "viewt0ype+" — see note #2.
+  * `VIEWT0YPE_neg`: "viewt0ype-" — see note #2.
   * `VIEWT0YPE`: "viewt0ype"
-  * `VAL_pos`: "val+" -- see note #2.
-  * `VAL_neg`: "val-" -- see note #2.
+  * `VAL_pos`: "val+" — see note #2.
+  * `VAL_neg`: "val-" — see note #2.
   * `VAL`: "val"
-  * `T_FORSTAR`: "for*" -- see note #2.
+  * `T_FORSTAR`: "for*" — see note #2.
   * `T_FOR`: "for"
-  * `T_WHILESTAR`: "while*" -- see note #2.
+  * `T_WHILESTAR`: "while*" — see note #2.
   * `T_WHILE`: "while"
-  * `T_ADDRAT`: "addr@" -- see note #2.
+  * `T_ADDRAT`: "addr@" — see note #2.
   * `T_ADDR`: "addr"
-  * `T_FOLDAT`: "fold@" -- see note #2.
+  * `T_FOLDAT`: "fold@" — see note #2.
   * `T_FOLD`: "fold"
-  * `T_FREEAT`: "free@" -- see note #2.
+  * `T_FREEAT`: "free@" — see note #2.
   * `T_FREE`: "free"
-  * `LAMAT`: "lam@" -- see note #2.
+  * `LAMAT`: "lam@" — see note #2.
   * `LAM`: "lam"
-  * `LLAMAT`: "llam@" -- see note #2.
+  * `LLAMAT`: "llam@" — see note #2.
   * `LLAM`: "llam"
-  * `FIXAT`: "fix@" -- see note #2.
+  * `FIXAT`: "fix@" — see note #2.
   * `FIX`: "fix"
-  * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* -- see note #1.
-  * `T_IDENT_sym`: `SYMBOLIC`+: -- see note #1.
-  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* (`P` `SIGN`? `DIGIT`+)? `FL`? -- see note #3.
-  * `T_FLOAT_hex`: "0" `X` `P` `SIGN`? `DIGIT`+ `FL`? -- see note #3.
-  * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? -- see note #3.
+  * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* — see note #1.
+  * `T_IDENT_sym`: `SYMBOLIC`+: — see note #1.
+  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* (`P` `SIGN`? `DIGIT`+)?
+     `FL`? — see note #3.
+  * `T_FLOAT_hex`: "0" `X` `P` `SIGN`? `DIGIT`+ `FL`? — see note #3.
+  * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? — see note #3.
   * `T_INT_oct`: "0" `OCTAL`+ `LU`?
-  * `T_FLOAT_dec`: "0" "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? -- see note #3 and note #5.
-  * `T_FLOAT_dec`: "0" `E` `SIGN`? `DIGIT`+ `FL`? -- see note #5.
+  * `T_FLOAT_dec`: "0" "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+    note #3 and note #5.
+  * `T_FLOAT_dec`: "0" `E` `SIGN`? `DIGIT`+ `FL`? — see note #5.
   * `T_INTZERO`: "0"
-  * `T_FLOAT_dec`: `DIGIT`+ "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? -- see note #3.
+  * `T_FLOAT_dec`: `DIGIT`+ "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+    note #3.
   * `T_FLOAT_dec`: `DIGIT`+ `E` `SIGN`? `DIGIT`+ `FL`?
   * `T_INT_dec`: `DIGIT`+
   * `T_EOF`: EOF
-  * `T_ERR`: `IC` -- any character which matched nothing.
+  * `T_ERR`: `IC` — any character which matched nothing.
 
 
 ### Note #1
@@ -277,13 +282,15 @@ later in this document) which has a special meaning
 
 This is so, whatever follows.
 
-Two different examples to have in minde:
+Two different examples to have in mind:
 
   * `case+foo` will be parsed as `case+` and `foo`.
   * `viewt@ypefoo` will be parsed as `viewt@ype` and `foo`.
 
 Both and even more the second kind of case, are **corner case** worth to know.
 
+On the contrary, `viewtypefoo` or `viewt0ypefoo` will be parsed as a single
+identifier.
 
 ### Note #3
 
@@ -333,12 +340,12 @@ Here, order does not matter.
 List for terminal products:
 
   * `T_AND`: "and"
-  * `T_AS`: "as" -- for refas-pattern
-  * `T_ASSUME`: "assume", "absimpl" -- for implementing abstypes
+  * `T_AS`: "as" — for refas-pattern
+  * `T_ASSUME`: "assume", "absimpl" — for implementing abstypes
   * `T_AT`: "@"
   * `T_BANG`: "!"
   * `T_BAR`: "|"
-  * `T_BEGIN`: "begin" -- initiating a sequence
+  * `T_BEGIN`: "begin" — initiating a sequence
   * `T_BQUOTE`: "`"
   * `T_CLASSDEC`: "classdec"
   * `T_COLON`: ":"
@@ -346,32 +353,32 @@ List for terminal products:
   * `T_DLRARRPSZ`: "$arrpsz", "$arrptrsize"
   * `T_DLRBREAK`: "$break"
   * `T_DLRCONTINUE`: "$continue"
-  * `T_DLRD2CTYPE`: "$d2ctype" -- $d2ctype(foo/foo<...>)
+  * `T_DLRD2CTYPE`: "$d2ctype" — $d2ctype(foo/foo<...>)
   * `T_DLREXTERN`: "$extern"
-  * `T_DLREXTFCALL`: "$extfcall" -- externally named fun-call
+  * `T_DLREXTFCALL`: "$extfcall" — externally named fun-call
   * `T_DLREXTKIND`: "$extkind"
-  * `T_DLREXTMCALL`: "$extmcall" -- externally named method-call
-  * `T_DLREXTVAL`: "$extval" -- externally named value
-  * `T_DLREXTYPE`: "$extype" -- externally named type
-  * `T_DLREXTYPE_STRUCT`: "$extype_struct" -- externally named struct
+  * `T_DLREXTMCALL`: "$extmcall" — externally named method-call
+  * `T_DLREXTVAL`: "$extval" — externally named value
+  * `T_DLREXTYPE`: "$extype" — externally named type
+  * `T_DLREXTYPE_STRUCT`: "$extype_struct" — externally named struct
   * `T_DLRLITERAL`: "$literal"
   * `T_DLRMYFILENAME`: "$myfilename"
   * `T_DLRMYFUNCTION`: "$myfunction"
   * `T_DLRMYLOCATION`: "$mylocation"
-  * `T_DLRRAISE`: "$raise" -- raising exceptions
-  * `T_DLRSHOWTYPE`: "$showtype" -- for debugging purpose
-  * `T_DLRSOLASSERT`: "$solver_assert" -- assert(d2e_prf)
-  * `T_DLRSOLVERIFY`: "$solver_verify" -- verify(s2e_prop)
-  * `T_DLRTEMPENVER`: "$tempenver" -- for adding environvar
-  * `T_DLRTYREP`: "$tyrep" -- $tyrep(SomeType)
-  * `T_DLRVARARG`: "$vararg" -- variadicity support
+  * `T_DLRRAISE`: "$raise" — raising exceptions
+  * `T_DLRSHOWTYPE`: "$showtype" — for debugging purpose
+  * `T_DLRSOLASSERT`: "$solver_assert" — assert(d2e_prf)
+  * `T_DLRSOLVERIFY`: "$solver_verify" — verify(s2e_prop)
+  * `T_DLRTEMPENVER`: "$tempenver" — for adding environvar
+  * `T_DLRTYREP`: "$tyrep" — $tyrep(SomeType)
+  * `T_DLRVARARG`: "$vararg" — variadicity support
   * `T_DO`: "do"
   * `T_DOLLAR`: "$"
   * `T_DOT`: "."
   * `T_DOTDOT`: ".."
   * `T_DOTDOTDOT`: "..."
-  * `T_DOTLTGTDOT`: ".<>." -- for empty termetric
-  * `T_DOTLT`: ".<" -- opening termetric
+  * `T_DOTLTGTDOT`: ".<>." — for empty termetric
+  * `T_DOTLT`: ".<" — opening termetric
   * `T_ELSE`: "else"
   * `T_END`: "end"
   * `T_EQ`: "="
@@ -383,34 +390,34 @@ List for terminal products:
   * `T_EQSLASHEQGTGT`: "=/=>>"
   * `T_EXCEPTION`: "exception"
   * `T_EXTERN`: "extern"
-  * `T_EXTVAR`: "extvar" -- externally named variable
-  * `T_EXTYPE`: "extype" -- externally named type
-  * `T_GTDOT`: ">." -- closing termetric
-  * `T_GT`: ">" -- for closing a tmparg
+  * `T_EXTVAR`: "extvar" — externally named variable
+  * `T_EXTYPE`: "extype" — externally named type
+  * `T_GTDOT`: ">." — closing termetric
+  * `T_GT`: ">" — for closing a tmparg
   * `T_GTLT`: "><"
   * `T_HASH`: "#"
-  * `T_IFCASE`: "ifcase" -- (dynamic) ifcase
-  * `T_IF`: "if" -- (dynamic) if
-  * `T_IMPORT`: "import" -- for importing packages
+  * `T_IFCASE`: "ifcase" — (dynamic) ifcase
+  * `T_IF`: "if" — (dynamic) if
+  * `T_IMPORT`: "import" — for importing packages
   * `T_IN`: "in"
   * `T_LET`: "let"
   * `T_LOCAL`: "local"
-  * `T_LT`: "<" -- for opening a tmparg
+  * `T_LT`: "<" — for opening a tmparg
   * `T_MINUSGT`: "->"
   * `T_MINUSLT`: "-<"
   * `T_MINUSLTGT`: "-<>"
   * `T_NONFIX`: "nonfix"
   * `T_OF`: "of"
-  * `T_OP`: "op" -- HX: taken from ML
+  * `T_OP`: "op" — HX: taken from ML
   * `T_OVERLOAD`: "overload"
-  * `T_REASSUME`: "reassume", "absreimpl" -- for re-assuming abstypes
+  * `T_REASSUME`: "reassume", "absreimpl" — for re-assuming abstypes
   * `T_REC`: "rec"
-  * `T_SCASE`: "scase" -- static case
-  * `T_SIF`: "sif" -- static if
+  * `T_SCASE`: "scase" — static case
+  * `T_SIF`: "sif" — static if
   * `T_SORTDEF`: "sortdef"
   * `T_SRPASSERT`: "#assert"
-  * `T_SRPCODEGEN2`: "#codegen2" -- for level-2 codegen
-  * `T_SRPCODEGEN3`: "#codegen3" -- for level-3 codegen
+  * `T_SRPCODEGEN2`: "#codegen2" — for level-2 codegen
+  * `T_SRPCODEGEN3`: "#codegen3" — for level-3 codegen
   * `T_SRPDEFINE`: "#define"
   * `T_SRPDYNLOAD`: "dynload", "#dynload"
   * `T_SRPELIFDEF`: "#elifdef"
@@ -423,9 +430,9 @@ List for terminal products:
   * `T_SRPIF`: "#if"
   * `T_SRPIFNDEF`: "#ifndef"
   * `T_SRPINCLUDE`: "#include"
-  * `T_SRPPRAGMA`: "#pragma" -- general pragma
-  * `T_SRPPRERR`: "#prerr" -- outpui to stderr
-  * `T_SRPPRINT`: "#print" -- output to stdout
+  * `T_SRPPRAGMA`: "#pragma" — general pragma
+  * `T_SRPPRERR`: "#prerr" — outpui to stderr
+  * `T_SRPPRINT`: "#print" — output to stdout
   * `T_SRPREQUIRE`: "#require"
   * `T_SRPSTALOAD`: "staload", "#staload"
   * `T_SRPTHEN`: "#then"
@@ -433,11 +440,11 @@ List for terminal products:
   * `T_STACST`: "sta", "stacst"
   * `T_STADEF`: "stadef"
   * `T_STATIC`: "static"
-  * `T_SYMELIM`: "symelim" -- symbol elimination
-  * `T_SYMINTR`: "symintr" -- symbol introduction
+  * `T_SYMELIM`: "symelim" — symbol elimination
+  * `T_SYMINTR`: "symintr" — symbol introduction
   * `T_THEN`: "then"
-  * `T_TILDE`: "~" -- often for 'not', 'free', etc.
-  * `T_TKINDEF`: "tkindef" -- for introducting tkinds
+  * `T_TILDE`: "~" — often for 'not', 'free', etc.
+  * `T_TKINDEF`: "tkindef" — for introducting tkinds
   * `T_TRY`: "try"
   * `T_WHEN`: "when"
   * `T_WHERE`: "where"
@@ -476,11 +483,11 @@ List for non‑terminal products:
   * `DLRTUP_VT`: "$tuple_vt", "$tup_vt"
   * `DLRVCOPYENV_VT`: "$vcopyenv_vt"
   * `DLRVCOPYENV_V`: "$vcopyenv_v"
-  * `FN`: "fn" -- non-recursive
-  * `FNX`: "fnx" -- mutual tail-rec.
-  * `FUN`: "fun" -- general-recursive
-  * `IMPLEMENT`: "implement" -- 1
-  * `IMPLMNT`: "implmnt" -- 0
+  * `FN`: "fn" — non-recursive
+  * `FNX`: "fnx" — mutual tail-rec.
+  * `FUN`: "fun" — general-recursive
+  * `IMPLEMENT`: "implement" — 1
+  * `IMPLMNT`: "implmnt" — 0
   * `INFIX`: "infix"
   * `INFIXL`: "infixl"
   * `INFIXR`: "infixr"
@@ -491,7 +498,7 @@ List for non‑terminal products:
   * `PREFIX`: "prefix"
   * `PRFN`: "prfn"
   * `PRFUN`: "prfun"
-  * `PRIMPLMNT`: "primplement", "primplmnt" -- ~1
+  * `PRIMPLMNT`: "primplement", "primplmnt" — ~1
   * `PROPDEF`: "propdef"
   * `PRVAL`: "prval"
   * `PRVAR`: "prvar"
@@ -510,17 +517,19 @@ Derived from other products
 
 Here, order does not matter.
 
-  * `T_ABSTYPE`: `ABSTYPE` | `ABST0YPE` | `ABSPROP` | `ABSVIEW` | `ABSVIEWTYPE` | `ABSVIEWT0YPE`
+  * `T_ABSTYPE`: `ABSTYPE` | `ABST0YPE` | `ABSPROP` | `ABSVIEW` | `ABSVIEWTYPE`
+    | `ABSVIEWT0YPE`
   * `T_CASE`: `CASE` | `CASE_pos` | `CASE_neg`
   * `T_COMMENT_block`: `COMMENT_block_c` | `COMMENT_block_ml`
   * `T_DATATYPE`: `DATATYPE` | `DATAPROP` | `DATAVIEW` | `DATAVTYPE`
   * `T_DLRDELAY`: `DLRDELAY` | `DLRLDELAY`
-  * `T_DLREFFMASK_ARG`: `DLREFFMASK_NTM` | `DLREFFMASK_EXN` | `DLREFFMASK_REF` | `DLREFFMASK_WRT` | `DLREFFMASK_ALL`
+  * `T_DLREFFMASK_ARG`: `DLREFFMASK_NTM` | `DLREFFMASK_EXN` | `DLREFFMASK_REF`
+    | `DLREFFMASK_WRT` | `DLREFFMASK_ALL`
   * `T_DLRLST`: `DLRLST` | `DLRLST_T` | `DLRLST_VT`
   * `T_DLRREC`: `DLRREC` | `DLRREC_T` | `DLRREC_VT`
   * `T_DLRTUP`: `DLRTUP` | `DLRTUP_T` | `DLRTUP_VT`
   * `T_DLRVCOPYENV`: `DLRVCOPYENV_V` | `DLRVCOPYENV_VT`
-  * `T_ERR` -- additional rules not described is this document.
+  * `T_ERR` — additional rules not described is this document.
   * `T_FIX`: `FIX` | `FIXAT`
   * `T_FIXITY`: `INFIX` | `INFIXL` | `INFIXR` | `PREFIX` | `POSTFIX`
   * `T_FUN`: `FN` | `FNX` | `FUN` | `PRFN` | `PRFUN` | `PRAXI` | `CASTFN`
@@ -528,7 +537,10 @@ Here, order does not matter.
   * `T_LAM`: `LAM` | `LAMAT` | `LLAM` | `LLAMAT`
   * `T_MACDEF`: `MACDEF` | `MACRODEF`
   * `T_TYPEDEF`: `PROPDEF` | `VIEWDEF` | `TYPEDEF` | `VIEWTYPEDEF`
-  * `T_TYPE`: `TYPE` | `TYPE_pos` | `TYPE_neg` | `T0YPE` | `T0YPE_pos` | `T0YPE_neg` | `PROP` | `PROP_pos` | `PROP_neg` | `VIEW` | `VIEW_pos` | `VIEW_neg` | `VIEWTYPE` | `VIEWTYPE_pos` | `VIEWTYPE_neg` | `VIEWT0YPE` | `VIEWT0YPE_pos` | `VIEWT0YPE_neg`
+  * `T_TYPE`: `TYPE` | `TYPE_pos` | `TYPE_neg` | `T0YPE` | `T0YPE_pos`
+    | `T0YPE_neg` | `PROP` | `PROP_pos` | `PROP_neg` | `VIEW` | `VIEW_pos`
+    | `VIEW_neg` | `VIEWTYPE` | `VIEWTYPE_pos` | `VIEWTYPE_neg` | `VIEWT0YPE`
+    | `VIEWT0YPE_pos` | `VIEWT0YPE_neg`
   * `T_VAL`: `VAL` | `VAL_pos` | `VAL_neg` | `PRVAL`
   * `T_VAR`: `VAR` | `PRVAR`
   * `T_WITHTYPE`: `WITHTYPE` | `WITHPROP` | `WITHVIEW` | `WITHVIEWTYPE`
