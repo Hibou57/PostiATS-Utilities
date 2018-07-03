@@ -198,60 +198,60 @@ Keep in mind the order matters.
   * `ABSVIEWT0YPE`: "absviewt@ype" — see note #2.
   * `CASE_pos`: "case+" — see note #2.
   * `CASE_neg`: "case-" — see note #2.
-  * `CASE`: "case"
+  * `CASE`: "case" — see note #7.
   * `PROP_pos`: "prop+" — see note #2.
   * `PROP_neg`: "prop-" — see note #2.
-  * `PROP`: "prop"
+  * `PROP`: "prop" — see note #7.
   * `T0YPE_pos`: "t@ype+" — see note #2.
   * `T0YPE_neg`: "t@ype-" — see note #2.
   * `T0YPE`: "t@ype" — see note #2.
   * `TYPE_pos`: "type+" — see note #2.
   * `TYPE_neg`: "type-" — see note #2.
-  * `TYPE`: "type"
+  * `TYPE`: "type" — see note #7.
   * `T0YPE_pos`: "t0ype+" — see note #2.
   * `T0YPE_neg`: "t0ype-" — see note #2.
-  * `T9YPE`: "t0ype"
+  * `T9YPE`: "t0ype" — see note #7.
   * `VIEWT0YPE_pos`: "vt@ype+" — see note #2.
   * `VIEWT0YPE_neg`: "vt@ype-" — see note #2.
   * `VIEWT0YPE`: "vt@ype" — see note #2.
   * `VIEWT0YPE_pos`: "vtype+" — see note #2.
   * `VIEWT0YPE_neg`: "vtype-" — see note #2.
-  * `VIEWT0YPE`: "vtype"
+  * `VIEWT0YPE`: "vtype" — see note #7.
   * `VIEWT0YPE_pos`: "vt0ype+" — see note #2.
   * `VIEWT0YPE_neg`: "vt0ype-" — see note #2.
-  * `VIEWT0YPE`: "vt0ype"
+  * `VIEWT0YPE`: "vt0ype" — see note #7.
   * `T_VIEWAT`: "view@" — see note #2.
   * `VIEW_pos`: "view+" — see note #2.
   * `VIEW_neg`: "view-" — see note #2.
-  * `VIEW`: "view"
+  * `VIEW`: "view" — see note #7.
   * `VIEWT0YPE_pos`: "viewt@ype+" — see note #2.
   * `VIEWT0YPE_neg`: "viewt@ype-" — see note #2.
   * `VIEWT0YPE`: "viewt@ype" — see note #2.
   * `VIEWTYPE_pos`: "viewtype+" — see note #2.
   * `VIEWTYPE_neg`: "viewtype-" — see note #2.
-  * `VIEWTYPE`: "viewtype"
+  * `VIEWTYPE`: "viewtype" — see note #7.
   * `VIEWT0YPE_pos`: "viewt0ype+" — see note #2.
   * `VIEWT0YPE_neg`: "viewt0ype-" — see note #2.
-  * `VIEWT0YPE`: "viewt0ype"
+  * `VIEWT0YPE`: "viewt0ype" — see note #7.
   * `VAL_pos`: "val+" — see note #2.
   * `VAL_neg`: "val-" — see note #2.
-  * `VAL`: "val"
+  * `VAL`: "val" — see note #7.
   * `T_FORSTAR`: "for*" — see note #2.
-  * `T_FOR`: "for"
+  * `T_FOR`: "for" — see note #7.
   * `T_WHILESTAR`: "while*" — see note #2.
-  * `T_WHILE`: "while"
+  * `T_WHILE`: "while" — see note #7.
   * `T_ADDRAT`: "addr@" — see note #2.
-  * `T_ADDR`: "addr"
+  * `T_ADDR`: "addr" — see note #7.
   * `T_FOLDAT`: "fold@" — see note #2.
-  * `T_FOLD`: "fold"
+  * `T_FOLD`: "fold" — see note #7.
   * `T_FREEAT`: "free@" — see note #2.
-  * `T_FREE`: "free"
+  * `T_FREE`: "free" — see note #7.
   * `LAMAT`: "lam@" — see note #2.
-  * `LAM`: "lam"
+  * `LAM`: "lam" — see note #7.
   * `LLAMAT`: "llam@" — see note #2.
-  * `LLAM`: "llam"
+  * `LLAM`: "llam" — see note #7.
   * `FIXAT`: "fix@" — see note #2.
-  * `FIX`: "fix"
+  * `FIX`: "fix" — see note #7.
   * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* — see note #1.
   * `T_IDENT_sym`: `SYMBOLIC`+: — see note #1.
   * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* (`P` `SIGN`? `DIGIT`+)?
@@ -293,6 +293,7 @@ Both and even more the second kind of case, are **corner case** worth to know.
 On the contrary, `viewtypefoo` or `viewt0ypefoo` will be parsed as a single
 identifier.
 
+
 ### Note #3
 
 With numeric literals, some parts may be empty. You may prefer to not make
@@ -325,6 +326,12 @@ There must be a space before the dot. Two examples to have in mind:
   * `foo .123` will be parsed as the identifier `foo` and the float `0.123`.
   * `foo.123` will be parsed as the identifier `foo` and the dot‑identifier
     `.123`.
+
+
+### Note #7
+
+Not followed by an `IDENTRST`. Ex. `viewtypefoo` or `viewt0ypefoo` will be
+parsed as a single identifier, not as `viewtype` or `viewt0ype` and `foo`.
 
 
 Predefined symbols
