@@ -57,7 +57,7 @@ Space separated alternatives.
   * `IC_LDQ` = any character, less double‑quote.
   * `IC_LEOL` = any character, less EOL.
   * `IDENTFST`: "a" to "z", "A" to "Z", "_"
-  * `IDENTRST`: `IDENTFST` "'" "$"
+  * `IDENTRST`: `IDENTFST` "0" to "9" "'" "$"
   * `SYMBOLIC`: " % & + - . / : = @ ~ \` ^ | * ! ? < > # " (less blanks).
   * `X`: "x" "X"
   * `P`: "p" "P"
