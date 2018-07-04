@@ -4,10 +4,11 @@ Postiats lexical rules
 Before anything
 ------------------------------------------------------------------------------
 
-The rules described here, are (I hope) exact. But **it is not required to know
-it exactly to be able to use Postiats**. This document is provided to be part
-of a reference documentation I always missed, and because it can be useful for
-many kinds of applications dealing with Postiats source.
+The rules described here, are hoped to be exact. But **it is not required to
+know it exactly to be able to use Postiats**. This document is provided to be
+part of a reference documentation I always missed, and because it can be
+useful for many kinds of applications dealing with Postiats source. If you
+find an issue, feel free to tell about.
 
 In the rules described, the order of the tests are relevant.
 
@@ -53,9 +54,9 @@ Space separated alternatives.
   * `DIGIT`: "0" to "9".
   * `OCTAL`: "0" to "7".
   * `IC`: any character, including EOL.
-  * `IC_LQ` = any character, less quote (single‑quote).
-  * `IC_LDQ` = any character, less double‑quote.
-  * `IC_LEOL` = any character, less EOL.
+  * `IC_LQ`: any character, less quote (single‑quote).
+  * `IC_LDQ`: any character, less double‑quote.
+  * `IC_LEOL`: any character, less EOL.
   * `IDENTFST`: "a" to "z", "A" to "Z", "_"
   * `IDENTRST`: `IDENTFST` "0" to "9" "'" "$"
   * `SYMBOLIC`: " % & + - . / : = @ ~ \` ^ | * ! ? < > # " (less blanks).
@@ -371,6 +372,7 @@ List for terminal products:
   * `T_DLRBREAK`: "$break"
   * `T_DLRCONTINUE`: "$continue"
   * `T_DLRD2CTYPE`: "$d2ctype" — $d2ctype(foo/foo<...>)
+  * `T_DLREFFMASK`: "$effmask"
   * `T_DLREXTERN`: "$extern"
   * `T_DLREXTFCALL`: "$extfcall" — externally named fun-call
   * `T_DLREXTKIND`: "$extkind"
@@ -427,6 +429,8 @@ List for terminal products:
   * `T_OF`: "of"
   * `T_OP`: "op" — HX: taken from ML
   * `T_OVERLOAD`: "overload"
+  * `T_PERCENT`: "%"
+  * `T_QMARK`: "?"
   * `T_REASSUME`: "reassume", "absreimpl" — for re-assuming abstypes
   * `T_REC`: "rec"
   * `T_SCASE`: "scase" — static case
@@ -466,7 +470,6 @@ List for terminal products:
   * `T_WHEN`: "when"
   * `T_WHERE`: "where"
   * `T_WITH`: "with"
-  * `T_DLREFFMASK`: "$effmask"
 
 
 List for non‑terminal products:
