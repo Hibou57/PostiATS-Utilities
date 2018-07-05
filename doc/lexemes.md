@@ -46,26 +46,24 @@ products up to a terminal product.
 Character categories
 ------------------------------------------------------------------------------
 
-Space separated alternatives.
-
   * `SPACE`: " " "\n" "\r" "\v" "\f" "\r".
   * `ESCAPED`: "n" "t" "v" "b" "r" "f" "a" "\\" "?" "'" '"' "(" "[" "{".
   * `XDIGIT`: "0" to "9", "a" to "f", "A" to "F".
   * `DIGIT`: "0" to "9".
   * `OCTAL`: "0" to "7".
-  * `IC`: any character, including EOL.
+  * `IC`: input character: any character, including EOL.
   * `IC_LQ`: any character, less quote (single‑quote).
   * `IC_LDQ`: any character, less double‑quote.
   * `IC_LEOL`: any character, less EOL.
   * `IDENTFST`: "a" to "z", "A" to "Z", "_"
   * `IDENTRST`: `IDENTFST` "0" to "9" "'" "$"
-  * `SYMBOLIC`: " % & + - . / : = @ ~ \` ^ | * ! ? < > # " (less blanks).
+  * `SYMBOLIC`: " % & + - . / : = @ ~ \` ^ | * ! ? < > # " — less blanks.
   * `X`: "x" "X"
   * `P`: "p" "P"
   * `E`: "e" "E"
   * `SIGN`: "-" "+"
-  * `FL`: "f" "F" "l" "L"
-  * `LU`: "L" "l" "U" "u"
+  * `FL`: "f" "F" "l" "L" — float suffix.
+  * `LU`: "L" "l" "U" "u" — integer suffix.
 
 Other caracters used (outise of comments and text literals), not alphanumeric
 and neither in `SYMBOLIC`, are: "(" ")" "[" "]" "{" "}" "," ";".
@@ -165,7 +163,7 @@ Keep in mind the order matters.
   * `T_ATLBRACKET`: "@["
   * `T_ATLBRACE`: "@{"
   * `T_IDENT_sym`: "@" `SYMBOLIC`* — see note #1.
-  * `T_COLONLT`: ":<"
+  * `T_COLONLT`: ":<" — see note #2.
   * `T_IDENT_sym`: ":" `SYMBOLIC`* — see note #1.
   * `T_IDENT_sym`: "." `SYMBOLIC`+ — see note #1.
   * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ (`E` `SIGN`? `DIGIT`+)? `FL`? — see
@@ -276,7 +274,7 @@ Keep in mind the order matters.
 
 if the identifier belongs to a predefined symbol table defined later,
 then it is turned into the production after that table. Ex. if an
-`IDENT_sym` is “:<” then is will be turned into `T_COLONLT` (introduced
+`IDENT_sym` is “->” then is will be turned into `T_MINUSGT` (introduced
 later in this document) which has a special meaning
 
 
@@ -284,12 +282,14 @@ later in this document) which has a special meaning
 
 This is so, whatever follows.
 
-Two different examples to have in mind:
+Three examples to have in mind:
 
   * `case+foo` will be parsed as `case+` and `foo`.
   * `viewt@ypefoo` will be parsed as `viewt@ype` and `foo`.
+  * `:<>` will be parsed as `:<` and `>`
 
-Both and even more the second kind of case, are **corner case** worth to know.
+The first and even more the second kind of case, are **corner case** worth to
+know.
 
 On the contrary, `viewtypefoo` or `viewt0ypefoo` will be parsed as a single
 identifier.
