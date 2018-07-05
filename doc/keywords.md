@@ -212,7 +212,7 @@ The list is split‑down into sub‑lists the same way as the previous list.
 
 ### Preprocessor keywords
 
-Note “#staload” and “#dynload” are not listed here.
+Note "#staload" and "#dynload" are not listed here.
 
   * `T_SRPASSERT`: "#assert"
   * `T_SRPCODEGEN2`: "#codegen2"
@@ -294,6 +294,9 @@ Synonymous groups — informational
   * "dataviewtype", "datavtype"
   * "primplement", "primplmnt"
   * "viewtypedef", "vtypedef"
+
+Note although "primplement" and "primplmnt" are synonymous, "implement" and
+"implmnt" are not synonymous!
 
 As a side note, “extern” may be a synonymous for “static”, “extype” or
 “extvar”, depending on the case and reciprocally.
