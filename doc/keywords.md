@@ -29,14 +29,15 @@ The first list is inferred from `pats_parsing_kwds.dats` and
 overlooked, since there is no clearly distinguished list of keywords in
 Postiats source (many are missing, in `pats_parsing_kwds.dats`).
 
-Postiats also has predefined symbols, which are not listed here. These symbols
-are not keywords. Predefined symbols are not necessarily symbols, they may be
-made of word characters.
+Postiats also has predefined identifiers, which are not listed here. These
+identifiers are not keywords.
 
-Keywords are not necessarily words, they may be made of symbolic characters.
+Keywords are not necessarily words, they may be made of symbolic characters,
+although the ones introducing a declaration are words‑like.
 
-Some keywords are the same as predefined symbols. An ATS2 colorizer could
-hardly be perfect without some syntax analyses.
+Some keywords are the same as predefined identifiers. An ATS2 colorizer could
+hardly be perfect without some syntax analyses, atlhough it is not too hard
+to make it good enough.
 
 
 Reference keywords list
@@ -237,6 +238,9 @@ Note "#staload" and "#dynload" are not listed here.
 
 ### Expression keywords
 
+Some of these keywords are the same as some predefined identifiers. This
+where some care should be taken by colorizer designers.
+
   * `T_AND`: "and"
   * `T_AS`: "as"
   * `T_ATLBRACE`: "@{"
@@ -298,5 +302,5 @@ Synonymous groups — informational
 Note although "primplement" and "primplmnt" are synonymous, "implement" and
 "implmnt" are not synonymous!
 
-As a side note, “extern” may be a synonymous for “static”, “extype” or
+As a side note, “extern” **may** be a synonymous for “static”, “extype” or
 “extvar”, depending on the case and reciprocally.
