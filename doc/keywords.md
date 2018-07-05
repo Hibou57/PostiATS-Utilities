@@ -239,7 +239,7 @@ Note "#staload" and "#dynload" are not listed here.
 ### Expression keywords
 
 Some of these keywords are the same as some predefined identifiers. This
-where some care should be taken by colorizer designers.
+is where some care should be taken by colorizer designers.
 
   * `T_AND`: "and"
   * `T_AS`: "as"
