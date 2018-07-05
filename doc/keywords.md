@@ -140,7 +140,8 @@ synonymous as much as possibly not.
 Expanded keywords list — informational
 ------------------------------------------------------------------------------
 
-Multiple items may be synonymous or may be not. It depends.
+Multiple items may be synonymous or may be not; tt depends. The third list,
+later, tells about synonymous.
 
 
   * `T_ABSTYPE`: "abstbox", "abstype", "abst@ype", "abst0ype", "abstflat",
