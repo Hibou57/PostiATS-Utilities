@@ -7,8 +7,8 @@ Before anything
 Here, is a reference list of ATS2 keywords based on lexical productions, an
 expanded list of these and a list of synonymous groups.
 
-This document about a keywords reference list, not a keyword based reference of
-ATS2.
+This document is about a keywords reference list, not a keyword based
+reference of ATS2.
 
 The reference list of keywords is given as a list of lexical productions, as
 described in “lexemes.md”. This is important since there may be synonymous and
