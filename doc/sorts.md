@@ -63,5 +63,5 @@ is to a type what a meta‑class is to a class.
 
 If the argument of a type constructor is of …
 
-  * an impredicative sort, it defines an indexed type.
-  * a predicative sort, it defines a polymorphic type.
+  * an predicative sort, it defines an indexed type.
+  * a impredicative sort, it defines a polymorphic type.
