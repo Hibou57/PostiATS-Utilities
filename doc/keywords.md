@@ -44,14 +44,14 @@ Reference keywords list
 ------------------------------------------------------------------------------
 
 The keywords are given using references to lexical productions, the texts in
-the list is not the actual keywords. The second list, later, gives the texts
+the list are not the actual keywords. The second list, later, gives the texts
 of the actual keywords.
 
 To ease its possible uses, the list is split‑down into sub‑lists by
 categories.
 
-Some keywords actually designated multiple concrete keywords, possibly
-synonymous as much as possibly not.
+Some “keyword” lexical productions, actually designate multiple concrete
+keywords, possibly synonymous as much as possibly not.
 
 
 ### Static declaration keywords
