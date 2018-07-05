@@ -438,7 +438,6 @@ List for terminal products:
   * `T_SORTDEF`: "sortdef"
   * `T_SRPASSERT`: "#assert"
   * `T_SRPCODEGEN2`: "#codegen2" — for level-2 codegen
-  * `T_SRPCODEGEN3`: "#codegen3" — for level-3 codegen
   * `T_SRPDEFINE`: "#define"
   * `T_SRPDYNLOAD`: "dynload", "#dynload"
   * `T_SRPELIFDEF`: "#elifdef"
