@@ -42,6 +42,10 @@ hardly be perfect without some syntax analyses.
 Reference keywords list
 ------------------------------------------------------------------------------
 
+The keywords are given using references to lexical productions, the texts in
+the list is not the actual keywords. The second list, later, gives the texts
+of the actual keywords.
+
 Some keywords actually designated multiple concrete keywords, possibly
 synonymous as much as possibly not.
 
