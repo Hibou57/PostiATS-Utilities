@@ -23,11 +23,13 @@ With these variations:
 
 With these relations:
 
-  * `prop` < `t@ype` < `type`.
-  * `view` < `view@type` < `viewtype`.
-  * `view` < `prop`.
-  * `viewt@ype` < `t@ype`.
+  * `t@ype` < `type`.
   * `viewtype` < `type`.
+  * `viewt@ype` < `t@ype`.
+  * `view@type` < `viewtype`.
+  * `prop` < `t@ype`.
+  * `view` < `view@type`.
+  * `view` < `prop`.
 
 
 With these aliases:
@@ -63,5 +65,5 @@ is to a type what a meta‑class is to a class.
 
 If the argument of a type constructor is of …
 
-  * an predicative sort, it defines an indexed type.
-  * a impredicative sort, it defines a polymorphic type.
+  * a predicative sort, it defines an indexed type.
+  * an impredicative sort, it defines a polymorphic type.
