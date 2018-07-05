@@ -145,8 +145,8 @@ later, tells about synonymous.
 
 
   * `T_ABSTYPE`: "abstbox", "abstype", "abst@ype", "abst0ype", "abstflat",
-    "absprop" | "absview", "absviewtype", "absvtbox", "absvtype" ,
-    "absvt@ype", "absviewt@ype", "absviewt0ype", "absvt0ype", "absvtflat"
+    "absprop", "absview", "absviewtype", "absvtbox", "absvtype" , vt@ype",
+    "abs"absviewt@ype", "absviewt0ype", "absvt0ype", "absvtflat"
   * `T_AND`: "and"
   * `T_AS`: "as"
   * `T_ASSUME`: "assume", "absimpl"
@@ -174,7 +174,7 @@ later, tells about synonymous.
   * `T_EXTYPE`: "extype"
   * `T_FIXITY`: "infix", "infixl", "infixr", "prefix", "postfix"
   * `T_FORSTAR`: "for*"
-  * `T_FUN`: "fn" | "fnx" | "fun" | "prfn" | "prfun", "praxi", "castfn"
+  * `T_FUN`: "fn", "fnx", "fun", "prfn", "prfun", "praxi", "castfn"
   * `T_GT`: ">"
   * `T_GTDOT`: ">."
   * `T_GTLT`: "><"
