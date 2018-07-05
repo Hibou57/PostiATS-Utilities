@@ -46,68 +46,58 @@ The keywords are given using references to lexical productions, the texts in
 the list is not the actual keywords. The second list, later, gives the texts
 of the actual keywords.
 
+To ease its possible uses, the list is split‑down into sub‑lists by
+categories.
+
 Some keywords actually designated multiple concrete keywords, possibly
 synonymous as much as possibly not.
 
 
+### Static declaration keywords
+
   * `T_ABSTYPE`
-  * `T_AND`
-  * `T_AS`
   * `T_ASSUME`
-  * `T_ATLBRACE`
-  * `T_ATLPAREN`
-  * `T_BANG`
-  * `T_BAR`
-  * `T_CASE`
   * `T_CLASSDEC`
-  * `T_COLON`
-  * `T_COMMA`
   * `T_DATASORT`
   * `T_DATATYPE`
-  * `T_DOT`
-  * `T_ELSE`
-  * `T_END`
-  * `T_EOF`
-  * `T_EQ`
-  * `T_EQGT`
   * `T_EXCEPTION`
+  * `T_EXTYPE`
+  * `T_FIXITY`
+  * `T_MACDEF`
+  * `T_NONFIX`
+  * `T_OVERLOAD`
+  * `T_REASSUME`
+  * `T_SORTDEF`
+  * `T_SRPSTALOAD`
+  * `T_STACST`
+  * `T_STADEF`
+  * `T_SYMELIM`
+  * `T_SYMINTR`
+  * `T_TKINDEF`
+  * `T_TYPEDEF`
+
+
+### Dynamic declaration keywords
+
   * `T_EXTCODE`
   * `T_EXTERN`
   * `T_EXTVAR`
-  * `T_EXTYPE`
-  * `T_FIXITY`
-  * `T_FORSTAR`
   * `T_FUN`
-  * `T_GT`
-  * `T_GTDOT`
-  * `T_GTLT`
-  * `T_IF`
-  * `T_IFCASE`
   * `T_IMPLEMENT`
-  * `T_IN`
-  * `T_LBRACE`
-  * `T_LBRACKET`
   * `T_LOCAL`
-  * `T_LPAREN`
-  * `T_MACDEF`
-  * `T_NONFIX`
-  * `T_OF`
-  * `T_OVERLOAD`
-  * `T_QUOTELBRACE`
-  * `T_QUOTELPAREN`
-  * `T_RBRACE`
-  * `T_RBRACKET`
-  * `T_REASSUME`
-  * `T_REC`
-  * `T_RPAREN`
-  * `T_SCASE`
-  * `T_SEMICOLON`
-  * `T_SIF`
-  * `T_SORTDEF`
+  * `T_SRPDYNLOAD`
+  * `T_STATIC` — yes, dynamic!
+  * `T_VAL`
+  * `T_VAR`
+
+
+### Preprocessor keywords
+
+Note `T_SRPSTALOAD` and `T_SRPDYNLOAD` are not listed here.
+
   * `T_SRPASSERT`
   * `T_SRPCODEGEN2`
   * `T_SRPDEFINE`
-  * `T_SRPDYNLOAD`
   * `T_SRPELIF`
   * `T_SRPELIFDEF`
   * `T_SRPELIFNDEF`
@@ -122,20 +112,49 @@ synonymous as much as possibly not.
   * `T_SRPPRERR`
   * `T_SRPPRINT`
   * `T_SRPREQUIRE`
-  * `T_SRPSTALOAD`
   * `T_SRPTHEN`
   * `T_SRPUNDEF`
-  * `T_STACST`
-  * `T_STADEF`
-  * `T_STATIC`
-  * `T_SYMELIM`
-  * `T_SYMINTR`
+
+
+### Expression keywords
+
+  * `T_AND` — not top‑level! (mutual references)
+  * `T_AS`
+  * `T_ATLBRACE`
+  * `T_ATLPAREN`
+  * `T_BANG`
+  * `T_BAR`
+  * `T_CASE`
+  * `T_COLON`
+  * `T_COMMA`
+  * `T_DOT` — used at top‑level too.
+  * `T_ELSE`
+  * `T_END`
+  * `T_EOF`
+  * `T_EQ`
+  * `T_EQGT`
+  * `T_FORSTAR`
+  * `T_GT`
+  * `T_GTDOT`
+  * `T_GTLT`
+  * `T_IF`
+  * `T_IFCASE`
+  * `T_IN`
+  * `T_LBRACE` — used at top‑level too.
+  * `T_LBRACKET` — used at top‑level too.
+  * `T_LPAREN` — used at top‑level too.
+  * `T_OF`
+  * `T_QUOTELBRACE`
+  * `T_QUOTELPAREN`
+  * `T_RBRACE`
+  * `T_RBRACKET`
+  * `T_REC`
+  * `T_RPAREN`
+  * `T_SCASE`
+  * `T_SEMICOLON`
+  * `T_SIF`
   * `T_THEN`
-  * `T_TKINDEF`
   * `T_TRY`
-  * `T_TYPEDEF`
-  * `T_VAL`
-  * `T_VAR`
   * `T_WHEN`
   * `T_WHILESTAR`
   * `T_WITH`
@@ -144,71 +163,60 @@ synonymous as much as possibly not.
 Expanded keywords list — informational
 ------------------------------------------------------------------------------
 
-Multiple items may be synonymous or may be not; tt depends. The third list,
+Multiple items may be synonymous or may be not; it depends. The third list,
 later, tells about synonymous.
 
+The list is split‑down into sub‑lists the same way as the previous list.
+
+
+### Static declaration keywords
 
   * `T_ABSTYPE`: "abstbox", "abstype", "abst@ype", "abst0ype", "abstflat",
     "absprop", "absview", "absviewtype", "absvtbox", "absvtype" , vt@ype",
     "abs"absviewt@ype", "absviewt0ype", "absvt0ype", "absvtflat"
-  * `T_AND`: "and"
-  * `T_AS`: "as"
   * `T_ASSUME`: "assume", "absimpl"
-  * `T_ATLBRACE`: "@{"
-  * `T_ATLPAREN`: "@("
-  * `T_BANG`: "!"
-  * `T_BAR`: "|"
-  * `T_CASE`: "case", "case+", "case-"
   * `T_CLASSDEC`: "classdec"
-  * `T_COLON`: ":"
-  * `T_COMMA`: ","
   * `T_DATASORT`: "datasort"
   * `T_DATATYPE`: "datatype", "dataprop", "dataview", "dataviewtype",
     "datavtype"
-  * `T_DOT`: "."
-  * `T_ELSE`: "else"
-  * `T_END`: "end"
-  * `T_EOF`: EOF
-  * `T_EQ`: "="
-  * `T_EQGT`: "=>"
   * `T_EXCEPTION`: "exception"
+  * `T_EXTYPE`: "extype"
+  * `T_FIXITY`: "infix", "infixl", "infixr", "prefix", "postfix"
+  * `T_MACDEF`: "macdef", "macrodef"
+  * `T_NONFIX`: "nonfix"
+  * `T_OVERLOAD`: "overload"
+  * `T_REASSUME`: "reassume", "absreimpl"
+  * `T_SORTDEF`: "sortdef"
+  * `T_SRPSTALOAD`: "staload", "#staload"
+  * `T_STACST`: "sta", "stacst"
+  * `T_STADEF`: "stadef"
+  * `T_SYMELIM`: "symelim"
+  * `T_SYMINTR`: "symintr"
+  * `T_TKINDEF`: "tkindef"
+  * `T_TYPEDEF`: "propdef", "viewdef", "typedef", "viewtypedef", "vtypedef"
+
+
+### Dynamic declaration keywords
+
   * `T_EXTCODE`: "%{"
   * `T_EXTERN`: "extern"
   * `T_EXTVAR`: "extvar"
-  * `T_EXTYPE`: "extype"
-  * `T_FIXITY`: "infix", "infixl", "infixr", "prefix", "postfix"
-  * `T_FORSTAR`: "for*"
   * `T_FUN`: "fn", "fnx", "fun", "prfn", "prfun", "praxi", "castfn"
-  * `T_GT`: ">"
-  * `T_GTDOT`: ">."
-  * `T_GTLT`: "><"
-  * `T_IF`: "if"
-  * `T_IFCASE`: "ifcase"
   * `T_IMPLEMENT`: "implmnt", "implement", "primplement", "primplmnt"
-  * `T_IN`: "in"
-  * `T_LBRACE`: "{"
-  * `T_LBRACKET`: "["
   * `T_LOCAL`: "local"
-  * `T_LPAREN`: "("
-  * `T_MACDEF`: "macdef", "macrodef"
-  * `T_NONFIX`: "nonfix"
-  * `T_OF`: "of"
-  * `T_OVERLOAD`: "overload"
-  * `T_QUOTELBRACE`: "'{"
-  * `T_QUOTELPAREN`: "'("
-  * `T_RBRACE`: "}"
-  * `T_RBRACKET`: "]"
-  * `T_REASSUME`: "reassume", "absreimpl"
-  * `T_REC`: "rec"
-  * `T_RPAREN`: ")"
-  * `T_SCASE`: "scase"
-  * `T_SEMICOLON`: ";"
-  * `T_SIF`: "sif"
-  * `T_SORTDEF`: "sortdef"
+  * `T_SRPDYNLOAD`: "dynload", "#dynload"
+  * `T_STATIC`: "static"
+  * `T_VAL`: "val", "val+", "val-", "prval"
+  * `T_VAR`: "var", "prvar"
+
+
+### Preprocessor keywords
+
+Note “#staload” and “#dynload” are not listed here.
+
   * `T_SRPASSERT`: "#assert"
   * `T_SRPCODEGEN2`: "#codegen2"
   * `T_SRPDEFINE`: "#define"
-  * `T_SRPDYNLOAD`: "dynload", "#dynload"
   * `T_SRPELIF`: "#elif"
   * `T_SRPELIFDEF`: "#elifdef"
   * `T_SRPELIFNDEF`: "#elifndef"
@@ -223,20 +231,49 @@ later, tells about synonymous.
   * `T_SRPPRERR`: "#prerr"
   * `T_SRPPRINT`: "#print"
   * `T_SRPREQUIRE`: "#require"
-  * `T_SRPSTALOAD`: "staload", "#staload"
   * `T_SRPTHEN`: "#then"
   * `T_SRPUNDEF`: "#undef"
-  * `T_STACST`: "sta", "stacst"
-  * `T_STADEF`: "stadef"
-  * `T_STATIC`: "static"
-  * `T_SYMELIM`: "symelim"
-  * `T_SYMINTR`: "symintr"
+
+
+### Expression keywords
+
+  * `T_AND`: "and"
+  * `T_AS`: "as"
+  * `T_ATLBRACE`: "@{"
+  * `T_ATLPAREN`: "@("
+  * `T_BANG`: "!"
+  * `T_BAR`: "|"
+  * `T_CASE`: "case", "case+", "case-"
+  * `T_COLON`: ":"
+  * `T_COMMA`: ","
+  * `T_DOT`: "."
+  * `T_ELSE`: "else"
+  * `T_END`: "end"
+  * `T_EOF`: EOF
+  * `T_EQ`: "="
+  * `T_EQGT`: "=>"
+  * `T_FORSTAR`: "for*"
+  * `T_GT`: ">"
+  * `T_GTDOT`: ">."
+  * `T_GTLT`: "><"
+  * `T_IF`: "if"
+  * `T_IFCASE`: "ifcase"
+  * `T_IN`: "in"
+  * `T_LBRACE`: "{"
+  * `T_LBRACKET`: "["
+  * `T_LPAREN`: "("
+  * `T_OF`: "of"
+  * `T_QUOTELBRACE`: "'{"
+  * `T_QUOTELPAREN`: "'("
+  * `T_RBRACE`: "}"
+  * `T_RBRACKET`: "]"
+  * `T_REC`: "rec"
+  * `T_RPAREN`: ")"
+  * `T_SCASE`: "scase"
+  * `T_SEMICOLON`: ";"
+  * `T_SIF`: "sif"
   * `T_THEN`: "then"
-  * `T_TKINDEF`: "tkindef"
   * `T_TRY`: "try"
-  * `T_TYPEDEF`: "propdef", "viewdef", "typedef", "viewtypedef", "vtypedef"
-  * `T_VAL`: "val", "val+", "val-", "prval"
-  * `T_VAR`: "var", "prvar"
   * `T_WHEN`: "when"
   * `T_WHILESTAR`: "while*"
   * `T_WITH`: "with"
@@ -257,3 +294,6 @@ Synonymous groups — informational
   * "dataviewtype", "datavtype"
   * "primplement", "primplmnt"
   * "viewtypedef", "vtypedef"
+
+As a side note, “extern” may be a synonymous for “static”, “extype” or
+“extvar”, depending on the case and reciprocally.
