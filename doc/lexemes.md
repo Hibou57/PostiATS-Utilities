@@ -565,3 +565,10 @@ Here, order does not matter.
   * `T_WITHTYPE`: `WITHTYPE` | `WITHPROP` | `WITHVIEW` | `WITHVIEWTYPE`
 
 The multiple alternatives are not synonymous!
+
+
+Unused
+------------------------------------------------------------------------------
+
+`T_CDATA` and `T_SRPCODEGEN3` was once introduced, but finally never used,
+so these ones are not documented here.
