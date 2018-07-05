@@ -272,9 +272,9 @@ Keep in mind the order matters.
 
 ### Note #1
 
-if the identifier belongs to a predefined symbol table defined later,
-then it is turned into the production after that table. Ex. if an
-`IDENT_sym` is “->” then is will be turned into `T_MINUSGT` (introduced
+if the identifier belongs to the predefined special “identifiers” table
+defined later, then it is turned into the production after that table. Ex. if
+an `IDENT_sym` is “->” then is will be turned into `T_MINUSGT` (introduced
 later in this document) which has a special meaning
 
 
@@ -335,10 +335,10 @@ Not followed by an `IDENTRST`. Ex. `viewtypefoo` or `viewt0ypefoo` will be
 parsed as a single identifier, not as `viewtype` or `viewt0ype` and `foo`.
 
 
-Predefined symbols
+Special predefined “identifiers”
 ------------------------------------------------------------------------------
 
-These symbols are predefined and tested as explained in “Note #1” in the
+These “identifiers” are predefined and tested as explained in “Note #1” in the
 previous section. The comments were extracted as‑is from `pats_lexing.sats`
 and some other files.
 
