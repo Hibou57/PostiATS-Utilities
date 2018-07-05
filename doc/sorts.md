@@ -53,3 +53,15 @@ Predicative built‑in base sorts, after `pats_staexp2_sort.dats`:
   * `tkind`: algebraic (no quantifiers), like an abstract type, template args.
 
 Note “char” used to be but is not anymore.
+
+
+Semantic
+------------------------------------------------------------------------------
+
+Sorts classify types like types classify values. Alternatively, a sort
+is to a type what a meta‑class is to a class.
+
+If the argument of a type constructor is of …
+
+  * an impredicative sort, it defines an indexed type.
+  * a predicative sort, it defines a polymorphic type.
