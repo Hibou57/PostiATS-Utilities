@@ -33,7 +33,7 @@ Postiats also has predefined identifiers, which are not listed here. These
 identifiers are not keywords.
 
 Keywords are not necessarily words, they may be made of symbolic characters,
-although the ones introducing a declaration are words‑like.
+although the ones introducing a declaration are words‑like (except one).
 
 Some keywords are the same as predefined identifiers. An ATS2 colorizer could
 hardly be perfect without some syntax analyses, atlhough it is not too hard
@@ -173,8 +173,8 @@ The list is split‑down into sub‑lists the same way as the previous list.
 ### Static declaration keywords
 
   * `T_ABSTYPE`: "abstbox", "abstype", "abst@ype", "abst0ype", "abstflat",
-    "absprop", "absview", "absviewtype", "absvtbox", "absvtype" , vt@ype",
-    "abs"absviewt@ype", "absviewt0ype", "absvt0ype", "absvtflat"
+    "absprop", "absview", "absviewtype", "absvtbox", "absvtype", "absvt@ype",
+    "absviewt@ype", "absviewt0ype", "absvt0ype", "absvtflat"
   * `T_ASSUME`: "assume", "absimpl"
   * `T_CLASSDEC`: "classdec"
   * `T_DATASORT`: "datasort"
@@ -303,4 +303,4 @@ Note although "primplement" and "primplmnt" are synonymous, "implement" and
 "implmnt" are not synonymous!
 
 As a side note, “extern” **may** be a synonymous for “static”, “extype” or
-“extvar”, depending on the case and reciprocally.
+“extvar”. Also "|" **may** be a synonymous for ";" in some cases.
