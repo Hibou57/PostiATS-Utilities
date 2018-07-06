@@ -304,3 +304,11 @@ Note although "primplement" and "primplmnt" are synonymous, "implement" and
 
 As a side note, “extern” **may** be a synonymous for “static”, “extype” or
 “extvar”. Also "|" **may** be a synonymous for ";" in some cases.
+
+
+Ignored
+------------------------------------------------------------------------------
+
+`BARSEMI`, `LPAREN_deco` and `LBRACE_deco`, implied by
+`pats_parsing_kwds.dats`, are not listed here. All three are the sum of two
+other tokens which are listed here.
