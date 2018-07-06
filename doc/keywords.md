@@ -311,4 +311,4 @@ Drift from Postiats source
 
 `BARSEMI`, `LPAREN_deco` and `LBRACE_deco`, implied by
 `pats_parsing_kwds.dats`, are not listed here. All three are the sum of two
-other tokens which are listed here.
+symbolic keywords, which are listed here.

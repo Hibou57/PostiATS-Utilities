@@ -573,9 +573,9 @@ Drift from Postiats source
 `T_CDATA` and `T_SRPCODEGEN3` was once introduced, but finally never used,
 so these ones are not documented here.
 
-`T_FLOAT_dec` `T_FLOAT_hex` were added for consistency with `T_INT_dec`
+`T_FLOAT_dec` and `T_FLOAT_hex` were added for consistency with `T_INT_dec`
 and `T_INT_hex`. Otherwise, only `T_FLOAT` is defined in Postiats source.
 
 `T_INTZERO` and `T_QMARK` are renaming of `INTZERO` and `QMARK` which are
-defined in Postiats source. Since they are finally terminal lexical product,
+defined in Postiats source. Since they are finally terminal lexical products,
 they were renamed.
