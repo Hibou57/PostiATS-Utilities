@@ -306,7 +306,7 @@ As a side note, “extern” **may** be a synonymous for “static”, “extype
 “extvar”. Also "|" **may** be a synonymous for ";" in some cases.
 
 
-Ignored
+Drift from Postiats source
 ------------------------------------------------------------------------------
 
 `BARSEMI`, `LPAREN_deco` and `LBRACE_deco`, implied by
