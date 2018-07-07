@@ -132,7 +132,7 @@ Note `T_SRPSTALOAD` and `T_SRPDYNLOAD` are not listed here.
   * `T_ELSE`
   * `T_END`
   * `T_EOF`
-  * `T_EQ`
+  * `T_EQ` — a keyword in the static.
   * `T_EQGT`
   * `T_FORSTAR`
   * `T_GT`
