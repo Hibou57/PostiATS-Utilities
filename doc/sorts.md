@@ -1,4 +1,4 @@
-Postiats sorts
+Postiats/ATS2 sorts
 ==============================================================================
 
 Impredicative sorts

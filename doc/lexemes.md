@@ -1,4 +1,4 @@
-Postiats lexical rules
+Postiats/ATS2 lexical rules
 ==============================================================================
 
 Before anything
