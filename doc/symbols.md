@@ -27,7 +27,7 @@ Syntactical symbols
 ------------------------------------------------------------------------------
 
   * `symbol_ADD`, "+": syntactic operator for adjusting precedence.
-  * `symbol_BACKSLASH`, "\": temporary binary operator from a function even in
+  * `symbol_BACKSLASH`, "\\": temporary binary operator from a function even in
     patterns; may also be static and dynamic identifier
   * `symbol_SUB`, "-": syntactic operator for adjusting precedence.
   * `symbol_TUPZ`, "tupz", creates a flat tuple from a syntactical list.
@@ -49,7 +49,7 @@ Symbols which can also be regular identifiers
 Type operators
 ------------------------------------------------------------------------------
 
-These operators alter the meaning of a type, hence they only appear in a
+These unary operators alter the meaning of a type, hence they only appear in a
 static expression.
 
   * `symbol_AMPERBANG`, "&!": read-write, invar(kind=3) type operator.
@@ -164,12 +164,12 @@ Configuration defines
 The symbols are what’s after `symbol_`, in upper‑case. You use it as defines.
 Ex. `#define ATS_DYNLOADFLAG 1`.
 
-  * `symbol_ATS_DYNLOADFLAG` // global scope, int type, defaults to 1.
-  * `symbol_ATS_DYNLOADNAME` // global scope, string type, defaults to nothing.
-  * `symbol_ATS_EXTERN_PREFIX` // file scope, string type, defaults to "atspre_".
-  * `symbol_ATS_MAINATSFLAG` // global scope, int type, defaults to 0.
+  * `symbol_ATS_DYNLOADFLAG`: global scope, int type, defaults to 1.
+  * `symbol_ATS_DYNLOADNAME`: global scope, string type, defaults to nothing.
+  * `symbol_ATS_EXTERN_PREFIX`: file scope, string type, defaults to "atspre_".
+  * `symbol_ATS_MAINATSFLAG`: global scope, int type, defaults to 0.
   * `symbol_ATS_PACKNAME`: global scope, string type, defaults to "ATSLIB.prelude".
-  * `symbol_ATS_STATIC_PREFIX` // global scope, string type, defaults to none.
+  * `symbol_ATS_STATIC_PREFIX`: global scope, string type, defaults to none.
 
 
 Virtual
@@ -187,18 +187,18 @@ For error messages only
 
 These ones are only referred to by `ats_e1xpval.dats`.
 
-  * `symbol_NEG` // ~ // only for error
-  * `symbol_MUL` // * // only for error
-  * `symbol_DIV` // / // only for error
-  * `symbol_GTEQ` // >= // only for error
-  * `symbol_LTEQ` // <= // only for error
-  * `symbol_LTGT` // <> // only for error
-  * `symbol_BANGEQ` // != // only for error
-  * `symbol_LTLT` // << // only for error
-  * `symbol_LAND` // && // only for error
-  * `symbol_LOR` // || // only for error
-  * `symbol_DEFINED` // only for error
-  * `symbol_UNDEFINED` // only for error
+  * `symbol_NEG`, "~": only for error
+  * `symbol_MUL`, "*": only for error
+  * `symbol_DIV`, "/": only for error
+  * `symbol_GTEQ`, ">=": only for error
+  * `symbol_LTEQ`, "<=": only for error
+  * `symbol_LTGT`, "<>": only for error
+  * `symbol_BANGEQ`, "!=": only for error
+  * `symbol_LTLT`, "<<": only for error
+  * `symbol_LAND`, "&&": only for error
+  * `symbol_LOR`, "||": only for error
+  * `symbol_DEFINED`, "defined": only for error
+  * `symbol_UNDEFINED`, "undefined": only for error
 
 
 Unused
