@@ -265,7 +265,7 @@ Keep in mind the order matters.
   * `T_FLOAT_dec`: `DIGIT`+ "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #3.
   * `T_FLOAT_dec`: `DIGIT`+ `E` `SIGN`? `DIGIT`+ `FL`?
-  * `T_INT_dec`: `DIGIT`+
+  * `T_INT_dec`: `DIGIT`+ `LU`?
   * `T_EOF`: EOF
   * `T_ERR`: `IC` — any character which matched nothing.
 
