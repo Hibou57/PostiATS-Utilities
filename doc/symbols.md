@@ -208,5 +208,5 @@ These ones are defined bu nowhere referred to (at least as symbol).
 
   * `symbol_LAMAT`, "lam@"
   * `symbol_LLAMAT`, "llam@"
-  * `symbol__STDIN__`, "\__STDIN__"
-  * `symbol__STRING__`, "\__STRING__"
+  * `symbol__STDIN__`, "\_\_STDIN__"
+  * `symbol__STRING__`, "\_\_STRING__"
