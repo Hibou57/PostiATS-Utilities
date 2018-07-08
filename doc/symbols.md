@@ -73,8 +73,8 @@ Special static symbols
 Dynamic operators
 ------------------------------------------------------------------------------
 
-  * `symbol_COLONEQ`, ":=": assign operator
-  * `symbol_COLONEQCOLON`, ":=:": exhange operator
+  * `symbol_COLONEQ`, ":=": assign operator.
+  * `symbol_COLONEQCOLON`, ":=:": exhange operator.
 
 
 Pattern elements
@@ -208,5 +208,5 @@ These ones are defined bu nowhere referred to (at least as symbol).
 
   * `symbol_LAMAT`, "lam@"
   * `symbol_LLAMAT`, "llam@"
-  * `symbol__STDIN__`, "__STDIN__"
-  * `symbol__STRING__`, "__STRING__"
+  * `symbol__STDIN__`, "\__STDIN__"
+  * `symbol__STRING__`, "\__STRING__"
