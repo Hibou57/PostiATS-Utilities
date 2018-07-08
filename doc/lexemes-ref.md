@@ -258,11 +258,11 @@ Keep in mind the order matters.
   * `T_FLOAT_hex`: "0" `X` `P` `SIGN`? `DIGIT`+ `FL`? — see note #3.
   * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? — see note #3.
   * `T_INT_oct`: "0" `OCTAL`+ `LU`?
-  * `T_FLOAT_dec`: "0" "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+  * `T_FLOAT_dec`: "0" "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #3 and note #5.
   * `T_FLOAT_dec`: "0" `E` `SIGN`? `DIGIT`+ `FL`? — see note #5.
   * `T_INTZERO`: "0"
-  * `T_FLOAT_dec`: `DIGIT`+ "." `DIDIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+  * `T_FLOAT_dec`: `DIGIT`+ "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #3.
   * `T_FLOAT_dec`: `DIGIT`+ `E` `SIGN`? `DIGIT`+ `FL`?
   * `T_INT_dec`: `DIGIT`+ `LU`?
