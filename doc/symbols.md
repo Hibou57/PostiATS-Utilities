@@ -187,18 +187,18 @@ For error messages only
 
 These ones are only referred to by `ats_e1xpval.dats`.
 
-  * `symbol_NEG`, "~": only for error
-  * `symbol_MUL`, "*": only for error
-  * `symbol_DIV`, "/": only for error
-  * `symbol_GTEQ`, ">=": only for error
-  * `symbol_LTEQ`, "<=": only for error
-  * `symbol_LTGT`, "<>": only for error
-  * `symbol_BANGEQ`, "!=": only for error
-  * `symbol_LTLT`, "<<": only for error
-  * `symbol_LAND`, "&&": only for error
-  * `symbol_LOR`, "||": only for error
-  * `symbol_DEFINED`, "defined": only for error
-  * `symbol_UNDEFINED`, "undefined": only for error
+  * `symbol_NEG`, "~"
+  * `symbol_MUL`, "*"
+  * `symbol_DIV`, "/"
+  * `symbol_GTEQ`, ">="
+  * `symbol_LTEQ`, "<="
+  * `symbol_LTGT`, "<>"
+  * `symbol_BANGEQ`, "!="
+  * `symbol_LTLT`, "<<"
+  * `symbol_LAND`, "&&"
+  * `symbol_LOR`, "||"
+  * `symbol_DEFINED`, "defined"
+  * `symbol_UNDEFINED`, "undefined"
 
 
 Unused
