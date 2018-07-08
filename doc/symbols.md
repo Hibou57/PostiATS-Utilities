@@ -74,14 +74,14 @@ Dynamic operators
 ------------------------------------------------------------------------------
 
   * `symbol_COLONEQ`, ":=": assign operator.
-  * `symbol_COLONEQCOLON`, ":=:": exhange operator.
+  * `symbol_COLONEQCOLON`, ":=:": exchange operator.
 
 
 Pattern elements
 ------------------------------------------------------------------------------
 
-  * `symbol_UNDERSCORE`, "_": wildward pattern, uninitialized dynamic
-    expression (topized dynamic expression); not fully supported.
+  * `symbol_UNDERSCORE`, "_": wild‑card pattern, uninitialized dynamic
+    expression (topized dynamic expression), the latter not fully supported.
   * `symbol_VBOX`, "vbox": vbox pattern (the box you can’t left empty).
   * `symbol_TRUE_BOOL`, "true_bool": boolean‑true pattern.
   * `symbol_FALSE_BOOL`, "false_bool": boolean‑false pattern.
