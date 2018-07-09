@@ -253,7 +253,8 @@ Keep in mind the order matters.
   * `FIX`: "fix" — see note #7.
   * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* — see note #1.
   * `T_IDENT_sym`: `SYMBOLIC`+: — see note #1.
-  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* (`P` `SIGN`? `DIGIT`+)?
+  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* `P` `SIGN`? `DIGIT`+? — see
+    note #8.
      `FL`? — see note #3.
   * `T_FLOAT_hex`: "0" `X` `P` `SIGN`? `DIGIT`+ `FL`? — see note #3.
   * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? — see note #3.
@@ -333,6 +334,12 @@ There must be a space before the dot. Two examples to have in mind:
 
 Not followed by an `IDENTRST`. Ex. `viewtypefoo` or `viewt0ypefoo` will be
 parsed as a single identifier, not as `viewtype` or `viewt0ype` and `foo`.
+
+
+### Note #8
+
+With hexadecimal floats, the exponent is required (after the C language
+standard).
 
 
 Special predefined “identifiers”
