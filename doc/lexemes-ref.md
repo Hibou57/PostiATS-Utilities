@@ -253,10 +253,11 @@ Keep in mind the order matters.
   * `FIX`: "fix" — see note #7.
   * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* — see note #1.
   * `T_IDENT_sym`: `SYMBOLIC`+: — see note #1.
-  * `T_FLOAT_hex`: "0" `X` `XDIGIT`* "." `XDIGIT`* `P` `SIGN`? `DIGIT`+? — see
-    note #8.
-     `FL`? — see note #3.
-  * `T_FLOAT_hex`: "0" `X` `P` `SIGN`? `DIGIT`+ `FL`? — see note #3.
+  * `T_FLOAT_hex`: "0" `X` `XDIGIT`+ "." `XDIGIT`+ `P` `SIGN`? `DIGIT`+`FL`?
+    — see note #3 and #8.
+  * `T_FLOAT_hex`: "0" `X` "." `XDIGIT`+ `P` `SIGN`? `DIGIT`+`FL`?
+    — see note #3 and #8.
+  * `T_FLOAT_hex`: "0" `X` `XDIGIT`+ `P` `SIGN`? `DIGIT`+ `FL`? — see note #8.
   * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? — see note #3.
   * `T_INT_oct`: "0" `OCTAL`+ `LU`?
   * `T_FLOAT_dec`: "0" "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
@@ -302,9 +303,12 @@ With numeric literals, some parts may be empty. You may prefer to not make
 use of it, but it is worth to know it’s intended and you should not be
 surprised Postiats does not complain with these.
 
-Ex. `0x.` is a valid hexadecimal floating point number, although its integer
-and fractional parts are both empty. It’s evaluated as if it was `0x0.0`.
-The empty parts are evaluated to zero.
+Ex. `0x0.P0` is a valid hexadecimal floating point number, although its
+fractional part is empty. It’s seen as if it was `0x0.0P0`. The empty part is
+like zero.
+
+An exponent part can never be empty. Only one of an integral or fractional
+part may be empty, not both.
 
 
 ### Note #4
