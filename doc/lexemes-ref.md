@@ -184,8 +184,8 @@ Keep in mind the order matters.
   * `T_CHAR`: "'\\" `X` `XDIGIT`+ "'"
   * `T_CHAR`: "'\\" `OCTAL`+ "'"
   * `T_CHAR`: "'" `IC_LQ` "'"
-  * `T_STRING`: '"' ("\\" EOL|"\\" `ESCAPED`|"\\" `X` `XDIGIT`{1,2}|"\\"
-    `OCTAL`{1,3}|`IC_LDQ`)* '"' — see note #4.
+  * `T_STRING`: '"' ("\\" EOL | "\\" `ESCAPED` | "\\" `X` `XDIGIT`{1,2} | "\\"
+    `OCTAL`{1,3} | `IC_LDQ`)* '"' — see note #4.
   * `T_BQUOTELPAREN`: "\`(" — macro syntax
   * `T_IDENT_sym`: "\`" `SYMBOLIC`* — see note #1.
   * `T_BACKSLASH`: "\\"
@@ -274,7 +274,7 @@ Keep in mind the order matters.
 
 ### Note #1
 
-if the identifier belongs to the predefined special “identifiers” table
+If the identifier belongs to the predefined special “identifiers” table
 defined later, then it is turned into the production after that table. Ex. if
 an `IDENT_sym` is “->” then is will be turned into `T_MINUSGT` (introduced
 later in this document) which has a special meaning
