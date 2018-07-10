@@ -258,7 +258,7 @@ Keep in mind the order matters.
   * `T_FLOAT_hex`: "0" `X` "." `XDIGIT`+ `P` `SIGN`? `DIGIT`+`FL`?
     — see note #3 and #8.
   * `T_FLOAT_hex`: "0" `X` `XDIGIT`+ `P` `SIGN`? `DIGIT`+ `FL`? — see note #8.
-  * `T_INT_hex`: "0" `X` `XDIGIT`* `LU`? — see note #3.
+  * `T_INT_hex`: "0" `X` `XDIGIT`+ `LU`?
   * `T_INT_oct`: "0" `OCTAL`+ `LU`?
   * `T_FLOAT_dec`: "0" "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #3 and note #5.
