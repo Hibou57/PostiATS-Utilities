@@ -174,7 +174,7 @@ float constants are better specified in hexadecimal than decimal.
 Floats are made of an integral part, a fractional part and an exponent part.
 Both former are optional with the **requirement at least one is provided**.
 With hexadecimal float, the exponent part is required, after the C language
-standard. With decimal floats, then exponent part is optional.
+standard. With decimal floats, the exponent part is optional.
 
   * Decimal: `DEC`* ("." `DEC`*)? (`E` `SIGN` `DEC`+)? `FL`?
   * Hexadecimal: "0" `X` `HEX`* ("." `HEX`*)? `P` `SIGN` `DEC`+ `FL`?
@@ -199,8 +199,9 @@ Floats are distinguished from integers by either the "." of the fractional
 part or the "P" or "E" of the exponent part or both. Note it’s "P" for
 hexadecimal floats ("E" would be an hexadecimal digit).
 
-The `X` is not repeated for the fractional part of hexadecimal, it only
-appears for the integer part.
+The `X` is not repeated for the fractional part of hexadecimal float, it only
+appears for the integral part, even if it’s empty (ex. "0x.1P0" where the
+integral part is empty but "x" is still there).
 
 If a decimal float is preceded by at least one space and its integer part is
 zero, it is allowed to omit it, although it is better avoided, to avoid visual
@@ -221,8 +222,8 @@ with records.
         val v:double = 1.0 // With any suffix, it does not type‑check.
         val v = 0xF.1P0 // 15 + 1/16.
         val v = 15.0625 // 15 + 1/16.
-        val t = @('a', 'b', 'c', 'd') // Prerequisite
-        val v = t.2 // Dot integer identifier
+        val t = @('a', 'b', 'c', 'd') // Prerequisite for next line.
+        val v = t.2 // Not a float, a dot integer identifier.
 
 
 Identifiers
@@ -238,9 +239,9 @@ Identifiers come in two main flavors with subtleties and additional derived
 kinds. The two main flavors are alphanumeric identifiers and symbolic
 identifiers. The subtleties are with symbolic identifiers: some prefix of it
 will be identifiers on their own, leaving the rest alone. The derived kinds
-are with alphanumeric identifiers with a symbol appended or a "$" or a "#"
-prepended. Then, there are the identifiers like alphanumeric with an added
-at‑sign in the middle.
+are with alphanumeric identifiers with a "[" or "<" or "!" appended or a "$"
+or a "#" prepended. Then, there are the identifiers like alphanumeric with an
+added at‑sign in the middle.
 
   * Alphanumeric identifier: `FIRST` `REST`*
   * Symbolic identifier: "$"? `SYMBOLIC`+ | "$"
@@ -249,7 +250,7 @@ Where:
 
   * `FIRST` is "a" to "z" or "A" to "Z" or "_", case **sensitive**.
   * `REST`* is zero or more of `FIRST` or "0" to "9" or "'" or "$".
-  * `SYMBOLIC`+ is one or more of %&+-./:=@~\`^|*!?<># .
+  * `SYMBOLIC`+ is one or more of %&+-./:=@~\`^|\*!?<># .
 
 "$" is not a `SYMBOLIC` character, but a symbolic identifier may starts with
 it or it may be a symbolic identifier alone.
@@ -257,10 +258,10 @@ it or it may be a symbolic identifier alone.
 Use of symbolic identifiers is more restricted than use of alphanumeric
 identifiers.
 
-Symbolic identifiers can contains the characters which open and close C/C++
-like comments. If it starts with "//" or "/*", it opens a comment; if contains
-"//" or "/*" and does not start with it, it does not open a comment. This
-should be used with care to not prevent readability.
+Symbolic identifiers can contain the characters which open and close C/C++
+like comments. If it starts with "//" or "/\*", it opens a comment; if
+contains "//" or "/\*" and does not start with it, it does not open a comment.
+This should be used with care to not prevent readability.
 
 Later, alphanumeric identifiers will be referred to as `ALNUM` and
 symbolic identifiers will be referred to as `SYMBOL` (to not be confused with
@@ -274,10 +275,10 @@ Additional restrictions are explained in later sub‑sections.
 
 **Examples:**
 
-        extern val foo
-        extern val foo1a
-        extern val foo$1a // Note the dollar sign in the middle.
-        extern val foo_1a
+        extern val foo: int
+        extern val foo1a: int
+        extern val foo$1a: int // Note the dollar sign in the middle.
+        extern val foo_1a: int
         //
         symintr ++
         symintr $*
@@ -362,7 +363,7 @@ be parsed as "foo" and "+", because of the same reason.
 
 ### Priority symbolic identifiers
 
-Beside `SYMBOL`, some `SYMBOL` has an higher precedence. These `SYMBOL`
+Beside `SYMBOL`, some `SYMBOL` has an lower precedence. These `SYMBOL`
 cannot be created by the user, they belong to a fixed set:
 
   * \`
@@ -415,8 +416,8 @@ a member of a record.
 
 **Example:**
 
-        val t = @('a', 'b', 'c', 'd') // Prerequisite
-        val v = t.2 // Dot integer identifier
+        val t = @('a', 'b', 'c', 'd') // Prerequisite for the example.
+        val v = t.2 // Dot integer identifier.
 
 
 Integers
@@ -443,7 +444,8 @@ There is no binary integers.
 
 **Examples:**
 
-        val v = 07777
+        // All represent the same value.
+        val v = 0377
         val v = 0xFF
         val v = 255
 
@@ -466,7 +468,7 @@ you can jump to later. The differences are:
     it from the string content.
 
 Note within string literals spanning multiple lines, comments are not parsed,
-they are just character data as any other. This so, obviously, up to the
+they are just character data as any other. This is so, obviously, up to the
 closing double‑quote.
 
 **Examples:**
@@ -474,7 +476,7 @@ closing double‑quote.
         val s = "Ça fait du café" // With two multi‑bytes characters.
         val s = "abc\ndef" // "abc\ndef", whatever the EOL convention.
         val s = "abc
-        def" // "abc\ndef" on *nix or "abc\r\ndef" on Windows.
+        def" // "abc\ndef" on *NIX or "abc\r\ndef" on Windows.
         val s = "abc\
         def" // "abcdef".
 
