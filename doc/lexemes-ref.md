@@ -1,6 +1,10 @@
 Postiats/ATS2 lexical rules
 ==============================================================================
 
+For students and other practioners, an higher level version of this
+document is provided as “lexemes-guide.md”.
+
+
 Before anything
 ------------------------------------------------------------------------------
 
@@ -65,8 +69,8 @@ Character categories
   * `FL`: "f" "F" "l" "L" — float suffix.
   * `LU`: "L" "l" "U" "u" — integer suffix.
 
-Other caracters used (outise of comments and text literals), not alphanumeric
-and neither in `SYMBOLIC`, are: "(" ")" "[" "]" "{" "}" "," ";".
+Other characters used (outside of comments and text literals), not
+alphanumeric and neither in `SYMBOLIC`, are: "(" ")" "[" "]" "{" "}" "," ";".
 
 
 Special handling of `IDENT_sym`
