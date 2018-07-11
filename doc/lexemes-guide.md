@@ -509,5 +509,5 @@ The longest matches first.
 For the tokens of this list starting with "@", "#", "%" and "\`": these tokens
 will not be parsed as this if they are preceded (without blanks) by a symbolic
 identifier. For the tokens of this list starting with a "'", there will not be
-parsed as this if they are not preceded (without blanks) by an alphanumeric
+parsed as this if they are preceded (without blanks) by an alphanumeric
 identifier.
