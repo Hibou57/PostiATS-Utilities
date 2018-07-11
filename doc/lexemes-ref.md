@@ -109,15 +109,15 @@ Where:
 ### Corner case
 
 A **corner case** consequence of these rules may be exposed with this
-example `IDENT_sym`: “$//”.
+example `IDENT_sym`: “+//”.
 
 Say a DATS source contains this:
 
-        val $// = 1
+        val +// = 1
 
 It looks like the statement is not terminated, broken by a comment. But it
-is not, `$//` is the name of the introduced `val` and its value is `1`. Try to
-check it, it will pass. Try to insert a space between “$” and “//”, it will
+is not, `+//` is the name of the introduced `val` and its value is `1`. Try to
+check it, it will pass. Try to insert a space between “+” and “//”, it will
 not pass.
 
 That’s so because although this `IDENT_sym` contains “//”, it does not
