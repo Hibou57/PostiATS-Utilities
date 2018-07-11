@@ -89,8 +89,8 @@ Comments
 Comments come in four flavors.
 
   * C++ line comments: starts with a "//" and ends with the end of the line.
-  * C/C++ block comments: starts with a "/*" and ends with a closing "*/".
-  * ML block comments: starts with a "(*" and ends with a closing "*)",
+  * C/C++ block comments: starts with a "/\*" and ends with a closing "\*/".
+  * ML block comments: starts with a "(\*" and ends with a closing "\*)",
     recursively, unlike with C/C++ block comments.
   * ATS2 rest comment: starts with a "////" and ends with the end of the file.
 
