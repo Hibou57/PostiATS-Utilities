@@ -375,9 +375,9 @@ cannot be created by the user, they belong to a fixed set:
   * =>>
   * =/=>
   * =/=>>
-  * >
-  * ><
-  * >.
+  * \>
+  * \><
+  * \>.
   * |
   * -<
   * -<>
