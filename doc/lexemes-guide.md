@@ -136,8 +136,8 @@ Positions meaning with offset:
 The offset may be specified only with "^" or "$". Beginning, middle and end
 refers to the target language generated file.
 
-"#" is to be used in statics files ("*.sats" files) for embedding in dynamics
-files (*.dats files) which `staload` it (*staload* is an ATS2 keyword). This
+"#" is to be used in statics files ("\*.sats" files) for embedding in dynamics
+files (\*.dats files) which `staload` it (*staload* is an ATS2 keyword). This
 embedding is at an unspecified position.
 
 **Examples:**
