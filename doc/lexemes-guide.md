@@ -393,7 +393,7 @@ cannot be created by the user, they belong to a fixed set:
   * ...
   * @
   * $
-  * #
+  * \#
   * %
 
 The longest match applies. If a `SYMBOL` starts with one from this list, then
