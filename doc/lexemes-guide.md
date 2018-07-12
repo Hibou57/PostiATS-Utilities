@@ -297,12 +297,14 @@ Additionally to `ALNUM`, are the ones of the kinds below:
   * `ALNUM` "["
   * `ALNUM` "!"
 
+"\\" `ALNUM` is not really a lexical unit, it is rather parsed from lexical
+units but you can see it as a lexical unit.
+
 These kinds cannot be created by the user; all valid identifiers of these
 kinds, are predefined and not listed in this document:
 
   * "$" `ALNUM`
   * "#" `ALNUM`
-  * `ALNUM` "<"
   * `ALNUM` "!"
 
 
