@@ -288,14 +288,21 @@ Additional restrictions are explained in later sub‑sections.
 
 ### Regular decorated alphanumeric identifiers
 
-Additionally to `ALNUM`, are the ones of the kinds below. They cannot be
-created by the user; all valid identifiers of these kinds, are predefined and
-not listed in this document.
+Additionally to `ALNUM`, are the ones of the kinds below:
+
+  * "$" `ALNUM`
+  * "#" `ALNUM`
+  * "\\" `ALNUM` — there may be spaces between "\\" and `ALNUM`.
+  * `ALNUM` "<"
+  * `ALNUM` "["
+  * `ALNUM` "!"
+
+These kinds cannot be created by the user; all valid identifiers of these
+kinds, are predefined and not listed in this document:
 
   * "$" `ALNUM`
   * "#" `ALNUM`
   * `ALNUM` "<"
-  * `ALNUM` "["
   * `ALNUM` "!"
 
 
