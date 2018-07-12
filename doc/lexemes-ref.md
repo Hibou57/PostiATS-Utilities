@@ -52,9 +52,9 @@ Character categories
 
   * `SPACE`: " " "\n" "\r" "\v" "\f" "\t".
   * `ESCAPED`: "n" "t" "v" "b" "r" "f" "a" "\\" "?" "'" '"' "(" "[" "{".
-  * `XDIGIT`: "0" to "9", "a" to "f", "A" to "F".
-  * `DIGIT`: "0" to "9".
   * `OCTAL`: "0" to "7".
+  * `DIGIT`: "0" to "9".
+  * `XDIGIT`: "0" to "9", "a" to "f", "A" to "F".
   * `IC`: input character: any character, including EOL.
   * `IC_LQ`: any character, less quote (single‑quote).
   * `IC_LDQ`: any character, less double‑quote.
