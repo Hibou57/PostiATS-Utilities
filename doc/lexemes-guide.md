@@ -370,10 +370,10 @@ It’s this way only these. Ex. "foo@bar" will be parsed as "foo" and "@" and
 be parsed as "foo" and "+", because of the same reason.
 
 
-### Priority symbolic identifiers
+### Predefined symbolic identifiers
 
-Beside `SYMBOL`, some `SYMBOL` has an lower precedence. These `SYMBOL`
-cannot be created by the user, they belong to a fixed set:
+Beside `SYMBOL`, some `SYMBOL` has a fixed meaning in ATS2. These `SYMBOL`
+cannot be redefined by the user, they belong to a fixed set:
 
   * \`
   * ~
@@ -405,16 +405,6 @@ cannot be created by the user, they belong to a fixed set:
   * $
   * \#
   * %
-
-The longest match applies. If a `SYMBOL` starts with one from this list, then
-it is the matching `SYMBOL` from this list and then the rest. The rest is
-subject to the same recursively.
-
-Ex. "=<=>" would be parsed as "=<" and "=>", because "=<=>" starts with "=<"
-which is in the list, remains "=>", which is again in the list. As another
-example, "=<++++" would be parsed as "=<" and "++++" because "++++" is not in
-the list. A final example, "+*+" would be parsed as‑is, because it has no
-prefix in the list.
 
 
 ### Dot integer identifier
