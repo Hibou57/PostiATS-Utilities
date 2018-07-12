@@ -50,7 +50,7 @@ products up to a terminal product.
 Character categories
 ------------------------------------------------------------------------------
 
-  * `SPACE`: " " "\n" "\r" "\v" "\f" "\r".
+  * `SPACE`: " " "\n" "\r" "\v" "\f" "\t".
   * `ESCAPED`: "n" "t" "v" "b" "r" "f" "a" "\\" "?" "'" '"' "(" "[" "{".
   * `XDIGIT`: "0" to "9", "a" to "f", "A" to "F".
   * `DIGIT`: "0" to "9".
