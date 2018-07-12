@@ -370,7 +370,7 @@ It’s this way only these. Ex. "foo@bar" will be parsed as "foo" and "@" and
 be parsed as "foo" and "+", because of the same reason.
 
 
-### Predefined symbolic identifiers
+### Reserved symbolic identifiers
 
 Beside `SYMBOL`, some `SYMBOL` has a fixed meaning in ATS2. These `SYMBOL`
 cannot be redefined by the user, they belong to a fixed set:
@@ -405,6 +405,8 @@ cannot be redefined by the user, they belong to a fixed set:
   * $
   * \#
   * %
+
+See also the section “Other tokens”.
 
 
 ### Dot integer identifier
