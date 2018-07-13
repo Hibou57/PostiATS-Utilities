@@ -45,7 +45,7 @@ Where:
   * \\r is ASCII 13, carriage‑return.
   * \\t is ASCII 9, horizontal tab.
   * \\v is ASCII 11, vertical tab.
-  * \\?'"([{ stands for their‑own.
+  * \\?'"()[]{} stands for their‑own.
 
 Any of ([{ needs to be escaped because these characters preceded by a single
 quote, has a special meaning in ATS2 (not required in string literals, while

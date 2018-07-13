@@ -51,7 +51,7 @@ Character categories
 ------------------------------------------------------------------------------
 
   * `SPACE`: " " "\n" "\r" "\v" "\f" "\t".
-  * `ESCAPED`: "n" "t" "v" "b" "r" "f" "a" "\\" "?" "'" '"' "(" "[" "{".
+  * `ESCAPED`: "ntvbrfa\\\?\'\"()[]{}" — read it as a set.
   * `OCTAL`: "0" to "7".
   * `DIGIT`: "0" to "9".
   * `XDIGIT`: "0" to "9", "a" to "f", "A" to "F".
