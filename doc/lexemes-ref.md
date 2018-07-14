@@ -213,7 +213,7 @@ Keep in mind the order matters.
   * `TYPE`: "type" — see note #7.
   * `T0YPE_pos`: "t0ype+" — see note #2.
   * `T0YPE_neg`: "t0ype-" — see note #2.
-  * `T9YPE`: "t0ype" — see note #7.
+  * `T0YPE`: "t0ype" — see note #7.
   * `VIEWT0YPE_pos`: "vt@ype+" — see note #2.
   * `VIEWT0YPE_neg`: "vt@ype-" — see note #2.
   * `VIEWT0YPE`: "vt@ype" — see note #2.
