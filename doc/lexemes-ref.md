@@ -256,7 +256,7 @@ Keep in mind the order matters.
   * `FIXAT`: "fix@" — see note #2.
   * `FIX`: "fix" — see note #7.
   * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* — see note #1.
-  * `T_IDENT_sym`: `SYMBOLIC`+: — see note #1.
+  * `T_IDENT_sym`: `SYMBOLIC`+ — see note #1.
   * `T_FLOAT_hex`: "0" `X` `XDIGIT`+ "." `XDIGIT`* `P` `SIGN`? `DIGIT`+`FL`?
     — see note #3 and #8.
   * `T_FLOAT_hex`: "0" `X` "." `XDIGIT`+ `P` `SIGN`? `DIGIT`+`FL`?
