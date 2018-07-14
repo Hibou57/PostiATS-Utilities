@@ -103,7 +103,7 @@ Where:
 
   * `COMMENT_block_c`: "/*" `IC`* "*/" — not recursive! (unlike ML comments)
   * `T_COMMENT_rest`: "////" `IC`* EOF — up to the end of the source file.
-  * `T_COMMENT_line`: "//" `IC_LEOL`* EOL — up to the end of the line.
+  * `T_COMMENT_line`: "//" `IC_LEOL`* (EOL|EOF) — up to the end of the line.
 
 
 ### Corner case
