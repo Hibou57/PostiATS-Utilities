@@ -170,7 +170,7 @@ Keep in mind the order matters.
   * `T_COLONLT`: ":<" — see note #2.
   * `T_IDENT_sym`: ":" `SYMBOLIC`* — see note #1.
   * `T_IDENT_sym`: "." `SYMBOLIC`+ — see note #1.
-  * `T_FLOAT_dec`: `SPACE` "." `DIGIT`+ (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+  * `T_FLOAT`: `SPACE` "." `DIGIT`+ (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #6.
   * `T_DOTINT`: "." `DIGIT`+
   * `T_IDENT_dlr`: "$" `IDENTFST` `IDENTRST`* — see note #1.
@@ -257,21 +257,21 @@ Keep in mind the order matters.
   * `FIX`: "fix" — see note #7.
   * `T_IDENT_alp`: `IDENTFST` `IDENTRST`* — see note #1.
   * `T_IDENT_sym`: `SYMBOLIC`+ — see note #1.
-  * `T_FLOAT_hex`: "0" `X` `XDIGIT`+ "." `XDIGIT`* `P` `SIGN`? `DIGIT`+ `FL`?
+  * `T_FLOAT`: "0" `X` `XDIGIT`+ "." `XDIGIT`* `P` `SIGN`? `DIGIT`+ `FL`?
     — see note #3 and #8.
-  * `T_FLOAT_hex`: "0" `X` "." `XDIGIT`+ `P` `SIGN`? `DIGIT`+ `FL`?
+  * `T_FLOAT`: "0" `X` "." `XDIGIT`+ `P` `SIGN`? `DIGIT`+ `FL`?
     — see note #3 and #8.
-  * `T_FLOAT_hex`: "0" `X` `XDIGIT`+ `P` `SIGN`? `DIGIT`+ `FL`? — see note #8.
-  * `T_INT_hex`: "0" `X` `XDIGIT`+ `LU`?
-  * `T_INT_oct`: "0" `OCTAL`+ `LU`?
-  * `T_FLOAT_dec`: "0" "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+  * `T_FLOAT`: "0" `X` `XDIGIT`+ `P` `SIGN`? `DIGIT`+ `FL`? — see note #8.
+  * `T_INT`: "0" `X` `XDIGIT`+ `LU`?
+  * `T_INT`: "0" `OCTAL`+ `LU`?
+  * `T_FLOAT`: "0" "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #3 and note #5.
-  * `T_FLOAT_dec`: "0" `E` `SIGN`? `DIGIT`+ `FL`? — see note #5.
+  * `T_FLOAT`: "0" `E` `SIGN`? `DIGIT`+ `FL`? — see note #5.
   * `T_INTZERO`: "0"
-  * `T_FLOAT_dec`: `DIGIT`+ "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
+  * `T_FLOAT`: `DIGIT`+ "." `DIGIT`* (`E` `SIGN`? `DIGIT`+)? `FL`? — see
     note #3.
-  * `T_FLOAT_dec`: `DIGIT`+ `E` `SIGN`? `DIGIT`+ `FL`?
-  * `T_INT_dec`: `DIGIT`+ `LU`?
+  * `T_FLOAT`: `DIGIT`+ `E` `SIGN`? `DIGIT`+ `FL`?
+  * `T_INT`: `DIGIT`+ `LU`?
   * `T_EOF`: EOF
   * `T_ERR`: `IC` — any character which matched nothing.
 
@@ -587,9 +587,6 @@ Drift from Postiats source
 
 `T_CDATA` and `T_SRPCODEGEN3` was once introduced, but finally never used,
 so these ones are not documented here.
-
-`T_FLOAT_dec` and `T_FLOAT_hex` were added for consistency with `T_INT_dec`
-and `T_INT_hex`. Otherwise, only `T_FLOAT` is defined in Postiats source.
 
 `T_INTZERO` and `T_QMARK` are renaming of `INTZERO` and `QMARK` which are
 defined in Postiats source. Since they are finally terminal lexical products,
