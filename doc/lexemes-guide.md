@@ -514,3 +514,36 @@ will not be parsed as this if they are preceded (without blanks) by a symbolic
 identifier. For the tokens of this list starting with a "'", there will not be
 parsed as this if they are preceded (without blanks) by an alphanumeric
 identifier.
+
+
+Exceptions
+------------------------------------------------------------------------------
+
+These, which match some non‑identifier lexical units, may also be used in
+place of alphanumeric identifiers (they are ambiguous lexical units):
+
+  * ?
+  * %
+  * type
+  * prop
+  * view
+  * viewtype
+  * addr
+  * fold
+  * free
+
+
+Error conditions
+------------------------------------------------------------------------------
+
+  * A C‑like block comment must be closed.
+  * An ML‑like block comment must be closed.
+  * A character literal must be closed.
+  * A string literal must be closed.
+  * An escaped character must be one of the predefined.
+  * A float cannot have both its integral and fractional parts empty.
+  * A float exponent, if present or required, must not be empty.
+  * An foreign language code block, must be closed.
+  * An hexadecimal float has a required exponent.
+  * An hexadecimal cannot have an empty hexadecimal digits string.
+

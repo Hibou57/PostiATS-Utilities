@@ -594,3 +594,10 @@ and `T_INT_hex`. Otherwise, only `T_FLOAT` is defined in Postiats source.
 `T_INTZERO` and `T_QMARK` are renaming of `INTZERO` and `QMARK` which are
 defined in Postiats source. Since they are finally terminal lexical products,
 they were renamed.
+
+
+See also
+------------------------------------------------------------------------------
+
+“lexemes-guide.md” has two sections “Exceptions” and “Error conditions” which
+are not duplicated here.
