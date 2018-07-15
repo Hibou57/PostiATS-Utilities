@@ -217,9 +217,9 @@ Keep in mind the order matters.
   * `VIEWT0YPE_pos`: "vt@ype+" — see note #2.
   * `VIEWT0YPE_neg`: "vt@ype-" — see note #2.
   * `VIEWT0YPE`: "vt@ype" — see note #2.
-  * `VIEWT0YPE_pos`: "vtype+" — see note #2.
-  * `VIEWT0YPE_neg`: "vtype-" — see note #2.
-  * `VIEWT0YPE`: "vtype" — see note #7.
+  * `VIEWTYPE_pos`: "vtype+" — see note #2.
+  * `VIEWTYPE_neg`: "vtype-" — see note #2.
+  * `VIEWTYPE`: "vtype" — see note #7.
   * `VIEWT0YPE_pos`: "vt0ype+" — see note #2.
   * `VIEWT0YPE_neg`: "vt0ype-" — see note #2.
   * `VIEWT0YPE`: "vt0ype" — see note #7.
