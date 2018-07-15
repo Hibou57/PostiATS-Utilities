@@ -12,7 +12,7 @@ class Input:
 
     """ Input string with current pos. """
 
-    __slots__ = ["source", "length", "pos", "stack"]
+    __slots__ = ["source", "length", "pos"]
 
     def __init__(self, source):
         self.source = source
