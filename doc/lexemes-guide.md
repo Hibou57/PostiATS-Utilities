@@ -525,7 +525,7 @@ place of alphanumeric identifiers (they are ambiguous lexical units):
   * ~
   * <
   * =
-  * >
+  * \>
   * ><
   * ->
   * !
