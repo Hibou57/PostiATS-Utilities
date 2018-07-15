@@ -524,13 +524,13 @@ place of alphanumeric identifiers (they are ambiguous lexical units):
 
   * ?
   * %
-  * type
-  * prop
-  * view
-  * viewtype
   * addr
   * fold
   * free
+  * prop
+  * type
+  * view
+  * viewtype
 
 
 Error conditions
