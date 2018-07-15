@@ -202,6 +202,22 @@ def get_cached_file_name(file_name):
     return result
 
 
+def get_source_file_name(json_name):
+    """ Source file name for cached `json_name`.
+
+    `file_name` is supposed to be a `clean_path`. The function can be invoked
+    on non-`clean_path`, but it will not be relevant.
+
+    """
+    assert json_name.endswith(JSON_EXT)
+    (directory, base_name) = os.path.split(json_name)
+    new_directory = os.path.relpath(directory, start=CACHE)
+    new_directory = os.path.join("/", new_directory)
+    new_base_name = base_name[:-len(JSON_EXT)]
+    result = os.path.join(new_directory, new_base_name)
+    return result
+
+
 # Generating JSON
 # ============================================================================
 
@@ -346,7 +362,7 @@ def get_json_to_stdout(file_name):
     print()
 
 
-# Prefilling and purging
+# Prefilling, purging and listing
 # ============================================================================
 
 def prefill_cache():
@@ -379,6 +395,21 @@ def purge_cache():
             if not os.listdir(path):
                 print("Removing directory “%s”" % path)
                 os.rmdir(path)
+
+
+def cached_files():
+    """ Yield cached JSON file names. """
+    for (dir_path, _dir_names, file_names) in os.walk(CACHE):
+        for file_name in file_names:
+            if is_json_file(file_name):
+                yield os.path.join(dir_path, file_name)
+
+
+def list_cached():
+    """ Yield tuple (json_name, source_name) for cached files. """
+    for json_name in cached_files():
+        source_name = get_source_file_name(json_name)
+        yield (json_name, source_name)
 
 
 # Main
