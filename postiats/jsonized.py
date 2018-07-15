@@ -214,6 +214,9 @@ def get_source_file_name(json_name):
     new_directory = os.path.relpath(directory, start=CACHE)
     new_directory = os.path.join("/", new_directory)
     new_base_name = base_name[:-len(JSON_EXT)]
+    i = new_base_name.rfind("-")
+    if i != -1:
+        new_base_name = new_base_name[:i] + "." + new_base_name[i + 1:]
     result = os.path.join(new_directory, new_base_name)
     return result
 
