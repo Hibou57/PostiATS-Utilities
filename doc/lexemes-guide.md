@@ -373,7 +373,7 @@ be parsed as "foo" and "+", because of the same reason.
 ### Reserved symbolic identifiers
 
 Beside `SYMBOL`, some `SYMBOL` has a fixed meaning in ATS2. These `SYMBOL`
-cannot be redefined by the user, they belong to a fixed set:
+cannot be entirely redefined by the user, they belong to a fixed set:
 
   * \`
   * ~
