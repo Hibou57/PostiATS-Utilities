@@ -406,7 +406,7 @@ cannot be redefined by the user, they belong to a fixed set:
   * \#
   * %
 
-See also the section “Other tokens”.
+See also the sections “Other tokens” and “Exceptions”.
 
 
 ### Dot integer identifier
