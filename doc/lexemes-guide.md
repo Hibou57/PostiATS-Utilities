@@ -543,7 +543,7 @@ Error conditions
   * An escaped character must be one of the predefined.
   * A float cannot have both its integral and fractional parts empty.
   * A float exponent, if present or required, must not be empty.
-  * An foreign language code block, must be closed.
+  * A foreign language code block, must be closed.
   * An hexadecimal float has a required exponent.
   * An hexadecimal cannot have an empty hexadecimal digits string.
 
