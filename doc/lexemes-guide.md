@@ -538,12 +538,12 @@ Error conditions
 
   * A C‑like block comment must be closed.
   * An ML‑like block comment must be closed.
+  * A foreign language code block, must be closed.
   * A character literal must be closed.
   * A string literal must be closed.
   * An escaped character must be one of the predefined.
   * A float cannot have both its integral and fractional parts empty.
   * A float exponent, if present or required, must not be empty.
-  * A foreign language code block, must be closed.
   * An hexadecimal float has a required exponent.
   * An hexadecimal cannot have an empty hexadecimal digits string.
 
