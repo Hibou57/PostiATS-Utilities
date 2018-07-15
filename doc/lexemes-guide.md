@@ -519,7 +519,7 @@ identifier.
 Exceptions
 ------------------------------------------------------------------------------
 
-These, which match some non‑identifier lexical units, may also be used in
+These, which match some non‑identifier lexical units, **may** also be used in
 place of alphanumeric identifiers (they are ambiguous lexical units):
 
   * ~
