@@ -795,7 +795,7 @@ def filtered(source):
 
     def error(lexeme):
         """ Lexeme as T_ERR. """
-        return (lexeme[0], Term.T_ERR, lexeme[2])
+        return (Term.T_ERR, lexeme[1], lexeme[2], lexeme[3])
 
     for lexeme in raw(source):
         kind = lexeme[0]
@@ -810,7 +810,7 @@ def filtered(source):
             yield error(lexeme)
             break
         elif kind == Term.T_IDENT_ext:
-            name = lexeme[2]
+            name = lexeme[3]
             if name not in d.IDENT_EXTS:
                 yield error(lexeme)
                 break
