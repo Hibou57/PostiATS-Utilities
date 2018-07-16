@@ -1,8 +1,8 @@
 """ Lexicalisation of ATS2 sources. """
 
-import lexemes_defs as d
+from . import lexemes_defs as d
 
-from lexemes_defs import (Term, NonTerm, Start)
+from .lexemes_defs import (Term, NonTerm, Start)
 
 
 # Types
