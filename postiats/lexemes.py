@@ -2,7 +2,7 @@
 
 from . import lexemes_defs as d
 
-from .lexemes_defs import (Term, NonTerm, Start)
+from .lexemes_defs import (Fin, NonFin, Start)
 
 
 # Types
@@ -193,9 +193,9 @@ def space_float_dec(source):
         _sign = get_sign(source)
         exponent = get_dec(source)
         if exponent is None:
-            return Term.T_ERR
+            return Fin.T_ERR
     _fl = get_fl(source)
-    return Term.T_FLOAT
+    return Fin.T_FLOAT
 
 
 # Extcode
@@ -235,9 +235,9 @@ def extcode(source):
             break
         c = source.char()
         if c == d.EOF:
-            return Term.T_ERR
+            return Fin.T_ERR
         source.consume()
-    return Term.T_EXTCODE
+    return Fin.T_EXTCODE
 
 
 # Prefix handlers
@@ -277,11 +277,11 @@ def char_escaped(source):
     if c == "0" and source.char(1) in d.X:
         source.consume(2)
         hex_digits = get_hex(source)
-        return hex_digits if hex_digits else Term.T_ERR
+        return hex_digits if hex_digits else Fin.T_ERR
     if c in d.OCTAL:
         oct_digits = get_oct(source)
         return oct_digits
-    return Term.T_ERR
+    return Fin.T_ERR
 
 
 def char(source):
@@ -301,16 +301,16 @@ def char(source):
     if c == "\\":
         source.consume()
         escaped = char_escaped(source)
-        if escaped == Term.T_ERR:
-            return Term.T_ERR
+        if escaped == Fin.T_ERR:
+            return Fin.T_ERR
     else:
         if c == d.EOF:
-            return Term.T_ERR
+            return Fin.T_ERR
         source.consume()
     c = get_char(source, "'")
     if c is None:
-        return Term.T_ERR
-    return Term.T_CHAR
+        return Fin.T_ERR
+    return Fin.T_CHAR
 
 
 # COMMENT_block_c_start
@@ -332,9 +332,9 @@ def comment_block_c(source):
             break
         c = source.char()
         if c == d.EOF:
-            return Term.T_ERR
+            return Fin.T_ERR
         source.consume()
-    return NonTerm.COMMENT_block_c
+    return NonFin.COMMENT_block_c
 
 
 # COMMENT_block_ml_start
@@ -364,9 +364,9 @@ def comment_block_ml(source):
         else:
             c = source.char()
             if c == d.EOF:
-                return Term.T_ERR
+                return Fin.T_ERR
             source.consume()
-    return NonTerm.COMMENT_block_ml
+    return NonFin.COMMENT_block_ml
 
 
 # COMMENT_line_start
@@ -387,7 +387,7 @@ def comment_line(source):
             # Don’t consume EOL nor EOF
             break
         source.consume()
-    return Term.T_COMMENT_line
+    return Fin.T_COMMENT_line
 
 
 # COMMENT_rest_start
@@ -408,7 +408,7 @@ def comment_rest(source):
             # Don’t consume EOF
             break
         source.consume()
-    return Term.T_COMMENT_rest
+    return Fin.T_COMMENT_rest
 
 
 # DOTINT_start
@@ -425,7 +425,7 @@ def dotint(source):
     assert source.at(".")
     source.consume()
     _int_ident = get_dec(source)
-    return Term.T_DOTINT
+    return Fin.T_DOTINT
 
 
 # FLOAT_dec_start
@@ -451,9 +451,9 @@ def float_dec(source):
         _sign = get_sign(source)
         exponent = get_dec(source)
         if not exponent:
-            return Term.T_ERR
+            return Fin.T_ERR
     _fl = get_fl(source)
-    return Term.T_FLOAT
+    return Fin.T_FLOAT
 
 
 # IDENT_dlr_start
@@ -474,7 +474,7 @@ def ident_dlr(source):
     source.consume()
     rest = get_ident(source)
     ident = "$" + rest
-    return d.ident_translation(ident, Term.T_IDENT_dlr)
+    return d.ident_translation(ident, Fin.T_IDENT_dlr)
 
 
 # IDENT_srp_start
@@ -495,7 +495,7 @@ def ident_srp(source):
     source.consume()
     rest = get_ident(source)
     ident = "#" + rest
-    return d.ident_translation(ident, Term.T_IDENT_srp)
+    return d.ident_translation(ident, Fin.T_IDENT_srp)
 
 
 # IDENT_sym_start
@@ -518,7 +518,7 @@ def ident_sym(source):
     if get_char(source, "$"):
         ident += "$"
     ident += get_symbol(source)
-    return d.ident_translation(ident, Term.T_IDENT_sym)
+    return d.ident_translation(ident, Fin.T_IDENT_sym)
 
 
 # IDENT_xx_start
@@ -542,14 +542,14 @@ def ident_xx(source):
     c = source.char()
     if c == "[":
         source.consume()
-        return Term.T_IDENT_arr
+        return Fin.T_IDENT_arr
     if c == "!":
         source.consume()
-        return Term.T_IDENT_ext
+        return Fin.T_IDENT_ext
     if c == "<":
         source.consume()
-        return Term.T_IDENT_tmp
-    return d.ident_translation(ident, Term.T_IDENT_alp)
+        return Fin.T_IDENT_tmp
+    return d.ident_translation(ident, Fin.T_IDENT_alp)
 
 
 # INT_oct_start
@@ -566,7 +566,7 @@ def int_oct(source):
     assert source.at("0")
     _oct = get_oct(source)
     _lu = get_lu(source)
-    return Term.T_INT
+    return Fin.T_INT
 
 
 # QMARKGT_start
@@ -583,7 +583,7 @@ def qmarkgt(source):
     assert source.at("?>")
     source.consume(1)  # Not 2!
     ident = "?"
-    return d.ident_translation(ident, Term.T_IDENT_sym)
+    return d.ident_translation(ident, Fin.T_IDENT_sym)
 
 
 # STRING_start
@@ -608,11 +608,11 @@ def string_escaped(source):
     if c == "0" and source.char(1) in d.X:
         source.consume(2)
         hex_digits = get_hex2(source)
-        return hex_digits if hex_digits else Term.T_ERR
+        return hex_digits if hex_digits else Fin.T_ERR
     if c in d.OCTAL:
         oct_digits = get_oct3(source)
         return oct_digits
-    return Term.T_ERR
+    return Fin.T_ERR
 
 
 def string(source):
@@ -630,16 +630,16 @@ def string(source):
         if c == "\\":
             source.consume()
             escaped = string_escaped(source)
-            if escaped == Term.T_ERR:
-                return Term.T_ERR
+            if escaped == Fin.T_ERR:
+                return Fin.T_ERR
         elif c == '"':
             source.consume()
             break
         else:
             source.consume()
         if c == d.EOF:
-            return Term.T_ERR
-    return Term.T_STRING
+            return Fin.T_ERR
+    return Fin.T_STRING
 
 
 # XX_dec_start
@@ -667,12 +667,12 @@ def xx_dec(source):
         _sign = get_sign(source)
         exponent = get_dec(source)
         if not exponent:
-            return Term.T_ERR
+            return Fin.T_ERR
     if a_float:
         _fl = get_fl(source)
-        return Term.T_FLOAT
+        return Fin.T_FLOAT
     _lu = get_lu(source)
-    return Term.T_INT
+    return Fin.T_INT
 
 
 # XX_hex_start
@@ -702,18 +702,18 @@ def xx_hex(source):
         _sign = get_sign(source)
         exponent = get_hex(source)
         if not exponent:
-            return Term.T_ERR
+            return Fin.T_ERR
     elif a_float:
-        return Term.T_ERR
+        return Fin.T_ERR
     if a_float:
         if not integral and not fractional:
-            return Term.T_ERR
+            return Fin.T_ERR
         _fl = get_fl(source)
-        return Term.T_FLOAT
+        return Fin.T_FLOAT
     if not integral:
-        return Term.T_ERR
+        return Fin.T_ERR
     _lu = get_lu(source)
-    return Term.T_INT
+    return Fin.T_INT
 
 
 # Dispatch
@@ -746,9 +746,9 @@ assert all(isinstance(x, Start) for x in DISPATCH)
 def raw(source):
     """ Unfiltered lexemes. """
 
-    def term(kind):
+    def fin(kind):
         """ (pos, kind, string) """
-        assert isinstance(kind, Term)
+        assert isinstance(kind, Fin)
         return (kind, pos, source.pos, source.string(pos))
 
     sol = True
@@ -757,33 +757,33 @@ def raw(source):
         space = get_space(source)
         if space is not None:
             sol = space[-1] == d.EOL
-            yield term(Term.T_SPACE)
+            yield fin(Fin.T_SPACE)
         # Don’t set sol to False when there is no space, not here: at start
         # of file, we have an sol and no space.
         pos = source.pos
         if space_float_dec_cond(space, source, consume=False):
             product = space_float_dec(source)
-            yield term(product)
+            yield fin(product)
         elif extcode_cond(sol, source, consume=False):
             product = extcode(source)
-            yield term(product)
+            yield fin(product)
         else:
             product = get_prefix_product(source)
             if product is not None:
                 if isinstance(product, Start):
                     source.pos = pos
                     product = DISPATCH[product](source)
-                if isinstance(product, NonTerm):  # Not elif!
-                    product = d.NONTERMS_TRANSL[product]
-                yield term(product)
+                if isinstance(product, NonFin):  # Not elif!
+                    product = d.NONFINS_TRANSL[product]
+                yield fin(product)
             else:
                 source.consume()
-                product = Term.T_ERR
-                yield term(product)
+                product = Fin.T_ERR
+                yield fin(product)
         sol = False
         # Suppose no product is empty except T_EOF and no product consumes
         # the EOL except T_SPACE.
-        if product == Term.T_EOF:
+        if product == Fin.T_EOF:
             # Don’t check source pos is at end, it is not the same: when
             # a token ends with EOF, it gives no chance to generate a
             # T_EOF.
@@ -795,21 +795,21 @@ def filtered(source):
 
     def error(lexeme):
         """ Lexeme as T_ERR. """
-        return (Term.T_ERR, lexeme[1], lexeme[2], lexeme[3])
+        return (Fin.T_ERR, lexeme[1], lexeme[2], lexeme[3])
 
     for lexeme in raw(source):
         kind = lexeme[0]
-        if kind == Term.T_ERR:
+        if kind == Fin.T_ERR:
             yield lexeme
             break
-        elif kind == Term.T_SPACE:
+        elif kind == Fin.T_SPACE:
             pass
         elif kind in d.COMMENTS:
             pass
         elif kind in d.ERRORS:
             yield error(lexeme)
             break
-        elif kind == Term.T_IDENT_ext:
+        elif kind == Fin.T_IDENT_ext:
             name = lexeme[3]
             if name not in d.IDENT_EXTS:
                 yield error(lexeme)

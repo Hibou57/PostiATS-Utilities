@@ -42,12 +42,12 @@ EXTCODE_TAG = set("#$^")
 OTHERS = set("()[]{},;")
 
 
-# Non‑terminals
+# Non‑finals
 # ----------------------------------------------------------------------------
 
-class NonTerm(Enum):
+class NonFin(Enum):
 
-    """ Non terminal lexical products. """
+    """ Non‑final lexical products. """
 
     ABSPROP = "ABSPROP"
     ABST0YPE = "ABST0YPE"
@@ -139,12 +139,12 @@ class NonTerm(Enum):
     WITHVIEWTYPE = "WITHVIEWTYPE"
 
 
-# Terminals
+# Finals
 # ----------------------------------------------------------------------------
 
-class Term(Enum):
+class Fin(Enum):
 
-    """ Terminal lexical products. """
+    """ Final lexical products. """
 
     T_ABSTYPE = "T_ABSTYPE"
     T_ADDRAT = "T_ADDRAT"
@@ -332,103 +332,103 @@ class Term(Enum):
     T_WITHTYPE = "T_WITHTYPE"
 
 
-# Translation of non‑terminals to terminals
+# Translation of non‑finals to finals
 # ----------------------------------------------------------------------------
 
-NONTERMS_TRANSL = {
-    NonTerm.ABSPROP: Term.T_ABSTYPE,
-    NonTerm.ABST0YPE: Term.T_ABSTYPE,
-    NonTerm.ABSTYPE: Term.T_ABSTYPE,
-    NonTerm.ABSVIEWT0YPE: Term.T_ABSTYPE,
-    NonTerm.ABSVIEW: Term.T_ABSTYPE,
-    NonTerm.ABSVIEWTYPE: Term.T_ABSTYPE,
-    NonTerm.CASE_neg: Term.T_CASE,
-    NonTerm.CASE_pos: Term.T_CASE,
-    NonTerm.CASE: Term.T_CASE,
-    NonTerm.CASTFN: Term.T_FUN,
-    NonTerm.COMMENT_block_c: Term.T_COMMENT_block,
-    NonTerm.COMMENT_block_ml: Term.T_COMMENT_block,
-    NonTerm.DATAPROP: Term.T_DATATYPE,
-    NonTerm.DATATYPE: Term.T_DATATYPE,
-    NonTerm.DATAVIEW: Term.T_DATATYPE,
-    NonTerm.DATAVTYPE: Term.T_DATATYPE,
-    NonTerm.DLRDELAY: Term.T_DLRDELAY,
-    NonTerm.DLREFFMASK_ALL: Term.T_DLREFFMASK_ARG,
-    NonTerm.DLREFFMASK_EXN: Term.T_DLREFFMASK_ARG,
-    NonTerm.DLREFFMASK_NTM: Term.T_DLREFFMASK_ARG,
-    NonTerm.DLREFFMASK_REF: Term.T_DLREFFMASK_ARG,
-    NonTerm.DLREFFMASK_WRT: Term.T_DLREFFMASK_ARG,
-    NonTerm.DLRLDELAY: Term.T_DLRDELAY,
-    NonTerm.DLRLST: Term.T_DLRLST,
-    NonTerm.DLRLST_T: Term.T_DLRLST,
-    NonTerm.DLRLST_VT: Term.T_DLRLST,
-    NonTerm.DLRREC: Term.T_DLRREC,
-    NonTerm.DLRREC_T: Term.T_DLRREC,
-    NonTerm.DLRREC_VT: Term.T_DLRREC,
-    NonTerm.DLRTUP: Term.T_DLRTUP,
-    NonTerm.DLRTUP_T: Term.T_DLRTUP,
-    NonTerm.DLRTUP_VT: Term.T_DLRTUP,
-    NonTerm.DLRVCOPYENV_V: Term.T_DLRVCOPYENV,
-    NonTerm.DLRVCOPYENV_VT: Term.T_DLRVCOPYENV,
-    NonTerm.FIXAT: Term.T_FIX,
-    NonTerm.FIX: Term.T_FIX,
-    NonTerm.FN: Term.T_FUN,
-    NonTerm.FNX: Term.T_FUN,
-    NonTerm.FUN: Term.T_FUN,
-    NonTerm.IMPLEMENT: Term.T_IMPLEMENT,
-    NonTerm.IMPLMNT: Term.T_IMPLEMENT,
-    NonTerm.INFIXL: Term.T_FIXITY,
-    NonTerm.INFIXR: Term.T_FIXITY,
-    NonTerm.INFIX: Term.T_FIXITY,
-    NonTerm.LAMAT: Term.T_LAM,
-    NonTerm.LAM: Term.T_LAM,
-    NonTerm.LLAMAT: Term.T_LAM,
-    NonTerm.LLAM: Term.T_LAM,
-    NonTerm.MACDEF: Term.T_MACDEF,
-    NonTerm.MACRODEF: Term.T_MACDEF,
-    NonTerm.POSTFIX: Term.T_FIXITY,
-    NonTerm.PRAXI: Term.T_FUN,
-    NonTerm.PREFIX: Term.T_FIXITY,
-    NonTerm.PRFN: Term.T_FUN,
-    NonTerm.PRFUN: Term.T_FUN,
-    NonTerm.PRIMPLMNT: Term.T_IMPLEMENT,
-    NonTerm.PROPDEF: Term.T_TYPEDEF,
-    NonTerm.PROP_neg: Term.T_TYPE,
-    NonTerm.PROP_pos: Term.T_TYPE,
-    NonTerm.PROP: Term.T_TYPE_OR_IDENT,
-    NonTerm.PRVAL: Term.T_VAL,
-    NonTerm.PRVAR: Term.T_VAR,
-    NonTerm.T0YPE_neg: Term.T_TYPE,
-    NonTerm.T0YPE_pos: Term.T_TYPE,
-    NonTerm.T0YPE: Term.T_TYPE,
-    NonTerm.TYPEDEF: Term.T_TYPEDEF,
-    NonTerm.TYPE_neg: Term.T_TYPE,
-    NonTerm.TYPE_pos: Term.T_TYPE,
-    NonTerm.TYPE: Term.T_TYPE_OR_IDENT,
-    NonTerm.VAL_neg: Term.T_VAL,
-    NonTerm.VAL_pos: Term.T_VAL,
-    NonTerm.VAL: Term.T_VAL,
-    NonTerm.VAR: Term.T_VAR,
-    NonTerm.VIEWDEF: Term.T_TYPEDEF,
-    NonTerm.VIEW_neg: Term.T_TYPE,
-    NonTerm.VIEW_pos: Term.T_TYPE,
-    NonTerm.VIEWT0YPE_neg: Term.T_TYPE,
-    NonTerm.VIEWT0YPE_pos: Term.T_TYPE,
-    NonTerm.VIEWT0YPE: Term.T_TYPE,
-    NonTerm.VIEW: Term.T_TYPE_OR_IDENT,
-    NonTerm.VIEWTYPEDEF: Term.T_TYPEDEF,
-    NonTerm.VIEWTYPE_neg: Term.T_TYPE,
-    NonTerm.VIEWTYPE_pos: Term.T_TYPE,
-    NonTerm.VIEWTYPE: Term.T_TYPE_OR_IDENT,
-    NonTerm.WITHPROP: Term.T_WITHTYPE,
-    NonTerm.WITHTYPE: Term.T_WITHTYPE,
-    NonTerm.WITHVIEW: Term.T_WITHTYPE,
-    NonTerm.WITHVIEWTYPE: Term.T_WITHTYPE}
+NONFINS_TRANSL = {
+    NonFin.ABSPROP: Fin.T_ABSTYPE,
+    NonFin.ABST0YPE: Fin.T_ABSTYPE,
+    NonFin.ABSTYPE: Fin.T_ABSTYPE,
+    NonFin.ABSVIEWT0YPE: Fin.T_ABSTYPE,
+    NonFin.ABSVIEW: Fin.T_ABSTYPE,
+    NonFin.ABSVIEWTYPE: Fin.T_ABSTYPE,
+    NonFin.CASE_neg: Fin.T_CASE,
+    NonFin.CASE_pos: Fin.T_CASE,
+    NonFin.CASE: Fin.T_CASE,
+    NonFin.CASTFN: Fin.T_FUN,
+    NonFin.COMMENT_block_c: Fin.T_COMMENT_block,
+    NonFin.COMMENT_block_ml: Fin.T_COMMENT_block,
+    NonFin.DATAPROP: Fin.T_DATATYPE,
+    NonFin.DATATYPE: Fin.T_DATATYPE,
+    NonFin.DATAVIEW: Fin.T_DATATYPE,
+    NonFin.DATAVTYPE: Fin.T_DATATYPE,
+    NonFin.DLRDELAY: Fin.T_DLRDELAY,
+    NonFin.DLREFFMASK_ALL: Fin.T_DLREFFMASK_ARG,
+    NonFin.DLREFFMASK_EXN: Fin.T_DLREFFMASK_ARG,
+    NonFin.DLREFFMASK_NTM: Fin.T_DLREFFMASK_ARG,
+    NonFin.DLREFFMASK_REF: Fin.T_DLREFFMASK_ARG,
+    NonFin.DLREFFMASK_WRT: Fin.T_DLREFFMASK_ARG,
+    NonFin.DLRLDELAY: Fin.T_DLRDELAY,
+    NonFin.DLRLST: Fin.T_DLRLST,
+    NonFin.DLRLST_T: Fin.T_DLRLST,
+    NonFin.DLRLST_VT: Fin.T_DLRLST,
+    NonFin.DLRREC: Fin.T_DLRREC,
+    NonFin.DLRREC_T: Fin.T_DLRREC,
+    NonFin.DLRREC_VT: Fin.T_DLRREC,
+    NonFin.DLRTUP: Fin.T_DLRTUP,
+    NonFin.DLRTUP_T: Fin.T_DLRTUP,
+    NonFin.DLRTUP_VT: Fin.T_DLRTUP,
+    NonFin.DLRVCOPYENV_V: Fin.T_DLRVCOPYENV,
+    NonFin.DLRVCOPYENV_VT: Fin.T_DLRVCOPYENV,
+    NonFin.FIXAT: Fin.T_FIX,
+    NonFin.FIX: Fin.T_FIX,
+    NonFin.FN: Fin.T_FUN,
+    NonFin.FNX: Fin.T_FUN,
+    NonFin.FUN: Fin.T_FUN,
+    NonFin.IMPLEMENT: Fin.T_IMPLEMENT,
+    NonFin.IMPLMNT: Fin.T_IMPLEMENT,
+    NonFin.INFIXL: Fin.T_FIXITY,
+    NonFin.INFIXR: Fin.T_FIXITY,
+    NonFin.INFIX: Fin.T_FIXITY,
+    NonFin.LAMAT: Fin.T_LAM,
+    NonFin.LAM: Fin.T_LAM,
+    NonFin.LLAMAT: Fin.T_LAM,
+    NonFin.LLAM: Fin.T_LAM,
+    NonFin.MACDEF: Fin.T_MACDEF,
+    NonFin.MACRODEF: Fin.T_MACDEF,
+    NonFin.POSTFIX: Fin.T_FIXITY,
+    NonFin.PRAXI: Fin.T_FUN,
+    NonFin.PREFIX: Fin.T_FIXITY,
+    NonFin.PRFN: Fin.T_FUN,
+    NonFin.PRFUN: Fin.T_FUN,
+    NonFin.PRIMPLMNT: Fin.T_IMPLEMENT,
+    NonFin.PROPDEF: Fin.T_TYPEDEF,
+    NonFin.PROP_neg: Fin.T_TYPE,
+    NonFin.PROP_pos: Fin.T_TYPE,
+    NonFin.PROP: Fin.T_TYPE_OR_IDENT,
+    NonFin.PRVAL: Fin.T_VAL,
+    NonFin.PRVAR: Fin.T_VAR,
+    NonFin.T0YPE_neg: Fin.T_TYPE,
+    NonFin.T0YPE_pos: Fin.T_TYPE,
+    NonFin.T0YPE: Fin.T_TYPE,
+    NonFin.TYPEDEF: Fin.T_TYPEDEF,
+    NonFin.TYPE_neg: Fin.T_TYPE,
+    NonFin.TYPE_pos: Fin.T_TYPE,
+    NonFin.TYPE: Fin.T_TYPE_OR_IDENT,
+    NonFin.VAL_neg: Fin.T_VAL,
+    NonFin.VAL_pos: Fin.T_VAL,
+    NonFin.VAL: Fin.T_VAL,
+    NonFin.VAR: Fin.T_VAR,
+    NonFin.VIEWDEF: Fin.T_TYPEDEF,
+    NonFin.VIEW_neg: Fin.T_TYPE,
+    NonFin.VIEW_pos: Fin.T_TYPE,
+    NonFin.VIEWT0YPE_neg: Fin.T_TYPE,
+    NonFin.VIEWT0YPE_pos: Fin.T_TYPE,
+    NonFin.VIEWT0YPE: Fin.T_TYPE,
+    NonFin.VIEW: Fin.T_TYPE_OR_IDENT,
+    NonFin.VIEWTYPEDEF: Fin.T_TYPEDEF,
+    NonFin.VIEWTYPE_neg: Fin.T_TYPE,
+    NonFin.VIEWTYPE_pos: Fin.T_TYPE,
+    NonFin.VIEWTYPE: Fin.T_TYPE_OR_IDENT,
+    NonFin.WITHPROP: Fin.T_WITHTYPE,
+    NonFin.WITHTYPE: Fin.T_WITHTYPE,
+    NonFin.WITHVIEW: Fin.T_WITHTYPE,
+    NonFin.WITHVIEWTYPE: Fin.T_WITHTYPE}
 
 
-assert all(isinstance(x, NonTerm) for x in NONTERMS_TRANSL)
-assert all(isinstance(x, Term) for x in NONTERMS_TRANSL.values())
-assert all(x in NONTERMS_TRANSL for x in NonTerm)
+assert all(isinstance(x, NonFin) for x in NONFINS_TRANSL)
+assert all(isinstance(x, Fin) for x in NONFINS_TRANSL.values())
+assert all(x in NONFINS_TRANSL for x in NonFin)
 
 
 # Translation of some idents to products
@@ -436,228 +436,228 @@ assert all(x in NONTERMS_TRANSL for x in NonTerm)
 
 IDENTS_TRANSL = {
 
-    # Terminals
+    # Finals
 
-    "and": Term.T_AND,
-    "as": Term.T_AS,
-    "assume": Term.T_ASSUME,
-    "absimpl": Term.T_ASSUME,
-    "@": Term.T_AT_OR_SIDENT,
-    "!": Term.T_BANG_OR_IDENT,
-    "|": Term.T_BAR,
-    "begin": Term.T_BEGIN,
-    "`": Term.T_BQUOTE,
-    "classdec": Term.T_CLASSDEC,
-    ":": Term.T_COLON,
-    "datasort": Term.T_DATASORT,
-    "$arrpsz": Term.T_DLRARRPSZ,
-    "$arrptrsize": Term.T_DLRARRPSZ,
-    "$break": Term.T_DLRBREAK,
-    "$continue": Term.T_DLRCONTINUE,
-    "$d2ctype": Term.T_DLRD2CTYPE,
-    "$effmask": Term.T_DLREFFMASK,
-    "$extern": Term.T_DLREXTERN,
-    "$extfcall": Term.T_DLREXTFCALL,
-    "$extkind": Term.T_DLREXTKIND,
-    "$extmcall": Term.T_DLREXTMCALL,
-    "$extval": Term.T_DLREXTVAL,
-    "$extype": Term.T_DLREXTYPE,
-    "$extype_struct": Term.T_DLREXTYPE_STRUCT,
-    "$literal": Term.T_DLRLITERAL,
-    "$myfilename": Term.T_DLRMYFILENAME,
-    "$myfunction": Term.T_DLRMYFUNCTION,
-    "$mylocation": Term.T_DLRMYLOCATION,
-    "$raise": Term.T_DLRRAISE,
-    "$showtype": Term.T_DLRSHOWTYPE,
-    "$solver_assert": Term.T_DLRSOLASSERT,
-    "$solver_verify": Term.T_DLRSOLVERIFY,
-    "$tempenver": Term.T_DLRTEMPENVER,
-    "$tyrep": Term.T_DLRTYREP,
-    "$vararg": Term.T_DLRVARARG,
-    "do": Term.T_DO,
-    "$": Term.T_DOLLAR,
-    ".": Term.T_DOT,
-    "..": Term.T_DOTDOT,
-    "...": Term.T_DOTDOTDOT,
-    ".<>.": Term.T_DOTLTGTDOT,
-    ".<": Term.T_DOTLT,
-    "else": Term.T_ELSE,
-    "end": Term.T_END,
-    "=": Term.T_EQ_OR_DIDENT,
-    "=>": Term.T_EQGT,
-    "=>>": Term.T_EQGTGT,
-    "=<": Term.T_EQLT,
-    "=<>": Term.T_EQLTGT,
-    "=/=>": Term.T_EQSLASHEQGT,
-    "=/=>>": Term.T_EQSLASHEQGTGT,
-    "exception": Term.T_EXCEPTION,
-    "extern": Term.T_EXTERN,
-    "extvar": Term.T_EXTVAR,
-    "extype": Term.T_EXTYPE,
-    ">.": Term.T_GTDOT,
-    ">": Term.T_GT_OR_IDENT,
-    "><": Term.T_GTLT_OR_DIDENT,
-    "#": Term.T_HASH,
-    "ifcase": Term.T_IFCASE,
-    "if": Term.T_IF,
-    "import": Term.T_IMPORT,
-    "in": Term.T_IN,
-    "let": Term.T_LET,
-    "local": Term.T_LOCAL,
-    "<": Term.T_LT_OR_IDENT,
-    "->": Term.T_MINUSGT_OR_SIDENT,
-    "-<": Term.T_MINUSLT,
-    "-<>": Term.T_MINUSLTGT,
-    "nonfix": Term.T_NONFIX,
-    "of": Term.T_OF,
-    "op": Term.T_OP,
-    "overload": Term.T_OVERLOAD,
-    "%": Term.T_PERCENT_OR_IDENT,
-    "?": Term.T_QMARK_OR_IDENT,
-    "reassume": Term.T_REASSUME,
-    "absreimpl": Term.T_REASSUME,
-    "rec": Term.T_REC,
-    "scase": Term.T_SCASE,
-    "sif": Term.T_SIF,
-    "sortdef": Term.T_SORTDEF,
-    "#assert": Term.T_SRPASSERT,
-    "#codegen2": Term.T_SRPCODEGEN2,
-    "#define": Term.T_SRPDEFINE,
-    "dynload": Term.T_SRPDYNLOAD,
-    "#dynload": Term.T_SRPDYNLOAD,
-    "#elifdef": Term.T_SRPELIFDEF,
-    "#elif": Term.T_SRPELIF,
-    "#elifndef": Term.T_SRPELIFNDEF,
-    "#else": Term.T_SRPELSE,
-    "#endif": Term.T_SRPENDIF,
-    "#error": Term.T_SRPERROR,
-    "#ifdef": Term.T_SRPIFDEF,
-    "#if": Term.T_SRPIF,
-    "#ifndef": Term.T_SRPIFNDEF,
-    "#include": Term.T_SRPINCLUDE,
-    "#pragma": Term.T_SRPPRAGMA,
-    "#prerr": Term.T_SRPPRERR,
-    "#print": Term.T_SRPPRINT,
-    "#require": Term.T_SRPREQUIRE,
-    "staload": Term.T_SRPSTALOAD,
-    "#staload": Term.T_SRPSTALOAD,
-    "#then": Term.T_SRPTHEN,
-    "#undef": Term.T_SRPUNDEF,
-    "sta": Term.T_STACST,
-    "stacst": Term.T_STACST,
-    "stadef": Term.T_STADEF,
-    "static": Term.T_STATIC,
-    "symelim": Term.T_SYMELIM,
-    "symintr": Term.T_SYMINTR,
-    "then": Term.T_THEN,
-    "~": Term.T_TILDE_OR_IDENT,
-    "tkindef": Term.T_TKINDEF,
-    "try": Term.T_TRY,
-    "when": Term.T_WHEN,
-    "where": Term.T_WHERE,
-    "with": Term.T_WITH,
+    "and": Fin.T_AND,
+    "as": Fin.T_AS,
+    "assume": Fin.T_ASSUME,
+    "absimpl": Fin.T_ASSUME,
+    "@": Fin.T_AT_OR_SIDENT,
+    "!": Fin.T_BANG_OR_IDENT,
+    "|": Fin.T_BAR,
+    "begin": Fin.T_BEGIN,
+    "`": Fin.T_BQUOTE,
+    "classdec": Fin.T_CLASSDEC,
+    ":": Fin.T_COLON,
+    "datasort": Fin.T_DATASORT,
+    "$arrpsz": Fin.T_DLRARRPSZ,
+    "$arrptrsize": Fin.T_DLRARRPSZ,
+    "$break": Fin.T_DLRBREAK,
+    "$continue": Fin.T_DLRCONTINUE,
+    "$d2ctype": Fin.T_DLRD2CTYPE,
+    "$effmask": Fin.T_DLREFFMASK,
+    "$extern": Fin.T_DLREXTERN,
+    "$extfcall": Fin.T_DLREXTFCALL,
+    "$extkind": Fin.T_DLREXTKIND,
+    "$extmcall": Fin.T_DLREXTMCALL,
+    "$extval": Fin.T_DLREXTVAL,
+    "$extype": Fin.T_DLREXTYPE,
+    "$extype_struct": Fin.T_DLREXTYPE_STRUCT,
+    "$literal": Fin.T_DLRLITERAL,
+    "$myfilename": Fin.T_DLRMYFILENAME,
+    "$myfunction": Fin.T_DLRMYFUNCTION,
+    "$mylocation": Fin.T_DLRMYLOCATION,
+    "$raise": Fin.T_DLRRAISE,
+    "$showtype": Fin.T_DLRSHOWTYPE,
+    "$solver_assert": Fin.T_DLRSOLASSERT,
+    "$solver_verify": Fin.T_DLRSOLVERIFY,
+    "$tempenver": Fin.T_DLRTEMPENVER,
+    "$tyrep": Fin.T_DLRTYREP,
+    "$vararg": Fin.T_DLRVARARG,
+    "do": Fin.T_DO,
+    "$": Fin.T_DOLLAR,
+    ".": Fin.T_DOT,
+    "..": Fin.T_DOTDOT,
+    "...": Fin.T_DOTDOTDOT,
+    ".<>.": Fin.T_DOTLTGTDOT,
+    ".<": Fin.T_DOTLT,
+    "else": Fin.T_ELSE,
+    "end": Fin.T_END,
+    "=": Fin.T_EQ_OR_DIDENT,
+    "=>": Fin.T_EQGT,
+    "=>>": Fin.T_EQGTGT,
+    "=<": Fin.T_EQLT,
+    "=<>": Fin.T_EQLTGT,
+    "=/=>": Fin.T_EQSLASHEQGT,
+    "=/=>>": Fin.T_EQSLASHEQGTGT,
+    "exception": Fin.T_EXCEPTION,
+    "extern": Fin.T_EXTERN,
+    "extvar": Fin.T_EXTVAR,
+    "extype": Fin.T_EXTYPE,
+    ">.": Fin.T_GTDOT,
+    ">": Fin.T_GT_OR_IDENT,
+    "><": Fin.T_GTLT_OR_DIDENT,
+    "#": Fin.T_HASH,
+    "ifcase": Fin.T_IFCASE,
+    "if": Fin.T_IF,
+    "import": Fin.T_IMPORT,
+    "in": Fin.T_IN,
+    "let": Fin.T_LET,
+    "local": Fin.T_LOCAL,
+    "<": Fin.T_LT_OR_IDENT,
+    "->": Fin.T_MINUSGT_OR_SIDENT,
+    "-<": Fin.T_MINUSLT,
+    "-<>": Fin.T_MINUSLTGT,
+    "nonfix": Fin.T_NONFIX,
+    "of": Fin.T_OF,
+    "op": Fin.T_OP,
+    "overload": Fin.T_OVERLOAD,
+    "%": Fin.T_PERCENT_OR_IDENT,
+    "?": Fin.T_QMARK_OR_IDENT,
+    "reassume": Fin.T_REASSUME,
+    "absreimpl": Fin.T_REASSUME,
+    "rec": Fin.T_REC,
+    "scase": Fin.T_SCASE,
+    "sif": Fin.T_SIF,
+    "sortdef": Fin.T_SORTDEF,
+    "#assert": Fin.T_SRPASSERT,
+    "#codegen2": Fin.T_SRPCODEGEN2,
+    "#define": Fin.T_SRPDEFINE,
+    "dynload": Fin.T_SRPDYNLOAD,
+    "#dynload": Fin.T_SRPDYNLOAD,
+    "#elifdef": Fin.T_SRPELIFDEF,
+    "#elif": Fin.T_SRPELIF,
+    "#elifndef": Fin.T_SRPELIFNDEF,
+    "#else": Fin.T_SRPELSE,
+    "#endif": Fin.T_SRPENDIF,
+    "#error": Fin.T_SRPERROR,
+    "#ifdef": Fin.T_SRPIFDEF,
+    "#if": Fin.T_SRPIF,
+    "#ifndef": Fin.T_SRPIFNDEF,
+    "#include": Fin.T_SRPINCLUDE,
+    "#pragma": Fin.T_SRPPRAGMA,
+    "#prerr": Fin.T_SRPPRERR,
+    "#print": Fin.T_SRPPRINT,
+    "#require": Fin.T_SRPREQUIRE,
+    "staload": Fin.T_SRPSTALOAD,
+    "#staload": Fin.T_SRPSTALOAD,
+    "#then": Fin.T_SRPTHEN,
+    "#undef": Fin.T_SRPUNDEF,
+    "sta": Fin.T_STACST,
+    "stacst": Fin.T_STACST,
+    "stadef": Fin.T_STADEF,
+    "static": Fin.T_STATIC,
+    "symelim": Fin.T_SYMELIM,
+    "symintr": Fin.T_SYMINTR,
+    "then": Fin.T_THEN,
+    "~": Fin.T_TILDE_OR_IDENT,
+    "tkindef": Fin.T_TKINDEF,
+    "try": Fin.T_TRY,
+    "when": Fin.T_WHEN,
+    "where": Fin.T_WHERE,
+    "with": Fin.T_WITH,
 
-    # Non‑terminals
+    # Non‑finals
 
-    "absprop": NonTerm.ABSPROP,
-    "abst0ype": NonTerm.ABST0YPE,
-    "abstflat": NonTerm.ABST0YPE,
-    "abstbox": NonTerm.ABSTYPE,
-    "abstype": NonTerm.ABSTYPE,
-    "absview": NonTerm.ABSVIEW,
-    "absviewt0ype": NonTerm.ABSVIEWT0YPE,
-    "absvt0ype": NonTerm.ABSVIEWT0YPE,
-    "absvtflat": NonTerm.ABSVIEWT0YPE,
-    "absviewtype": NonTerm.ABSVIEWTYPE,
-    "absvtbox": NonTerm.ABSVIEWTYPE,
-    "absvtype": NonTerm.ABSVIEWTYPE,
-    "castfn": NonTerm.CASTFN,
-    "dataprop": NonTerm.DATAPROP,
-    "datatype": NonTerm.DATATYPE,
-    "dataview": NonTerm.DATAVIEW,
-    "dataviewtype": NonTerm.DATAVTYPE,
-    "datavtype": NonTerm.DATAVTYPE,
-    "$delay": NonTerm.DLRDELAY,
-    "$effmask_all": NonTerm.DLREFFMASK_ALL,
-    "$effmask_exn": NonTerm.DLREFFMASK_EXN,
-    "$effmask_ntm": NonTerm.DLREFFMASK_NTM,
-    "$effmask_ref": NonTerm.DLREFFMASK_REF,
-    "$effmask_wrt": NonTerm.DLREFFMASK_WRT,
-    "$ldelay": NonTerm.DLRLDELAY,
-    "$list": NonTerm.DLRLST,
-    "$lst": NonTerm.DLRLST,
-    "$list_t": NonTerm.DLRLST_T,
-    "$lst_t": NonTerm.DLRLST_T,
-    "$list_vt": NonTerm.DLRLST_VT,
-    "$lst_vt": NonTerm.DLRLST_VT,
-    "$rec": NonTerm.DLRREC,
-    "$record": NonTerm.DLRREC,
-    "$record_t": NonTerm.DLRREC_T,
-    "$rec_t": NonTerm.DLRREC_T,
-    "$record_vt": NonTerm.DLRREC_VT,
-    "$rec_vt": NonTerm.DLRREC_VT,
-    "$tuple_t": NonTerm.DLRTUP_T,
-    "$tup_t": NonTerm.DLRTUP_T,
-    "$tup": NonTerm.DLRTUP,
-    "$tuple": NonTerm.DLRTUP,
-    "$tuple_vt": NonTerm.DLRTUP_VT,
-    "$tup_vt": NonTerm.DLRTUP_VT,
-    "$vcopyenv_vt": NonTerm.DLRVCOPYENV_VT,
-    "$vcopyenv_v": NonTerm.DLRVCOPYENV_V,
-    "fn": NonTerm.FN,
-    "fnx": NonTerm.FNX,
-    "fun": NonTerm.FUN,
-    "implement": NonTerm.IMPLEMENT,
-    "implmnt": NonTerm.IMPLMNT,
-    "infix": NonTerm.INFIX,
-    "infixl": NonTerm.INFIXL,
-    "infixr": NonTerm.INFIXR,
-    "macdef": NonTerm.MACDEF,
-    "macrodef": NonTerm.MACRODEF,
-    "postfix": NonTerm.POSTFIX,
-    "praxi": NonTerm.PRAXI,
-    "prefix": NonTerm.PREFIX,
-    "prfn": NonTerm.PRFN,
-    "prfun": NonTerm.PRFUN,
-    "primplement": NonTerm.PRIMPLMNT,
-    "primplmnt": NonTerm.PRIMPLMNT,
-    "propdef": NonTerm.PROPDEF,
-    "prval": NonTerm.PRVAL,
-    "prvar": NonTerm.PRVAR,
-    "typedef": NonTerm.TYPEDEF,
-    "var": NonTerm.VAR,
-    "viewdef": NonTerm.VIEWDEF,
-    "viewtypedef": NonTerm.VIEWTYPEDEF,
-    "vtypedef": NonTerm.VIEWTYPEDEF,
-    "withprop": NonTerm.WITHPROP,
-    "withtype": NonTerm.WITHTYPE,
-    "withviewtype": NonTerm.WITHVIEWTYPE,
-    "withvtype": NonTerm.WITHVIEWTYPE,
-    "withview": NonTerm.WITHVIEW,
+    "absprop": NonFin.ABSPROP,
+    "abst0ype": NonFin.ABST0YPE,
+    "abstflat": NonFin.ABST0YPE,
+    "abstbox": NonFin.ABSTYPE,
+    "abstype": NonFin.ABSTYPE,
+    "absview": NonFin.ABSVIEW,
+    "absviewt0ype": NonFin.ABSVIEWT0YPE,
+    "absvt0ype": NonFin.ABSVIEWT0YPE,
+    "absvtflat": NonFin.ABSVIEWT0YPE,
+    "absviewtype": NonFin.ABSVIEWTYPE,
+    "absvtbox": NonFin.ABSVIEWTYPE,
+    "absvtype": NonFin.ABSVIEWTYPE,
+    "castfn": NonFin.CASTFN,
+    "dataprop": NonFin.DATAPROP,
+    "datatype": NonFin.DATATYPE,
+    "dataview": NonFin.DATAVIEW,
+    "dataviewtype": NonFin.DATAVTYPE,
+    "datavtype": NonFin.DATAVTYPE,
+    "$delay": NonFin.DLRDELAY,
+    "$effmask_all": NonFin.DLREFFMASK_ALL,
+    "$effmask_exn": NonFin.DLREFFMASK_EXN,
+    "$effmask_ntm": NonFin.DLREFFMASK_NTM,
+    "$effmask_ref": NonFin.DLREFFMASK_REF,
+    "$effmask_wrt": NonFin.DLREFFMASK_WRT,
+    "$ldelay": NonFin.DLRLDELAY,
+    "$list": NonFin.DLRLST,
+    "$lst": NonFin.DLRLST,
+    "$list_t": NonFin.DLRLST_T,
+    "$lst_t": NonFin.DLRLST_T,
+    "$list_vt": NonFin.DLRLST_VT,
+    "$lst_vt": NonFin.DLRLST_VT,
+    "$rec": NonFin.DLRREC,
+    "$record": NonFin.DLRREC,
+    "$record_t": NonFin.DLRREC_T,
+    "$rec_t": NonFin.DLRREC_T,
+    "$record_vt": NonFin.DLRREC_VT,
+    "$rec_vt": NonFin.DLRREC_VT,
+    "$tuple_t": NonFin.DLRTUP_T,
+    "$tup_t": NonFin.DLRTUP_T,
+    "$tup": NonFin.DLRTUP,
+    "$tuple": NonFin.DLRTUP,
+    "$tuple_vt": NonFin.DLRTUP_VT,
+    "$tup_vt": NonFin.DLRTUP_VT,
+    "$vcopyenv_vt": NonFin.DLRVCOPYENV_VT,
+    "$vcopyenv_v": NonFin.DLRVCOPYENV_V,
+    "fn": NonFin.FN,
+    "fnx": NonFin.FNX,
+    "fun": NonFin.FUN,
+    "implement": NonFin.IMPLEMENT,
+    "implmnt": NonFin.IMPLMNT,
+    "infix": NonFin.INFIX,
+    "infixl": NonFin.INFIXL,
+    "infixr": NonFin.INFIXR,
+    "macdef": NonFin.MACDEF,
+    "macrodef": NonFin.MACRODEF,
+    "postfix": NonFin.POSTFIX,
+    "praxi": NonFin.PRAXI,
+    "prefix": NonFin.PREFIX,
+    "prfn": NonFin.PRFN,
+    "prfun": NonFin.PRFUN,
+    "primplement": NonFin.PRIMPLMNT,
+    "primplmnt": NonFin.PRIMPLMNT,
+    "propdef": NonFin.PROPDEF,
+    "prval": NonFin.PRVAL,
+    "prvar": NonFin.PRVAR,
+    "typedef": NonFin.TYPEDEF,
+    "var": NonFin.VAR,
+    "viewdef": NonFin.VIEWDEF,
+    "viewtypedef": NonFin.VIEWTYPEDEF,
+    "vtypedef": NonFin.VIEWTYPEDEF,
+    "withprop": NonFin.WITHPROP,
+    "withtype": NonFin.WITHTYPE,
+    "withviewtype": NonFin.WITHVIEWTYPE,
+    "withvtype": NonFin.WITHVIEWTYPE,
+    "withview": NonFin.WITHVIEW,
 
     # Added
 
-    "case": NonTerm.CASE,
-    "prop": NonTerm.PROP,
-    "type": NonTerm.TYPE,
-    "t0ype": NonTerm.T0YPE,
-    "vtype": NonTerm.VIEWTYPE,
-    "vt0ype": NonTerm.VIEWT0YPE,
-    "view": NonTerm.VIEW,
-    "viewtype": NonTerm.VIEWTYPE,
-    "viewt0ype": NonTerm.VIEWT0YPE,
-    "val": NonTerm.VAL,
-    "for": Term.T_FOR,
-    "while": Term.T_WHILE,
-    "addr": Term.T_ADDR_OR_IDENT,
-    "fold": Term.T_FOLD_OR_IDENT,
-    "free": Term.T_FREE_OR_IDENT,
-    "lam": NonTerm.LAM,
-    "llam": NonTerm.LLAM,
-    "fix": NonTerm.FIX}
+    "case": NonFin.CASE,
+    "prop": NonFin.PROP,
+    "type": NonFin.TYPE,
+    "t0ype": NonFin.T0YPE,
+    "vtype": NonFin.VIEWTYPE,
+    "vt0ype": NonFin.VIEWT0YPE,
+    "view": NonFin.VIEW,
+    "viewtype": NonFin.VIEWTYPE,
+    "viewt0ype": NonFin.VIEWT0YPE,
+    "val": NonFin.VAL,
+    "for": Fin.T_FOR,
+    "while": Fin.T_WHILE,
+    "addr": Fin.T_ADDR_OR_IDENT,
+    "fold": Fin.T_FOLD_OR_IDENT,
+    "free": Fin.T_FREE_OR_IDENT,
+    "lam": NonFin.LAM,
+    "llam": NonFin.LLAM,
+    "fix": NonFin.FIX}
 
 assert all(isinstance(x, str) for x in IDENTS_TRANSL)
-assert all(isinstance(x, (Term, NonTerm)) for x in IDENTS_TRANSL.values())
+assert all(isinstance(x, (Fin, NonFin)) for x in IDENTS_TRANSL.values())
 
 
 def ident_translation(ident, default):
@@ -679,7 +679,7 @@ class TreeNode:
     def __init__(self):
 
         self.next = dict()  # char -> TreeNode.
-        self.product = None  # Term, NonTerm, Start or None.
+        self.product = None  # Fin, NonFin, Start or None.
 
 
 def add_to_tree(tree, prefix, product):
@@ -731,7 +731,7 @@ TREE = TreeNode()
 
 def add_prefix(prefix, product):
     """ Add to TREE. """
-    assert isinstance(product, (Term, Start)) or product in NONTERMS_TRANSL
+    assert isinstance(product, (Fin, Start)) or product in NONFINS_TRANSL
     add_to_tree(TREE, prefix, product)
 
 
@@ -749,76 +749,76 @@ def add_prefixes1(char1_set, product):
 
 # Some prefixes are a product on their own, some prefix starts a product.
 
-add_prefix(EOF, Term.T_EOF)
+add_prefix(EOF, Fin.T_EOF)
 
-# Term, sorted by "XX"
+# Fin, sorted by "XX"
 
-add_prefix("0", Term.T_INTZERO)
-add_prefix("addr@", Term.T_ADDRAT)
-add_prefix("fold@", Term.T_FOLDAT)
-add_prefix("for*", Term.T_FORSTAR)
-add_prefix("free@", Term.T_FREEAT)
-add_prefix("view@", Term.T_VIEWAT)
-add_prefix("while*", Term.T_WHILESTAR)
-add_prefix("@{", Term.T_ATLBRACE)
-add_prefix("@[", Term.T_ATLBRACKET)
-add_prefix("@(", Term.T_ATLPAREN)
-add_prefix("\\", Term.T_BACKSLASH_OR_IDENT)
-add_prefix("`(", Term.T_BQUOTELPAREN)
-add_prefix(":<", Term.T_COLONLT)
-add_prefix(",", Term.T_COMMA)
-add_prefix(",(", Term.T_COMMALPAREN)
-add_prefix("#[", Term.T_HASHLBRACKET)
-add_prefix("$", Term.T_IDENT_sym)
-add_prefix("{", Term.T_LBRACE)
-add_prefix("[", Term.T_LBRACKET)
-add_prefix("(", Term.T_LPAREN)
-add_prefix("%(", Term.T_PERCENTLPAREN)
-add_prefix("'{", Term.T_QUOTELBRACE)
-add_prefix("'[", Term.T_QUOTELBRACKET)
-add_prefix("'(", Term.T_QUOTELPAREN)
-add_prefix("}", Term.T_RBRACE)
-add_prefix("]", Term.T_RBRACKET)
-add_prefix(")", Term.T_RPAREN)
-add_prefix(";", Term.T_SEMICOLON)
+add_prefix("0", Fin.T_INTZERO)
+add_prefix("addr@", Fin.T_ADDRAT)
+add_prefix("fold@", Fin.T_FOLDAT)
+add_prefix("for*", Fin.T_FORSTAR)
+add_prefix("free@", Fin.T_FREEAT)
+add_prefix("view@", Fin.T_VIEWAT)
+add_prefix("while*", Fin.T_WHILESTAR)
+add_prefix("@{", Fin.T_ATLBRACE)
+add_prefix("@[", Fin.T_ATLBRACKET)
+add_prefix("@(", Fin.T_ATLPAREN)
+add_prefix("\\", Fin.T_BACKSLASH_OR_IDENT)
+add_prefix("`(", Fin.T_BQUOTELPAREN)
+add_prefix(":<", Fin.T_COLONLT)
+add_prefix(",", Fin.T_COMMA)
+add_prefix(",(", Fin.T_COMMALPAREN)
+add_prefix("#[", Fin.T_HASHLBRACKET)
+add_prefix("$", Fin.T_IDENT_sym)
+add_prefix("{", Fin.T_LBRACE)
+add_prefix("[", Fin.T_LBRACKET)
+add_prefix("(", Fin.T_LPAREN)
+add_prefix("%(", Fin.T_PERCENTLPAREN)
+add_prefix("'{", Fin.T_QUOTELBRACE)
+add_prefix("'[", Fin.T_QUOTELBRACKET)
+add_prefix("'(", Fin.T_QUOTELPAREN)
+add_prefix("}", Fin.T_RBRACE)
+add_prefix("]", Fin.T_RBRACKET)
+add_prefix(")", Fin.T_RPAREN)
+add_prefix(";", Fin.T_SEMICOLON)
 
-# NonTerm, Sorted by "XX"
+# NonFin, Sorted by "XX"
 
-add_prefix("abst@ype", NonTerm.ABST0YPE)
-add_prefix("absviewt@ype", NonTerm.ABSVIEWT0YPE)
-add_prefix("absvt@ype", NonTerm.ABSVIEWT0YPE)
-add_prefix("case-", NonTerm.CASE_neg)
-add_prefix("case+", NonTerm.CASE_pos)
-add_prefix("fix@", NonTerm.FIXAT)
-add_prefix("lam@", NonTerm.LAMAT)
-add_prefix("llam@", NonTerm.LLAMAT)
-add_prefix("prop-", NonTerm.PROP_neg)
-add_prefix("prop+", NonTerm.PROP_pos)
-add_prefix("t0ype-", NonTerm.T0YPE_neg)
-add_prefix("t0ype+", NonTerm.T0YPE_pos)
-add_prefix("t@ype", NonTerm.T0YPE)
-add_prefix("t@ype-", NonTerm.T0YPE_neg)
-add_prefix("t@ype+", NonTerm.T0YPE_pos)
-add_prefix("type-", NonTerm.TYPE_neg)
-add_prefix("type+", NonTerm.TYPE_pos)
-add_prefix("val-", NonTerm.VAL_neg)
-add_prefix("val+", NonTerm.VAL_pos)
-add_prefix("view-", NonTerm.VIEW_neg)
-add_prefix("view+", NonTerm.VIEW_pos)
-add_prefix("viewt0ype-", NonTerm.VIEWT0YPE_neg)
-add_prefix("viewt0ype+", NonTerm.VIEWT0YPE_pos)
-add_prefix("viewt@ype", NonTerm.VIEWT0YPE)
-add_prefix("viewt@ype-", NonTerm.VIEWT0YPE_neg)
-add_prefix("viewt@ype+", NonTerm.VIEWT0YPE_pos)
-add_prefix("viewtype-", NonTerm.VIEWTYPE_neg)
-add_prefix("viewtype+", NonTerm.VIEWTYPE_pos)
-add_prefix("vt0ype-", NonTerm.VIEWT0YPE_neg)
-add_prefix("vt0ype+", NonTerm.VIEWT0YPE_pos)
-add_prefix("vt@ype", NonTerm.VIEWT0YPE)
-add_prefix("vt@ype-", NonTerm.VIEWT0YPE_neg)
-add_prefix("vtype-", NonTerm.VIEWTYPE_neg)
-add_prefix("vt@ype+", NonTerm.VIEWT0YPE_pos)
-add_prefix("vtype+", NonTerm.VIEWTYPE_pos)
+add_prefix("abst@ype", NonFin.ABST0YPE)
+add_prefix("absviewt@ype", NonFin.ABSVIEWT0YPE)
+add_prefix("absvt@ype", NonFin.ABSVIEWT0YPE)
+add_prefix("case-", NonFin.CASE_neg)
+add_prefix("case+", NonFin.CASE_pos)
+add_prefix("fix@", NonFin.FIXAT)
+add_prefix("lam@", NonFin.LAMAT)
+add_prefix("llam@", NonFin.LLAMAT)
+add_prefix("prop-", NonFin.PROP_neg)
+add_prefix("prop+", NonFin.PROP_pos)
+add_prefix("t0ype-", NonFin.T0YPE_neg)
+add_prefix("t0ype+", NonFin.T0YPE_pos)
+add_prefix("t@ype", NonFin.T0YPE)
+add_prefix("t@ype-", NonFin.T0YPE_neg)
+add_prefix("t@ype+", NonFin.T0YPE_pos)
+add_prefix("type-", NonFin.TYPE_neg)
+add_prefix("type+", NonFin.TYPE_pos)
+add_prefix("val-", NonFin.VAL_neg)
+add_prefix("val+", NonFin.VAL_pos)
+add_prefix("view-", NonFin.VIEW_neg)
+add_prefix("view+", NonFin.VIEW_pos)
+add_prefix("viewt0ype-", NonFin.VIEWT0YPE_neg)
+add_prefix("viewt0ype+", NonFin.VIEWT0YPE_pos)
+add_prefix("viewt@ype", NonFin.VIEWT0YPE)
+add_prefix("viewt@ype-", NonFin.VIEWT0YPE_neg)
+add_prefix("viewt@ype+", NonFin.VIEWT0YPE_pos)
+add_prefix("viewtype-", NonFin.VIEWTYPE_neg)
+add_prefix("viewtype+", NonFin.VIEWTYPE_pos)
+add_prefix("vt0ype-", NonFin.VIEWT0YPE_neg)
+add_prefix("vt0ype+", NonFin.VIEWT0YPE_pos)
+add_prefix("vt@ype", NonFin.VIEWT0YPE)
+add_prefix("vt@ype-", NonFin.VIEWT0YPE_neg)
+add_prefix("vtype-", NonFin.VIEWTYPE_neg)
+add_prefix("vt@ype+", NonFin.VIEWT0YPE_pos)
+add_prefix("vtype+", NonFin.VIEWTYPE_pos)
 
 # Start, Sorted by Start.XX
 
@@ -845,9 +845,9 @@ add_prefixes2("0", X, Start.XX_hex_start)
 # Additions
 # ============================================================================
 
-COMMENTS = {Term.T_COMMENT_block, Term.T_COMMENT_line, Term.T_COMMENT_rest}
+COMMENTS = {Fin.T_COMMENT_block, Fin.T_COMMENT_line, Fin.T_COMMENT_rest}
 
-ERRORS = {Term.T_IDENT_srp}
+ERRORS = {Fin.T_IDENT_srp}
 
 IDENT_EXTS = {
     "car!",
