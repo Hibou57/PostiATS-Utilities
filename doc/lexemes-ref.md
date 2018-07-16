@@ -42,9 +42,9 @@ The informations in this document are inferred from mainly `pats_lexing.sats`,
 `pats_lexing_token.dats`. The names are near to exactly the same as in
 Postiats source, but not exactly.
 
-The names starting with `T_` are that of terminal products (for lexemes, this
-is not the grammar). The names no starting with `T_` take part in other
-products up to a terminal product.
+The names starting with `T_` are that of final non‑terminal products (for
+lexemes, this is not the grammar). The names no starting with `T_` take part
+in other products up to a `T_XX` product.
 
 
 Character categories
@@ -370,7 +370,7 @@ The list is split in two, after the prefix, but it’s in the same table.
 
 Here, order does not matter.
 
-List for terminal products:
+List for final products:
 
   * `T_AND`: "and"
   * `T_AS`: "as" — for refas-pattern
@@ -486,7 +486,7 @@ List for terminal products:
   * `T_WITH`: "with"
 
 
-List for non‑terminal products:
+List for non‑final products:
 
   * `ABSPROP`: "absprop"
   * `ABST0YPE`: "abst0ype", "abstflat"
@@ -589,7 +589,7 @@ Drift from Postiats source
 so these ones are not documented here.
 
 `T_INTZERO` and `T_QMARK` are renaming of `INTZERO` and `QMARK` which are
-defined in Postiats source. Since they are finally terminal lexical products,
+defined in Postiats source. Since they are finally final lexical products,
 they were renamed.
 
 
