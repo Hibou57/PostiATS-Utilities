@@ -33,8 +33,10 @@ class Input:
         assert self.pos + count <= self.length
         self.pos += count
 
-    def string(self, start):
+    def string(self, start, end=None):
         """ String from start to pos excluded. """
+        if end is None:
+            end = self.pos
         return self.source[start:self.pos]
 
     def at(self, text):
@@ -747,7 +749,7 @@ def raw(source):
     def term(kind):
         """ (pos, kind, string) """
         assert isinstance(kind, Term)
-        return (pos, kind, source.string(pos))
+        return (kind, pos, source.pos, source.string(pos))
 
     sol = True
     while True:
