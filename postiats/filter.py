@@ -131,6 +131,8 @@ def parse_showtype_message(line):
 class String(object):
     """ String iterator with indexes stack. """
 
+    __slots__ = ["string", "index", "indexes", "len"]
+
     def __init__(self, string):
         """ Assign content to `string` and initializes index and stack. """
         self.string = string
