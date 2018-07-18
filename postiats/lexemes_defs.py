@@ -660,8 +660,13 @@ assert all(isinstance(x, str) for x in IDENTS_TRANSL)
 assert all(isinstance(x, (Fin, NonFin)) for x in IDENTS_TRANSL.values())
 
 
-def ident_translation(ident, default):
+def ident_translation(ident, default, in_feffs):
     """ Ident possibly translated after IDENTS_TRANSL. """
+    if in_feffs:
+        # Only apply this single translation when in function effects.
+        if default == Fin.T_IDENT_sym and ident == ">":
+            return Fin.T_GT_OR_IDENT
+        return default
     return IDENTS_TRANSL[ident] if ident in IDENTS_TRANSL else default
 
 

@@ -284,7 +284,7 @@ def char_escaped(source):
     return Fin.T_ERR
 
 
-def char(source):
+def char(source, _in_feffs):
     r""" T_CHAR
 
     Prefix: '
@@ -316,7 +316,7 @@ def char(source):
 # COMMENT_block_c_start
 # ----------------------------------------------------------------------------
 
-def comment_block_c(source):
+def comment_block_c(source, _in_feffs):
     """ COMMENT_block_c
 
     Prefix: /*
@@ -340,7 +340,7 @@ def comment_block_c(source):
 # COMMENT_block_ml_start
 # ----------------------------------------------------------------------------
 
-def comment_block_ml(source):
+def comment_block_ml(source, _in_feffs):
     """ COMMENT_block_ml
 
     Prefix: (*
@@ -372,7 +372,7 @@ def comment_block_ml(source):
 # COMMENT_line_start
 # ----------------------------------------------------------------------------
 
-def comment_line(source):
+def comment_line(source, _in_feffs):
     """ T_COMMENT_line
 
     Prefix: //
@@ -393,7 +393,7 @@ def comment_line(source):
 # COMMENT_rest_start
 # ----------------------------------------------------------------------------
 
-def comment_rest(source):
+def comment_rest(source, _in_feffs):
     """ T_COMMENT_rest
 
     Prefix: ////
@@ -414,7 +414,7 @@ def comment_rest(source):
 # DOTINT_start
 # ----------------------------------------------------------------------------
 
-def dotint(source):
+def dotint(source, _in_feffs):
     """ T_DOTINT
 
     Prefix: . DIGIT
@@ -431,7 +431,7 @@ def dotint(source):
 # FLOAT_dec_start
 # ----------------------------------------------------------------------------
 
-def float_dec(source):
+def float_dec(source, _in_feffs):
     """ T_FLOAT
 
     Prefix: 0.
@@ -459,7 +459,7 @@ def float_dec(source):
 # IDENT_dlr_start
 # ----------------------------------------------------------------------------
 
-def ident_dlr(source):
+def ident_dlr(source, in_feffs):
     """ T_IDENT_dlr
 
     Prefix: $ IDENTFST
@@ -474,13 +474,13 @@ def ident_dlr(source):
     source.consume()
     rest = get_ident(source)
     ident = "$" + rest
-    return d.ident_translation(ident, Fin.T_IDENT_dlr)
+    return d.ident_translation(ident, Fin.T_IDENT_dlr, in_feffs)
 
 
 # IDENT_srp_start
 # ----------------------------------------------------------------------------
 
-def ident_srp(source):
+def ident_srp(source, in_feffs):
     """ T_IDENT_srp
 
     Prefix: # IDENTFST
@@ -495,13 +495,13 @@ def ident_srp(source):
     source.consume()
     rest = get_ident(source)
     ident = "#" + rest
-    return d.ident_translation(ident, Fin.T_IDENT_srp)
+    return d.ident_translation(ident, Fin.T_IDENT_srp, in_feffs)
 
 
 # IDENT_sym_start
 # ----------------------------------------------------------------------------
 
-def ident_sym(source):
+def ident_sym(source, in_feffs):
     """ T_IDENT_sym
 
     Prefix: $ SYMBOLIC
@@ -518,13 +518,13 @@ def ident_sym(source):
     if get_char(source, "$"):
         ident += "$"
     ident += get_symbol(source)
-    return d.ident_translation(ident, Fin.T_IDENT_sym)
+    return d.ident_translation(ident, Fin.T_IDENT_sym, in_feffs)
 
 
 # IDENT_xx_start
 # ----------------------------------------------------------------------------
 
-def ident_xx(source):
+def ident_xx(source, in_feffs):
     """ T_IDENT_arr, T_IDENT_ext, T_IDENT_tmp, T_IDENT_alp
 
     Prefix: IDENTFST
@@ -549,13 +549,13 @@ def ident_xx(source):
     if c == "<":
         source.consume()
         return Fin.T_IDENT_tmp
-    return d.ident_translation(ident, Fin.T_IDENT_alp)
+    return d.ident_translation(ident, Fin.T_IDENT_alp, in_feffs)
 
 
 # INT_oct_start
 # ----------------------------------------------------------------------------
 
-def int_oct(source):
+def int_oct(source, _in_feffs):
     """ T_INT
 
     Prefix: 0 OCTAL
@@ -572,7 +572,7 @@ def int_oct(source):
 # QMARKGT_start
 # ----------------------------------------------------------------------------
 
-def qmarkgt(source):
+def qmarkgt(source, in_feffs):
     """ T_IDENT_sym
 
     Prefix: ?>
@@ -583,7 +583,7 @@ def qmarkgt(source):
     assert source.at("?>")
     source.consume(1)  # Not 2!
     ident = "?"
-    return d.ident_translation(ident, Fin.T_IDENT_sym)
+    return d.ident_translation(ident, Fin.T_IDENT_sym, in_feffs)
 
 
 # STRING_start
@@ -615,7 +615,7 @@ def string_escaped(source):
     return Fin.T_ERR
 
 
-def string(source):
+def string(source, _in_feffs):
     r""" T_STRING
 
     Prefix: "
@@ -645,7 +645,7 @@ def string(source):
 # XX_dec_start
 # ----------------------------------------------------------------------------
 
-def xx_dec(source):
+def xx_dec(source, _in_feffs):
     """ T_FLOAT, T_INT
 
     Prefix: 1-9
@@ -678,7 +678,7 @@ def xx_dec(source):
 # XX_hex_start
 # ----------------------------------------------------------------------------
 
-def xx_hex(source):
+def xx_hex(source, _in_feffs):
     """ T_FLOAT, T_INT
 
     Prefix: 0 X
@@ -743,6 +743,13 @@ assert all(isinstance(x, Start) for x in DISPATCH)
 # Main
 # ============================================================================
 
+def check_in_feffs(product, in_feffs):
+    """ Hack required for usability in a parser. """
+    if in_feffs:
+        return product != Fin.T_GT_OR_IDENT
+    return product in {Fin.T_EQLT, Fin.T_MINUSLT, Fin.T_COLONLT}
+
+
 def raw(source):
     """ Unfiltered lexemes. """
 
@@ -751,6 +758,7 @@ def raw(source):
         assert isinstance(kind, Fin)
         return (kind, pos, source.pos, source.string(pos))
 
+    in_feffs = False
     sol = True
     while True:
         pos = source.pos
@@ -772,7 +780,7 @@ def raw(source):
             if product is not None:
                 if isinstance(product, Start):
                     source.pos = pos
-                    product = DISPATCH[product](source)
+                    product = DISPATCH[product](source, in_feffs)
                 if isinstance(product, NonFin):  # Not elif!
                     product = d.NONFINS_TRANSL[product]
                 yield fin(product)
@@ -780,6 +788,7 @@ def raw(source):
                 source.consume()
                 product = Fin.T_ERR
                 yield fin(product)
+        in_feffs = check_in_feffs(product, in_feffs)
         sol = False
         # Suppose no product is empty except T_EOF and no product consumes
         # the EOL except T_SPACE.
