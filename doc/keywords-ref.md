@@ -60,36 +60,40 @@ keywords, possibly synonymous as much as possibly not.
   * `T_ASSUME`
   * `T_CLASSDEC`
   * `T_DATASORT`
-  * `T_DATATYPE`
-  * `T_EXCEPTION`
   * `T_EXTYPE`
-  * `T_FIXITY`
-  * `T_MACDEF`
-  * `T_NONFIX`
-  * `T_OVERLOAD`
   * `T_REASSUME`
   * `T_SORTDEF`
-  * `T_SRPSTALOAD`
   * `T_STACST`
   * `T_STADEF`
-  * `T_SYMELIM`
-  * `T_SYMINTR`
   * `T_TKINDEF`
   * `T_TYPEDEF`
 
 
 ### Dynamic declaration keywords
 
-  * `T_EXTCODE`
   * `T_EXTERN`
   * `T_EXTVAR`
+  * `T_FIXITY`
   * `T_FUN`
   * `T_IMPLEMENT`
-  * `T_LOCAL`
+  * `T_MACDEF`
+  * `T_NONFIX`
+  * `T_OVERLOAD`
   * `T_SRPDYNLOAD`
   * `T_STATIC` — yes, dynamic!
+  * `T_SYMELIM`
+  * `T_SYMINTR`
   * `T_VAL`
   * `T_VAR`
+
+
+### Static/dynamic declaration keywords
+
+  * `T_DATATYPE`
+  * `T_EXCEPTION`
+  * `T_EXTCODE`
+  * `T_LOCAL`
+  * `T_SRPSTALOAD`
 
 
 ### Preprocessor keywords
@@ -119,18 +123,14 @@ Note `T_SRPSTALOAD` and `T_SRPDYNLOAD` are not listed here.
 
 ### Expression keywords
 
-  * `T_AND` — not top‑level! (mutual references)
   * `T_AS`
   * `T_ATLBRACE`
   * `T_ATLPAREN`
   * `T_BANG`
-  * `T_BAR`
   * `T_CASE`
   * `T_COLON`
   * `T_COMMA`
   * `T_DOT` — used at top‑level too.
-  * `T_ELSE`
-  * `T_END`
   * `T_EQ` — a keyword in the static.
   * `T_EQGT`
   * `T_FORSTAR`
@@ -139,24 +139,33 @@ Note `T_SRPSTALOAD` and `T_SRPDYNLOAD` are not listed here.
   * `T_GTLT`
   * `T_IF`
   * `T_IFCASE`
-  * `T_IN`
   * `T_LBRACE` — used at top‑level too.
   * `T_LBRACKET` — used at top‑level too.
   * `T_LPAREN` — used at top‑level too.
-  * `T_OF`
   * `T_QUOTELBRACE`
   * `T_QUOTELPAREN`
   * `T_RBRACE`
   * `T_RBRACKET`
-  * `T_REC`
   * `T_RPAREN`
   * `T_SCASE`
   * `T_SEMICOLON`
   * `T_SIF`
-  * `T_THEN`
   * `T_TRY`
-  * `T_WHEN`
   * `T_WHILESTAR`
+
+
+### Other keywords
+
+  * `T_AND` — not top‑level! (mutual references)
+  * `T_BAR`
+  * `T_ELSE`
+  * `T_END`
+  * `T_EOF`
+  * `T_IN`
+  * `T_OF`
+  * `T_REC`
+  * `T_THEN`
+  * `T_WHEN`
   * `T_WITH`
 
 
