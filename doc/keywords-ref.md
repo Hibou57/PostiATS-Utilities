@@ -252,7 +252,6 @@ is where some care should be taken by colorizer designers.
   * `T_DOT`: "."
   * `T_ELSE`: "else"
   * `T_END`: "end"
-  * `T_EOF`: EOF
   * `T_EQ`: "="
   * `T_EQGT`: "=>"
   * `T_FORSTAR`: "for*"
