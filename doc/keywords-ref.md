@@ -11,8 +11,8 @@ This document is about a keywords reference list, not a keyword based
 reference of ATS2.
 
 The reference list of keywords is given as a list of lexical productions, as
-described in “lexemes.md”. This is important since there may be synonymous and
-lexical productions are not just simple strings.
+described in “lexemes-ref.md”. This is important since there may be synonymous
+and lexical productions are not just simple strings.
 
 The second list is informational only and is derived from the first list and
 the rules given in “lexemes.md”. It is informational only, because it lacks
@@ -131,7 +131,6 @@ Note `T_SRPSTALOAD` and `T_SRPDYNLOAD` are not listed here.
   * `T_DOT` — used at top‑level too.
   * `T_ELSE`
   * `T_END`
-  * `T_EOF`
   * `T_EQ` — a keyword in the static.
   * `T_EQGT`
   * `T_FORSTAR`
