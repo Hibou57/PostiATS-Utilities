@@ -459,13 +459,87 @@ CASE_EXP
 
         CASE_EXP = CASE … "of" … "|"* … IMPEND
 
-Tags: expression;
+Tags: expression; dynamic;
 
 Where `CASE` is one of:
 
-  * `"case"`
-  * `"case+"`
-  * `"case-"`
+  * `"case"` for warnings when coverage is not exhaustive.
+  * `"case+"` for errors when coverage is not exhaustive.
+  * `"case-"` for no static check about pattern coverage.
+
+Dynamic patterns guarded expressions, borrowed from ML/SML. The static
+counter‑part is `SCASE_EXP`.
+
+The first part, contains the expression to be matched with patterns. The
+second part which may be multiple `|` separated, contains the patterns and
+the associated expressions. The repeatable second part (and last third part)
+has its own inner syntax with a richer semantic than the ML/SML counter part;
+this will be documented later. For friendliness, an extraneous `|` may
+appears before the first pattern.
+
+Example:
+
+        val b:bool = true
+
+        val c:int =
+          case b of
+          | false => 0
+          | true => 1
+
+        datatype tree =
+          | Leaf
+          | Left of tree
+          | Right of tree
+          | Left_Right of (tree, tree)
+
+        val t:tree = Leaf
+
+        val count:int =
+          case t of
+          | Leaf() => 0
+          | Left(_) => 1
+          | Right(_) => 1
+          | Left_Right(_, _) => 2
+
+
+**Warning:** nulary constructors in patterns of a `case` expression, must be
+written with parentheses for distinguishing with pattern variables. Without
+parentheses, what may looks like to be a constructor pattern will in reality
+be a pattern variable.
+
+Example:
+
+        datatype t = C
+
+        val c = C  // No parentheses is OK here.
+
+        val b:bool =
+          case c of
+          | C => true // Not the intent: C is a pattern variable!
+
+        val b:bool =
+          case c of
+          | C() => true // The intent: C() refers to the constructor.
+
+
+Three different keywords for three coverage checking modes at compile‑time.
+In any case, a failure to find a matching clause at run‑time ends in a
+run‑time error (program execution stops).
+
+Example:
+
+        datatype t = C1 | C2
+
+        val c = C2
+
+        val b = case- c of C1() => true
+        // Not compile‑time message and run‑time error.
+
+        val b = case c of C1() => true
+        // Compile‑time warning and run‑time error.
+
+        val b = case+ c of C1() => true
+        // Compile‑time error.
 
 
 CLASSDEC_DECL
