@@ -495,6 +495,16 @@ Example:
            ,(m); // Evaluation occurs here.
         end
 
+A comma‑quoted expression can only be apply on or in a back‑quoted expression.
+
+Example:
+
+        val a = ,(`(1)) // OK.
+        val b = ,(1)    // Error.
+
+A comma‑quoted expression yields an ATS2 “code” fragment from an ATS2
+syntactic node, the latter being created using a back‑quoted expression.
+
 
 DATASORT_DECL
 ------------------------------------------------------------------------------
