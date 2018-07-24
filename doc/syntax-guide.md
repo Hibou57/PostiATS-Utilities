@@ -1037,6 +1037,13 @@ Example:
 
         val b:int = N  // Error.
 
+C‑like macros may have arguments.
+
+Example:
+
+        #define SUCC(x) x + 1
+        val a:int(2) = SUCC 1
+
 
 SRPDYNLOAD_DECL
 ------------------------------------------------------------------------------
