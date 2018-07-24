@@ -928,8 +928,78 @@ SRPDEFINE_DECL
 
         SRPDEFINE_DECL = "#define" … ";"?
 
+Tags: declaration; static; dynamic; macro;
 
-Tags: declaration;
+Borrowed from C, defines a weak macro. Unlike `MACDEF_DECL` LISP‑like macros,
+C‑like macros does not do binding resolution, identifiers appearing in it
+are just identifiers. A consequence of this is that unlike LISP‑like macros,
+C‑like macros may resolve referring to static identifiers.
+
+Example:
+
+        #define T int
+        val a:T = 1
+
+        macdef T = int   // Error.
+
+However, C‑like macro are not expanded in static declarations, only in
+dynamic declarations, refering to static or dynamic identifiers.
+
+Example:
+
+        #define V a
+        val a:int = 0
+        val b:int = V
+
+        #define T int
+        val a:T = 1
+
+        #define S type
+        stacst t:S       // Error.
+
+        #define S t@ype  // Additionally, this is a syntax error.
+
+Unlike LISP‑like macros, C‑like macros don’t allow controlling evaluation,
+there is no evaluation at the time of the definition, evaluation occurs at the
+time the macro is referred to by name, doing binding resolution in the context
+where the reference occurs.
+
+Example:
+
+        val n = 1
+        #define N n
+        val n = 2
+        val a:int(2) = N // Use the n available from here.
+
+Like with LISP‑like macros and unlike with original C macros, the macro’s
+body must be a syntactically valid expression …
+
+Example:
+
+        #define N (1  // Error.
+
+… and the expression is like implicitly wrapped in parentheses when it is
+evaluation.
+
+Example:
+
+        #define N 1 + 2
+        val a:int(12) = 4 * N  // Like 4 * (1 + 3) not like 4 * 1 + 2.
+
+Unlike original C macros and like LISP‑like macros, C‑like macros are
+scoped.
+
+Example:
+
+        local
+           #define N 1
+           val a:int = N  // OK.
+        in
+           (* empty *)
+        end
+
+        val b:int = N  // Error.
+
 
 SRPDYNLOAD_DECL
 ------------------------------------------------------------------------------
