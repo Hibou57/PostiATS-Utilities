@@ -421,7 +421,29 @@ BQUOTELPAREN_EXP
 
         BQUOTELPAREN_EXP = "`(" … ")"
 
-Expression;
+Expression; dynamic; macro;
+
+Borrowed from LISP’s back‑quote notation, used in macro definition and
+invocation to treat whatever "…" is, frozen after binding resolution. The "…"
+part must be a valid ATS2 syntactic sub‑tree; as an example, it may not
+contain an unclosed expression, hence in that regard and except for freezing
+and binding resolution, it is like with `SRPDEFINE_DECL`. See also
+`COMMALPAREN_EXP` and `MACDEF_DECL`.
+
+Example:
+
+        val n = 1
+        macrodef m = `(n + n)  // Frozen, however binding resolved.
+        val n = 2
+        val a:int(2) = ,(m)    // Still 1 + 1, not 2 + 2.
+
+        val n = 1
+        #define M n + n        // Not frozen.
+        val n = 2
+        val a:int(4) = M       // 2 + 2, not 1 + 1 any more.
+
+        #define M2 j + j       // No error since no binding resolution.
+        macrodef m2 = `(i + i) // Error, since unresolved binding.
 
 
 CASE_EXP
