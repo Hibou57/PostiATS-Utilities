@@ -32,7 +32,7 @@ Explained just next, in short there are:
 
 **Boundaries:** `LET_EXP = let … in … end` means a `LET_EXP` starts with
 `let` and has two “…” required parts whose boundaries are `in` and `end`. Note
-a “…” part may be empty although the syntax of inner parts — which is not yet
+a “…” part may be empty although the inner syntax of parts — which is not yet
 documented — may forbid it.
 
 **Implied end boundaries:** `FORSTAR_EXP = "for*" … => … IMPEND` means the
@@ -60,7 +60,8 @@ repeated; that is, it may as much be `scase … of …` or `scase … of … | �
 rule (here, the second part). The rest is as explained before.
 
 The parser mentioned before uses additional sanity rules which are not
-described here (it checks for unexpected boundaries).
+described here (it checks for unexpected boundaries or for ones comming too
+soon).
 
 
 Rules index and outline
@@ -92,6 +93,10 @@ each of these sections, the corresponding rule is recalled.
 To search for a keyword in this document, search for it wrapped in
 double‑quotes and follow the tracks you get from where it drives you. You may
 have multiple matches.
+
+Not all keywords appear yet, and some only partially appears, because their
+use cannot be expressed with the simple syntactic model used: they take part
+in parts inner syntax.
 
 
 ### Expressions
@@ -148,7 +153,7 @@ section.
 With explicit begin and end boundaries.
 
         LOCAL_DECL   = "local" … "in" … "end"
-        SRPCOND_DECL = SRPCOND … "#then"? … SRPELCOND? … "#else"? … "#endif"
+        SRPCOND_DECL = SRPCOND … "#then"? … SRPELCOND* … "#else"? … "#endif"
 
 
 Note `"let" … "in" … "end"` too, contains declarations, in its first part,
@@ -209,13 +214,13 @@ Similarly and repeatable with the `"and"` keyword:
 Note the boundary for the first part of `CLASSDEC_DECL`, is a colon, not a
 semicolon (it may visually looks similar).
 
-Constructs with all empty parts are a special case: it does end on its own but
-with what follows it and contains it. Ex. `static fn (): int` is a
-`STATIC_DECL` containing the `FUN_DECL` which follows it. In particular, the
-`REC_DECL` must only appears as such, ex. as `val rec a = …` or
-`macdef rec …`, and `STATIC_DECL` (and not only) can only contains another
-declaration. Remember the rules given here so far, are just an outline,
-there are additional validity conditions required by the language.
+Semicolon ended constructs with all empty parts are a special case: it does
+end on its own but with what follows it and contains it. Ex. `static fn ():
+int` is a `STATIC_DECL` containing the `FUN_DECL` which follows it. In
+particular, the `REC_DECL` must only appears as such, ex. as `val rec a = …`
+or `macdef rec …`, and `STATIC_DECL` (and not only) can only contains another
+declaration. Remember the rules given here so far, are just an outline, there
+are additional validity conditions required by the language.
 
 
 ABSTYPE_DECL
@@ -256,7 +261,7 @@ Expression; dynamic;
 
 Given a `var` named `v`, `addr@ v` returns the address of `v` of sort `addr`.
 A proof of the view of something at that location will also be needed to make
-anything out of it. See also `VIEWAT_EXP`.
+something out of it. See also `VIEWAT_EXP`.
 
 Example:
 
@@ -808,7 +813,7 @@ Declaration;
 SRPCOND_DECL
 ------------------------------------------------------------------------------
 
-        SRPCOND_DECL = SRPCOND … "#then"? … SRPELCOND? … "#else"? … "#endif"
+        SRPCOND_DECL = SRPCOND … "#then"? … SRPELCOND* … "#else"? … "#endif"
 
 Declaration;
 
