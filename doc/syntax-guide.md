@@ -753,8 +753,8 @@ Declaration; dynamic; macro;
 
 Where `MACDEF` may be one of:
 
-  * "macdef"
-  * "macrodef"
+  * "macdef" for user friendly short form, explained below.
+  * "macrodef" for raw long form, explained below.
 
 Borrowed from LISP, defines macro which like with `SRPDEFINE_DECL` are defined
 with valid syntactic sub‑tree node, but which unlike with the latter, requires
