@@ -767,6 +767,8 @@ Where `MACDEF` may be one of:
   * `"macdef"` for user friendly short form, explained below.
   * `"macrodef"` for raw long form, explained below.
 
+LISP‑like macro names are dynamic identifiers.
+
 Borrowed from LISP, defines macro which like with `SRPDEFINE_DECL` are defined
 with valid syntactic sub‑tree node, but which unlike with the latter, requires
 binding to be resolvable and allows to control where evaluation occurs.
@@ -966,6 +968,8 @@ SRPDEFINE_DECL
         SRPDEFINE_DECL = "#define" … ";"?
 
 Tags: declaration; static; dynamic; macro;
+
+C‑like macro names are dynamic identifiers.
 
 Borrowed from C, defines a weak macro. Unlike `MACDEF_DECL` LISP‑like macros,
 C‑like macros does not do binding resolution, identifiers appearing in it
