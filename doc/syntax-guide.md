@@ -749,12 +749,33 @@ MACDEF_DECL
 
         MACDEF_DECL = MACDEF … "and"* … ";"?
 
-Declaration;
+Declaration; dynamic; macro;
 
 Where `MACDEF` may be one of:
 
   * "macdef"
   * "macrodef"
+
+Borrowed from LISP, defines macro which like with `SRPDEFINE_DECL` are defined
+with valid syntactic sub‑tree node, but which unlike with the latter, requires
+binding to be resolvable and allows to control where evaluation occurs.
+`BQUOTELPAREN_EXP` is used for frozen expressions and `COMMALPAREN_EXP` is
+used for evaluated expressions.
+
+"macrodef" is a more raw form than "macdef" or "macdef" is a special case
+of "macrodef". A "macdef" is implicitly back‑quoted at the time of its
+definition and its evaluation is implicitly requested at the macro name is
+referred to. With "macrodef", both must be explicitly specified.
+
+Example:
+
+        macrodef m = `(println! "Test m.")  // Explicit freeze request.
+        macdef n = (println! "Test n.")     // `(…) is implicit
+
+        implement main0() = begin
+           ,(m);                            // Explicit evaluation request.
+           n;                               // ,(…) is implicit
+        end
 
 
 NONFIX_DECL
