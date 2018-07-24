@@ -481,7 +481,19 @@ COMMALPAREN_EXP
 
         COMMALPAREN_EXP = ",(" … ")"
 
-Expression;
+Expression; dynamic; macro;
+
+Borrowed from LISP, this is used with macro definition and application, to
+require evaluation of a  `BQUOTELPAREN_EXP` back‑quoted expression. See also
+`MACDEF_DECL`.
+
+Example:
+
+        macrodef m = `(println! "Test.")
+
+        implement main0() = begin
+           ,(m); // Evaluation occurs here.
+        end
 
 
 DATASORT_DECL
