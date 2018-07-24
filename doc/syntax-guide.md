@@ -788,6 +788,32 @@ Example:
            n;                               // ,(…) is implicit
         end
 
+LISP‑like macros, like `SRPDEFINE_DECL` C‑like macros, are scoped.
+
+Example:
+
+        local
+           macdef n = 1
+           val a:int = n  // OK
+        in
+           (* empty *)
+        end
+
+        val b:int = n     // Error.
+
+LISP‑like macros, like `SRPDEFINE_DECL` C‑like macros, may have arguments. The
+arguments must be ATS2 syntactic nodes, which are created with back‑quote
+expressions. It may turns into many back‑quotations, hence the friendliness of
+`macdef` over `macrodef` becomes clear.
+
+Example:
+
+        macrodef succ(x) = `(,(x) + 1)
+        val a:int(2) = ,(succ `(1))      // Argument explicitly back‑quoted.
+
+        macdef succ(x) = ,(x) + 1
+        val a:int(2) = succ 1            // Argument implicitly back‑quoted.
+
 
 NONFIX_DECL
 ------------------------------------------------------------------------------
