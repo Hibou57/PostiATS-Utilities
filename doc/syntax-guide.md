@@ -9,7 +9,7 @@ followed by an equal‑sign follow by boundaries delimiting “…” parts whic
 contains “any” sequence of tokens. The “…” are there to say there may be
 anything between two boundaries, it may even be empty. Matching these rules is
 not enough to be valid ATS2, but these rules are enough to have a grasp on a
-source file and have an quick and easy overview of ATS2 syntax. These rules
+source file and have a quick and easy overview of ATS2 syntax. These rules
 are also enough for a “first‑pass” or “first‑level” parsing of the ATS2
 language.
 
@@ -44,9 +44,9 @@ declaration following it or the `in` boundary of an outer `LET_EXP` or the end
 of the source file. The rest is as explained before.
 
 **Semicolon end boundaries:** `ABSTYPE_DECL = abstype … "and"* … ";"?` means
-the end boundary is very like an implied boundary (explained before), just
-that it also accepts a semi‑colon as an end marker, as much as an implied end.
-Additionally, the semi‑colon may appear multiple time.
+the end boundary is very like an implied end boundary (explained before), just
+that it also accepts a semicolon as an end marker, as much as an implied end.
+Additionally, the semicolon may appear multiple times.
 
 **Optional part boundaries:** `IF_EXP = if … then … else? … IMPEND` means
 the `else` starting the third part, is optional, thus the third part is
@@ -54,13 +54,13 @@ optional; that is, it may as much be `if … then … else …` or `if … then 
 (which is actually valid under conditions). The rest is as explained before.
 
 **Reaptable part boundaries:** `SCASE_EXP = scase … of … "|"* … IMPEND`
-means `|` is an optional boundaries (as explained before) which can be
+means `|` is an optional boundary (as explained before) which can be
 repeated; that is, it may as much be `scase … of …` or `scase … of … | …` or
 `scase … of … | … | …`. The repetition applies to the part it ends in the
 rule (here, the second part). The rest is as explained before.
 
 The parser mentioned before uses additional sanity rules which are not
-described here.
+described here (it checks for unexpected boundaries).
 
 
 Rules index and outline
@@ -72,7 +72,7 @@ similarities.
   1. Expressions, with explicit begin and end boundaries.
   2. Expressions, with implied end boundaries.
   3. Declarations blocks, with explicit begin and end boundaries.
-  4. Declarations, with explicit or implied semi‑colon.
+  4. Declarations, with explicit or implied semicolon.
   5. Declarations, like in #4 and repeatable with the `"and"` keyword.
 
 
@@ -85,7 +85,7 @@ of ambiguity, keywords are still wrapped in double‑quotes, to ease searching
 by avoiding irrelevant matches.
 
 The meaning of each rule is given later, each in its own section. The title
-of the sections are that of the rule. Ex. to learn more about
+of the sections are that of the rules. Ex. to learn more about
 `let … in … end`, go to (later) the section whose title is `LET_EXP`. In
 each of these sections, the corresponding rule is recalled.
 
@@ -118,7 +118,7 @@ With explicit begin and end boundaries:
         WHERE_EXP =         "where" … "end"
 
 
-with implied end boundaries:
+With implied end boundaries:
 
         ADDRAT_EXP =     "addr@" … IMPEND
         CASE_EXP =          CASE … "of" … "|"* … IMPEND
@@ -139,7 +139,8 @@ with implied end boundaries:
         WHILESTAR_EXP = "while*" … "=>" … IMPEND
 
 
-The `WHERE_EXP` construct is a special case, as explained in its section.
+The `WHERE_EXP` construct is a special case, as will be explained in its
+section.
 
 
 ### Declarations blocks
@@ -156,7 +157,7 @@ although this first part may be empty and the construct is an expression.
 
 ### Declarations
 
-With explicit or implied semi‑colon:
+With explicit or implied semicolon:
 
         CLASSDEC_DECL =     "classdec" … ":"? … ";"?
         EXTCODE_DECL =       "extcode" … ";"?
@@ -206,16 +207,15 @@ Similarly and repeatable with the `"and"` keyword:
 
 
 Note the boundary for the first part of `CLASSDEC_DECL`, is a colon, not a
-semi‑colon (it may visually looks similar).
+semicolon (it may visually looks similar).
 
-Constructs with all empty parts are a special case: it does end on its own
-but with what follows it and contains it. Ex. `static fn (): int` is a
+Constructs with all empty parts are a special case: it does end on its own but
+with what follows it and contains it. Ex. `static fn (): int` is a
 `STATIC_DECL` containing the `FUN_DECL` which follows it. In particular, the
 `REC_DECL` must only appears as such, ex. as `val rec a = …` or
-`macdef rec …`, also but the other with `STATIC_DECL` (and not only), which can
-only contains another declaration. Remember the rules given here so far, are
-just outlines, and there are additional validity conditions required by the
-language.
+`macdef rec …`, and `STATIC_DECL` (and not only) can only contains another
+declaration. Remember the rules given here so far, are just an outline,
+there are additional validity conditions required by the language.
 
 
 ABSTYPE_DECL
@@ -254,7 +254,7 @@ ADDRAT_EXP
 
 Expression; dynamic;
 
-Given a `var` named `v`, `addr@ v` returns the address of `v` or sort `addr`.
+Given a `var` named `v`, `addr@ v` returns the address of `v` of sort `addr`.
 A proof of the view of something at that location will also be needed to make
 anything out of it. See also `VIEWAT_EXP`.
 
@@ -296,10 +296,10 @@ Example:
         val x = u.a
 
 
-The field names may identifiers or natural numbers expressed as decimal. When
-all fields a numbers and when there starts at zero and increase one by one, a
-flat tuple may be used instead. A flat tuple is a special case of a flat
-record. See also `ATLPAREN_EXP`.
+The field names may be identifiers or natural numbers expressed as decimal.
+When all fields are numbers and starts at zero and increase one by one, a flat
+tuple may be used instead. A flat tuple is a special case of flat record. See
+also `ATLPAREN_EXP`.
 
 Example:
 
@@ -316,11 +316,11 @@ ATLBRACKET_EXP
 
 Expression; static; dynamic; flat;
 
-Expression for flat one‑dimmnsion arrays types and values. It has two forms,
+Expression for flat one‑dimension arrays types and values. It has two forms,
 one defining a type (static) and one defining a value of that type (dynamic).
 The sort of a flat array is `t@ype`.
 
-The expression `@[t][n]` means the type of an array of `n` element of type
+The expression `@[t][n]` means the type of an array of `n` elements of type
 `t`. The expression `@[t](a, b, …)` (without really a “…”) means a literal
 for an array of elements of type `t` initialized with `a`, `b` and so on.
 
@@ -330,7 +330,7 @@ Example:
         var v:t = @[int](1, 2, 3)
         val a = v[0]
 
-An array type is mono–dimensional only, even you don’t get a syntax error
+An array type is mono–dimensional only, even if you don’t get a syntax error
 trying otherwise. To be accessible, an array needs to be allocated in a `var`,
 not a `val`, although you don’t get a type error when trying otherwise. In
 the example above, the array is statically allocated, no heap allocation is
@@ -355,15 +355,15 @@ of a flat tuple is `t@ype`.
 
 Example:
 
-        typedef t = @{a=int, b=int}
-        val u = @{a=1, b=2}
-        val v:t = @{a=1, b=2}
+        typedef t = @(int, int)
+        val u = @(1, 2)
+        val v:t = @(1, 2)
 
 
 The field names are natural numbers, starting at zero and increasing one by
 one. Field selectors must be expression using the decimal notation, no other
 base is allowed. A field selector is a special lexical unit. A flat tuple
-is a special case of a flat record. See also `ATLBRACE_EXP`.
+is a special case of flat record. See also `ATLBRACE_EXP`.
 
 Example:
 
@@ -379,11 +379,11 @@ BEGIN_EXP
 
         BEGIN_EXP = "begin" … "end"
 
-Expression; dynamic;
+Expression; dynamic; void;
 
 Expression of void type. It contains a sequence of void expressions,
-semi‑colon separated. Unlike with declarations, the semi‑colons are required.
-There may be an extraneous semi‑colon at the end. The same can be written
+semicolon separated. Unlike with declarations, the semicolons are required.
+There may be extraneous semicolons at the end. The same can be written
 using an `LPAREN_EXP`, but a `BEGIN_EXP` more expresses the intent.
 
 Example:
@@ -458,10 +458,10 @@ Where `DATATYPE` may be one of:
   * "dataviewtype"
   * "datavtype"
 
-Defines an algebraic type of prop, type, view or viewtype sort. The type
-belongs to the dynamic but the constructors belong to the dynamic. There is
-no associated versatile variant as there are with `ABSTYPE_DECL` and
-`TYPEDEF_DECL`.
+Defines an algebraic type of prop, type, view or viewtype sort. The types
+introduce static identifiers but the constructors introduce dynamic
+identifiers, hence it is both static and dynamic. There is no associated
+versatile variant as there are with `ABSTYPE_DECL` and `TYPEDEF_DECL`.
 
 
 EXCEPTION_DECL
@@ -1054,7 +1054,7 @@ VIEWAT_EXP
 
 Expression; dynamic;
 
-Given a `var` `v:t`, `view@(v)` returns a proof of a view of a `t` at `v`.
+Given a `var` `v:t`, `view@ v` returns a proof of a view of a `t` at `v`.
 See also `ADDRAT_EXP`.
 
 Example:
