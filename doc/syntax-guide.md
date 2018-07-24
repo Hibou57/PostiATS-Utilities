@@ -430,6 +430,8 @@ contain an unclosed expression, hence in that regard and except for freezing
 and binding resolution, it is like with `SRPDEFINE_DECL`. See also
 `COMMALPAREN_EXP` and `MACDEF_DECL`.
 
+The identifiers used in the expression, must be dynamic identifiers.
+
 Example:
 
         val n = 1
