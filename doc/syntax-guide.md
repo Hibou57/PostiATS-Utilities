@@ -229,25 +229,25 @@ ABSTYPE_DECL
 
         ABSTYPE_DECL = ABSTYPE … "and"* … ";"?
 
-Declaration; static; abstract; type;
+Tags: declaration; static; abstract; type;
 
 Where `ABSTYPE` may be one of:
 
-  * "abstbox"
-  * "abstype"
-  * "abst@ype"
-  * "abst0ype"
-  * "abstflat"
-  * "absprop"
-  * "absview"
-  * "absviewtype"
-  * "absvtbox"
-  * "absvtype"
-  * "absvt@ype"
-  * "absviewt@ype"
-  * "absviewt0ype"
-  * "absvt0ype"
-  * "absvtflat"
+  * `"abstbox"`
+  * `"abstype"`
+  * `"abst@ype"`
+  * `"abst0ype"`
+  * `"abstflat"`
+  * `"absprop"`
+  * `"absview"`
+  * `"absviewtype"`
+  * `"absvtbox"`
+  * `"absvtype"`
+  * `"absvt@ype"`
+  * `"absviewt@ype"`
+  * `"absviewt0ype"`
+  * `"absvt0ype"`
+  * `"absvtflat"`
 
 Abstract prop, type, view or viewtype. These are special cases of
 `STACST_DECL` which is more versatile but less expresses the intent.
@@ -258,7 +258,7 @@ ADDRAT_EXP
 
         ADDRAT_EXP = "addr@" … IMPEND
 
-Expression; dynamic;
+Tags: expression; dynamic;
 
 Given a `var` named `v`, `addr@ v` returns the address of `v` of sort `addr`.
 A proof of the view of something at that location will also be needed to make
@@ -275,12 +275,12 @@ ASSUME_DECL
 
         ASSUME_DECL = ASSUME … ";"?
 
-Declaration; static; abstract;
+Tags: declaration; static; abstract;
 
 Where `ASSUME` may be one of:
 
-  * "assume"
-  * "absimpl"
+  * `"assume"`
+  * `"absimpl"`
 
 Assume equality of two static abstract constants of the same sort. See also
 `REASSUME_DECL`.
@@ -301,7 +301,7 @@ ATLBRACE_EXP
 
         ATLBRACE_EXP = "@{" … "}"
 
-Expression; static; dynamic; flat;
+Tags: expression; static; dynamic; flat;
 
 Expression for flat records types and values. It has two forms, one defining a
 type (static) and one defining a value of that type (dynamic). The sort
@@ -333,7 +333,7 @@ ATLBRACKET_EXP
 
         ATLBRACKET_EXP = "@[" … "]"
 
-Expression; static; dynamic; flat;
+Tags: expression; static; dynamic; flat;
 
 Expression for flat one‑dimension arrays types and values. It has two forms,
 one defining a type (static) and one defining a value of that type (dynamic).
@@ -366,7 +366,7 @@ ATLPAREN_EXP
 
         ATLPAREN_EXP = "@(" … ")"
 
-Expression; static; dynamic; flat;
+Tags: expression; static; dynamic; flat;
 
 Expression for flat tuples types and values. It has two forms, one defining a
 type (static) and one defining a value of that type (dynamic).  The sort
@@ -398,7 +398,7 @@ BEGIN_EXP
 
         BEGIN_EXP = "begin" … "end"
 
-Expression; dynamic; void;
+Tags: expression; dynamic; void;
 
 Expression of void type. It contains a sequence of void expressions,
 semicolon separated. Unlike with declarations, the semicolons are required.
@@ -421,7 +421,7 @@ BQUOTELPAREN_EXP
 
         BQUOTELPAREN_EXP = "`(" … ")"
 
-Expression; dynamic; macro;
+Tags: expression; dynamic; macro;
 
 Borrowed from LISP’s back‑quote notation, used in macro definition and
 invocation to treat whatever "…" is, frozen after binding resolution. The "…"
@@ -459,13 +459,13 @@ CASE_EXP
 
         CASE_EXP = CASE … "of" … "|"* … IMPEND
 
-Expression;
+Tags: expression;
 
 Where `CASE` is one of:
 
-  * "case"
-  * "case+"
-  * "case-"
+  * `"case"`
+  * `"case+"`
+  * `"case-"`
 
 
 CLASSDEC_DECL
@@ -473,7 +473,7 @@ CLASSDEC_DECL
 
         CLASSDEC_DECL = "classdec" … ":"? … ";"?
 
-Declaration; static;
+Tags: declaration; static;
 
 
 COMMALPAREN_EXP
@@ -481,7 +481,7 @@ COMMALPAREN_EXP
 
         COMMALPAREN_EXP = ",(" … ")"
 
-Expression; dynamic; macro;
+Tags: expression; dynamic; macro;
 
 Borrowed from LISP, this is used with macro definition and application, to
 require evaluation of a  `BQUOTELPAREN_EXP` back‑quoted expression. See also
@@ -501,7 +501,7 @@ DATASORT_DECL
 
         DATASORT_DECL = "datasort" … "and"* … ";"?
 
-Declaration; static;
+Tags: declaration; static;
 
 
 DATATYPE_DECL
@@ -509,15 +509,15 @@ DATATYPE_DECL
 
         DATATYPE_DECL = DATATYPE … "and"* … ";"?
 
-Declaration; static; algebraic; dynamic; constructor;
+Tags: declaration; static; algebraic; dynamic; constructor;
 
 Where `DATATYPE` may be one of:
 
-  * "datatype"
-  * "dataprop"
-  * "dataview"
-  * "dataviewtype"
-  * "datavtype"
+  * `"datatype"`
+  * `"dataprop"`
+  * `"dataview"`
+  * `"dataviewtype"`
+  * `"datavtype"`
 
 Defines an algebraic type of prop, type, view or viewtype sort. The types
 introduce static identifiers but the constructors introduce dynamic
@@ -530,7 +530,7 @@ EXCEPTION_DECL
 
         EXCEPTION_DECL = "exception" … "and"* … ";"?
 
-Declaration; static; dynamic;
+Tags: declaration; static; dynamic;
 
 
 EXTCODE_DECL
@@ -538,7 +538,7 @@ EXTCODE_DECL
 
         EXTCODE_DECL = "extcode" … ";"?
 
-Declaration; static; dynamic;
+Tags: declaration; static; dynamic;
 
 
 EXTERN_DECL
@@ -546,7 +546,7 @@ EXTERN_DECL
 
         EXTERN_DECL = "extern" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 EXTTYPE_DECL
@@ -554,7 +554,7 @@ EXTTYPE_DECL
 
         EXTTYPE_DECL = "exttype" … ";"?
 
-Declaration; static;
+Tags: declaration; static;
 
 
 EXTVAR_DECL
@@ -562,7 +562,7 @@ EXTVAR_DECL
 
         EXTVAR_DECL = "extvar" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 FIX_EXP
@@ -570,7 +570,7 @@ FIX_EXP
 
         FIX_EXP = "fix" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 FIXITY_DECL
@@ -578,15 +578,15 @@ FIXITY_DECL
 
         FIXITY_DECL = FIXITY … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 Where `FIXITY` may be one of:
 
-  * "infix"
-  * "infixl"
-  * "infixr"
-  * "prefix"
-  * "postfix"
+  * `"infix"`
+  * `"infixl"`
+  * `"infixr"`
+  * `"prefix"`
+  * `"postfix"`
 
 
 FOLDAT_EXP
@@ -594,7 +594,7 @@ FOLDAT_EXP
 
         FOLDAT_EXP = "fold@" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 FOR_EXP
@@ -602,7 +602,7 @@ FOR_EXP
 
         FOR_EXP = "for" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 FORSTAR_EXP
@@ -610,7 +610,7 @@ FORSTAR_EXP
 
         FORSTAR_EXP = "for*" … "=>" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 FREEAT_EXP
@@ -618,7 +618,7 @@ FREEAT_EXP
 
         FREEAT_EXP = "free@" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 FUN_DECL
@@ -626,17 +626,17 @@ FUN_DECL
 
         FUN_DECL = FUN … "and"* … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 Where `FUN` is one of:
 
-  * "fn"
-  * "fnx"
-  * "fun"
-  * "prfn"
-  * "prfun"
-  * "praxi"
-  * "castfn"
+  * `"fn"`
+  * `"fnx"`
+  * `"fun"`
+  * `"prfn"`
+  * `"prfun"`
+  * `"praxi"`
+  * `"castfn"`
 
 
 HASHLBRACKET_EXP
@@ -644,7 +644,7 @@ HASHLBRACKET_EXP
 
         HASHLBRACKET_EXP = "#[" … "]"
 
-Expression;
+Tags: expression;
 
 
 IDENT_arr_EXP
@@ -652,7 +652,7 @@ IDENT_arr_EXP
 
         IDENT_arr_EXP = ALNUM"[" … "]"
 
-Expression;
+Tags: expression;
 
 
 IDENT_tmp_EXP
@@ -660,7 +660,7 @@ IDENT_tmp_EXP
 
         IDENT_tmp_EXP = ALNUM"<" … ">"
 
-Expression;
+Tags: expression;
 
 
 IFCASE_EXP
@@ -668,7 +668,7 @@ IFCASE_EXP
 
         IFCASE_EXP = "ifcase" … "|"* … IMPEND
 
-Expression;
+Tags: expression;
 
 
 IF_EXP
@@ -676,7 +676,7 @@ IF_EXP
 
         IF_EXP = "if" … then … "else"? … IMPEND
 
-Expression;
+Tags: expression;
 
 
 IMPLEMENT_DECL
@@ -684,14 +684,14 @@ IMPLEMENT_DECL
 
         IMPLEMENT_DECL = IMPLEMENT … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 Where `IMPLEMENT` is one of:
 
-  * "implmnt"
-  * "implement"
-  * "primplement"
-  * "primplmnt"
+  * `"implmnt"`
+  * `"implement"`
+  * `"primplement"`
+  * `"primplmnt"`
 
 
 LAM_EXP
@@ -699,7 +699,7 @@ LAM_EXP
 
         LAM_EXP = "lam" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 LBRACE_EXP
@@ -707,7 +707,7 @@ LBRACE_EXP
 
         LBRACE_EXP = "{" … "}"
 
-Expression;
+Tags: expression;
 
 
 LBRACKET_EXP
@@ -715,7 +715,7 @@ LBRACKET_EXP
 
         LBRACKET_EXP = "[" … "]"
 
-Expression;
+Tags: expression;
 
 
 LET_EXP
@@ -723,7 +723,7 @@ LET_EXP
 
         LET_EXP = "let" … "in" … "end"
 
-Expression;
+Tags: expression;
 
 
 LOCAL_DECL
@@ -731,7 +731,7 @@ LOCAL_DECL
 
         LOCAL_DECL   = "local" … "in" … "end"
 
-Declaration; static; dynamic;
+Tags: declaration; static; dynamic;
 
 
 LPAREN_EXP
@@ -739,7 +739,7 @@ LPAREN_EXP
 
         LPAREN_EXP = "(" … ")"
 
-Expression;
+Tags: expression;
 
 For sequence of void expressios, see also `BEGIN_EXP`.
 
@@ -749,12 +749,12 @@ MACDEF_DECL
 
         MACDEF_DECL = MACDEF … "and"* … ";"?
 
-Declaration; dynamic; macro;
+Tags: declaration; dynamic; macro;
 
 Where `MACDEF` may be one of:
 
-  * "macdef" for user friendly short form, explained below.
-  * "macrodef" for raw long form, explained below.
+  * `"macdef"` for user friendly short form, explained below.
+  * `"macrodef"` for raw long form, explained below.
 
 Borrowed from LISP, defines macro which like with `SRPDEFINE_DECL` are defined
 with valid syntactic sub‑tree node, but which unlike with the latter, requires
@@ -762,10 +762,10 @@ binding to be resolvable and allows to control where evaluation occurs.
 `BQUOTELPAREN_EXP` is used for frozen expressions and `COMMALPAREN_EXP` is
 used for evaluated expressions.
 
-"macrodef" is a more raw form than "macdef" or "macdef" is a special case
-of "macrodef". A "macdef" is implicitly back‑quoted at the time of its
+`macrodef` is a more raw form than `macdef` or `macdef` is a special case
+of `macrodef`. A `macdef` is implicitly back‑quoted at the time of its
 definition and its evaluation is implicitly requested at the macro name is
-referred to. With "macrodef", both must be explicitly specified.
+referred to. With `macrodef`, both must be explicitly specified.
 
 Example:
 
@@ -783,7 +783,7 @@ NONFIX_DECL
 
         NONFIX_DECL = "nonfix" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 OP_EXP
@@ -791,7 +791,7 @@ OP_EXP
 
         OP_EXP = "op" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 OVERLOAD_DECL
@@ -799,7 +799,7 @@ OVERLOAD_DECL
 
         OVERLOAD_DECL = "overload" … "with" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 QUOTELBRACE_EXP
@@ -807,7 +807,7 @@ QUOTELBRACE_EXP
 
         QUOTELBRACE_EXP = "'{" … "}"
 
-Expression;
+Tags: expression;
 
 
 QUOTELBRACKET_EXP
@@ -815,7 +815,7 @@ QUOTELBRACKET_EXP
 
         QUOTELBRACKET_EXP = "'[" … "]"
 
-Expression;
+Tags: expression;
 
 
 QUOTELPAREN_EXP
@@ -823,7 +823,7 @@ QUOTELPAREN_EXP
 
         QUOTELPAREN_EXP = "'(" … ")"
 
-Expression;
+Tags: expression;
 
 
 REASSUME_DECL
@@ -831,12 +831,12 @@ REASSUME_DECL
 
         REASSUME_DECL = REASSUME … ";"?
 
-Declaration; static; abstract;
+Tags: declaration; static; abstract;
 
 Where `REASSUME` may be one of:
 
-  * "reassume"
-  * "absreimpl"
+  * `"reassume"`
+  * `"absreimpl"`
 
 Recall a previous assumption of equality of two static abstract constants. See
 also `ASSUME_DECL`.
@@ -860,7 +860,7 @@ REC_DECL
 
         REC_DECL = "rec" … "and"* … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SCASE_EXP
@@ -868,7 +868,7 @@ SCASE_EXP
 
         SCASE_EXP = "scase" … "of" … "|"* … IMPEND
 
-Expression;
+Tags: expression;
 
 
 SIF_EXP
@@ -876,7 +876,7 @@ SIF_EXP
 
         SIF_EXP = "sif" … "then" … "else" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 SORTDEF_DECL
@@ -884,7 +884,7 @@ SORTDEF_DECL
 
         SORTDEF_DECL = "sortdef" … "and"* … ";"?
 
-Declaration; static;
+Tags: declaration; static;
 
 
 SRPASSERT_DECL
@@ -892,7 +892,7 @@ SRPASSERT_DECL
 
         SRPASSERT_DECL = "#assert" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPCODEGEN2_DECL
@@ -900,7 +900,7 @@ SRPCODEGEN2_DECL
 
         SRPCODEGEN2_DECL = "#codegen2" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPCOND_DECL
@@ -908,19 +908,19 @@ SRPCOND_DECL
 
         SRPCOND_DECL = SRPCOND … "#then"? … SRPELCOND* … "#else"? … "#endif"
 
-Declaration;
+Tags: declaration;
 
 Where `SRPCOND` may be one of:
 
-  * "#if"
-  * "#ifdef"
-  * "#ifndef"
+  * `"#if"`
+  * `"#ifdef"`
+  * `"#ifndef"`
 
 And where `SRPELCOND` may be one of:
 
-  * "#elif"
-  * "#elifdef"
-  * "#elifndef"
+  * `"#elif"`
+  * `"#elifdef"`
+  * `"#elifndef"`
 
 
 SRPDEFINE_DECL
@@ -929,19 +929,19 @@ SRPDEFINE_DECL
         SRPDEFINE_DECL = "#define" … ";"?
 
 
-Declaration;
+Tags: declaration;
 
 SRPDYNLOAD_DECL
 ------------------------------------------------------------------------------
 
         SRPDYNLOAD_DECL = SRPDYNLOAD … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 Where `SRPDYNLOAD` is one of:
 
-  * "dynload"
-  * "#dynload"
+  * `"dynload"`
+  * `"#dynload"`
 
 
 SRPERROR_DECL
@@ -949,7 +949,7 @@ SRPERROR_DECL
 
         SRPERROR_DECL = "#error" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPINCLUDE_DECL
@@ -957,7 +957,7 @@ SRPINCLUDE_DECL
 
         SRPINCLUDE_DECL = "#include" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPPRAGMA_DECL
@@ -965,7 +965,7 @@ SRPPRAGMA_DECL
 
         SRPPRAGMA_DECL = "#pragma" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPPRERR_DECL
@@ -973,7 +973,7 @@ SRPPRERR_DECL
 
         SRPPRERR_DECL = "#prerr" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPPRINT_DECL
@@ -981,7 +981,7 @@ SRPPRINT_DECL
 
         SRPPRINT_DECL = "#print" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPREQUIRE_DECL
@@ -989,7 +989,7 @@ SRPREQUIRE_DECL
 
         SRPREQUIRE_DECL = "#require" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 SRPSTALOAD_DECL
@@ -997,12 +997,12 @@ SRPSTALOAD_DECL
 
         SRPSTALOAD_DECL = SRPSTALOAD … ";"?
 
-Declaration; static; dynamic;
+Tags: declaration; static; dynamic;
 
 Where `SRPSTALOAD` may be one of:
 
-  * "staload"
-  * "#staload"
+  * `"staload"`
+  * `"#staload"`
 
 
 SRPUNDEF_DECL
@@ -1010,7 +1010,7 @@ SRPUNDEF_DECL
 
         SRPUNDEF_DECL = "#undef" … ";"?
 
-Declaration;
+Tags: declaration;
 
 
 STACST_DECL
@@ -1018,12 +1018,12 @@ STACST_DECL
 
         STACST_DECL = STACST … "and"* … ";"?
 
-Declaration; static; abstract;
+Tags: declaration; static; abstract;
 
 Where `STACST` may be one of:
 
-  * "sta"
-  * "stacst"
+  * `"sta"`
+  * `"stacst"`
 
 Abstract static expression. Abstract: the value does not matter and there is
 none, only the introduced identity (name) and its declared sort, do.
@@ -1038,7 +1038,7 @@ STADEF_DECL
 
         STADEF_DECL = "stadef" … "and"* … ";"?
 
-Declaration; static; aliasing;
+Tags: declaration; static; aliasing;
 
 Versatile static expression aliasing. `TYPEDEF_DECL` has more specialized
 keywords better expressing the intent.
@@ -1049,7 +1049,7 @@ STATIC_DECL
 
         STATIC_DECL = "static" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 SYMELIM_DECL
@@ -1057,7 +1057,7 @@ SYMELIM_DECL
 
         SYMELIM_DECL = "symelim" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 SYMINTR_DECL
@@ -1065,7 +1065,7 @@ SYMINTR_DECL
 
         SYMINTR_DECL = "symintr" … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 
 SYMLT_EXP
@@ -1073,13 +1073,13 @@ SYMLT_EXP
 
         SYMLT_EXP = SYMLT … ">"
 
-Expression;
+Tags: expression;
 
 Where `SYMLT` may be one of:
 
-  * ":<"
-  * "=<"
-  * "-<"
+  * `":<"`
+  * `"=<"`
+  * `"-<"`
 
 
 TKINDEF_DECL
@@ -1087,7 +1087,7 @@ TKINDEF_DECL
 
         TKINDEF_DECL = "tkindef" … ";"?
 
-Declaration; static;
+Tags: declaration; static;
 
 
 TRY_EXP
@@ -1095,7 +1095,7 @@ TRY_EXP
 
         TRY_EXP = "try" … "with" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 TYPEDEF_DECL
@@ -1103,15 +1103,15 @@ TYPEDEF_DECL
 
         TYPEDEF_DECL = TYPEDEF … "and"* … ";"?
 
-Declaration; static; aliasing; type;
+Tags: declaration; static; aliasing; type;
 
 Where `TYPEDEF` may be one of:
 
-  * "propdef"
-  * "typedef"
-  * "viewdef"
-  * "viewtypedef"
-  * "vtypedef"
+  * `"propdef"`
+  * `"typedef"`
+  * `"viewdef"`
+  * `"viewtypedef"`
+  * `"vtypedef"`
 
 Prop, type, view or viewtype expression aliasing. Specialized cases of
 `STADEF_DECL` which is more versatile but less expresses the intent.
@@ -1122,14 +1122,14 @@ VAL_DECL
 
         VAL_DECL = VAL … "and"* … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 Where `VAL` is one of:
 
-  * "val"
-  * "val+"
-  * "val-"
-  * "prval"
+  * `"val"`
+  * `"val+"`
+  * `"val-"`
+  * `"prval"`
 
 
 VAR_DECL
@@ -1137,12 +1137,12 @@ VAR_DECL
 
         VAR_DECL = VAR … "and"* … ";"?
 
-Declaration; dynamic;
+Tags: declaration; dynamic;
 
 Where `VAR` is one of:
 
-  * "var"
-  * "prvar"
+  * `"var"`
+  * `"prvar"`
 
 
 VIEWAT_EXP
@@ -1150,7 +1150,7 @@ VIEWAT_EXP
 
         VIEWAT_EXP = "view@" … IMPEND
 
-Expression; dynamic;
+Tags: expression; dynamic;
 
 Given a `var` `v:t`, `view@ v` returns a proof of a view of a `t` at `v`.
 See also `ADDRAT_EXP`.
@@ -1172,7 +1172,7 @@ WHILE_EXP
 
         WHILE_EXP = "while" … IMPEND
 
-Expression;
+Tags: expression;
 
 
 WHILESTAR_EXP
@@ -1180,5 +1180,5 @@ WHILESTAR_EXP
 
         WHILESTAR_EXP = "while*" … "=>" … IMPEND
 
-Expression;
+Tags: expression;
 
