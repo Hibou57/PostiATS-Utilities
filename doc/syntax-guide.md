@@ -144,6 +144,9 @@ With implied end boundaries:
         WHILESTAR_EXP = "while*" … "=>" … IMPEND
 
 
+`ALNUM"["` and `ALNUM"<"` are atomic lexial units, no space is allowed between
+`ALNUM` and the symbol. This is shown expanded for clarity.
+
 The `WHERE_EXP` construct is a special case, as will be explained in its
 section.
 
