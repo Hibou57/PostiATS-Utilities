@@ -447,6 +447,12 @@ Example:
         #define M2 j + j       // No error since no binding resolution.
         macrodef m2 = `(i + i) // Error, since unresolved binding.
 
+        macrodef m = `(println! "Test.")  // Not evaluated right now.
+        implement main0() = begin
+           ,(m);                          // Evaluated here.
+           ,(m);                          // Evaluated one more time here.
+        end
+
 
 CASE_EXP
 ------------------------------------------------------------------------------
