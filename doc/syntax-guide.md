@@ -971,15 +971,15 @@ Example:
         val n = 2
         val a:int(2) = N // Use the n available from here.
 
-Like with LISP‑like macros and unlike with original C macros, the macro’s
-body must be a syntactically valid expression …
+Like with LISP‑like macros and unlike with original C macros, the macro’s body
+is not raw text substitution, it must be a valid syntactic sub‑tree …
 
 Example:
 
         #define N (1  // Error.
 
 … and the expression is like implicitly wrapped in parentheses when it is
-evaluation.
+evaluated.
 
 Example:
 
