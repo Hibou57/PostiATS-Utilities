@@ -59,9 +59,8 @@ repeated; that is, it may as much be `scase … of …` or `scase … of … | �
 `scase … of … | … | …`. The repetition applies to the part it ends in the
 rule (here, the second part). The rest is as explained before.
 
-The parser mentioned before uses additional sanity rules which are not
-described here (it checks for unexpected boundaries or for ones comming too
-soon).
+The parser mentioned before uses additional kind of rules which are not
+described here.
 
 
 Rules index and outline
@@ -167,6 +166,7 @@ although this first part may be empty and the construct is an expression.
 
 With explicit or implied semicolon:
 
+        ASSUME_DECL =           ASSUME … "=" … ";"?
         CLASSDEC_DECL =     "classdec" … ":"? … ";"?
         EXTCODE_DECL =       "extcode" … ";"?
         EXTERN_DECL =         "extern" … ";"?
@@ -176,6 +176,7 @@ With explicit or implied semicolon:
         IMPLEMENT_DECL =     IMPLEMENT … ";"?
         NONFIX_DECL =         "nonfix" … ";"?
         OVERLOAD_DECL =     "overload" … "with" … ";"?
+        REASSUME_DECL =       REASSUME … ";"?
         SRPASSERT_DECL =     "#assert" … ";"?
         SRPCODEGEN2_DECL = "#codegen2" … ";"?
         SRPDEFINE_DECL =     "#define" … ";"?
@@ -192,9 +193,6 @@ With explicit or implied semicolon:
         SYMELIM_DECL =       "symelim" … ";"?
         SYMINTR_DECL =       "symintr" … ";"?
         TKINDEF_DECL =       "tkindef" … ";"?
-
-        ASSUME_DECL = ASSUME … ";"?
-        REASSUME_DECL = REASSUME … ";"?
 
 
 Similarly and repeatable with the `"and"` keyword:
@@ -277,12 +275,25 @@ ASSUME_DECL
 
         ASSUME_DECL = ASSUME … ";"?
 
-Declaration; static;
+Declaration; static; abstract;
 
 Where `ASSUME` may be one of:
 
   * "assume"
   * "absimpl"
+
+Assume equality of two static abstract constants of the same sort. See also
+`REASSUME_DECL`.
+
+Example:
+
+        absprop p
+        absprop q
+        assume p = q
+
+        abstype t
+        abstype u
+        assume t = u
 
 
 ATLBRACE_EXP
@@ -757,12 +768,28 @@ REASSUME_DECL
 
         REASSUME_DECL = REASSUME … ";"?
 
-Declaration; static;
+Declaration; static; abstract;
 
 Where `REASSUME` may be one of:
 
   * "reassume"
   * "absreimpl"
+
+Recall a previous assumption of equality of two static abstract constants. See
+also `ASSUME_DECL`.
+
+Example:
+
+        absprop p
+        absprop q
+        assume p = q
+
+        abstype t
+        abstype u
+        assume t = u
+
+        reassume p
+        reassume t
 
 
 REC_DECL
