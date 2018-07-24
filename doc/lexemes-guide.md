@@ -9,6 +9,8 @@ Each section comes with examples.
 
 This document is based on the low level “lexemes-ref.md”.
 
+Later after you’ve read this document, you may read “syntax-guide.md”.
+
 
 Characters (literal)
 ------------------------------------------------------------------------------
