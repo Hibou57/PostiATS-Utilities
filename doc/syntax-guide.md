@@ -495,7 +495,8 @@ Example:
            ,(m); // Evaluation occurs here.
         end
 
-A comma‑quoted expression can only be apply on or in a back‑quoted expression.
+A comma‑quoted expression can only be applied on or in a back‑quoted
+expression.
 
 Example:
 
