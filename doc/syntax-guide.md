@@ -609,9 +609,10 @@ Provides the only way to define a new sort with constants of that sort. The
 static equality operator `==` is available for these constants. As with any
 other static values, these constants may be used as type index. With the `and`
 keyword, multiple sorts referring to each others may be defined. See also
-`DATATYPE_DECL` for the dynamic counterpart. The constants can be matched
-by an `SCASE_EXP` which is a dynamic expression although its domain is in
-the static. This is done usually for proof value.
+`DATATYPE_DECL` for the dynamic counterpart. The constants can be matched by
+an `SCASE_EXP` which is a dynamic expression although its domain is in the
+static; this is done usually for proof value. When all constructors are
+nullary, it is like an enumeration (a common SML idiom).
 
 Example:
 
@@ -649,7 +650,8 @@ introduce static identifiers but the constructors introduce dynamic
 identifiers, hence it is both static and dynamic. There is no associated
 versatile variant as there are with `ABSTYPE_DECL` and `TYPEDEF_DECL`. See
 also `DATASORT_DECL` for the static counterpart. The dynamic constructors
-can be matched by a `CASE_EXP`.
+can be matched by a `CASE_EXP`. When all constructors are nullary, it is
+like an enumeration (a common SML idiom).
 
 Example:
 
