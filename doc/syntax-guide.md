@@ -602,6 +602,18 @@ DATASORT_DECL
 
 Tags: declaration; static;
 
+Provides the only way to define a new sort with constants of that sort. The
+static equality operator `==` is available for these constants. As with any
+other static values, these constants may be used as type index. With the `and`
+keyword, multiple sorts refering to each others may be defined.
+
+Example:
+
+        datasort three_state =
+          | On
+          | Off
+          | High_Impedance
+
 
 DATATYPE_DECL
 ------------------------------------------------------------------------------
