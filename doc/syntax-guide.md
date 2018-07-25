@@ -15,6 +15,9 @@ language.
 
 The keywords are subject to the lexical rules described in “lexemes-guide.md”.
 
+The semantic description comming with the constructs, is intended to be terce.
+For more, there are [Introduction to Programming in ATS](http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/HTMLTOC/book1.html)
+and [A Tutorial on Programming Features in ATS](http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/HTML/HTMLTOC/book1.html).
 
 Reading the rules of the big lines syntax
 ------------------------------------------------------------------------------
