@@ -539,7 +539,7 @@ Example:
         val c = C2
 
         val b = case- c of C1() => true
-        // Not compile‑time message and run‑time error.
+        // No compile‑time message and run‑time error.
 
         val b = case c of C1() => true
         // Compile‑time warning and run‑time error.
