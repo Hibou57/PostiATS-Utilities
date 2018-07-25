@@ -605,7 +605,8 @@ Tags: declaration; static;
 Provides the only way to define a new sort with constants of that sort. The
 static equality operator `==` is available for these constants. As with any
 other static values, these constants may be used as type index. With the `and`
-keyword, multiple sorts refering to each others may be defined.
+keyword, multiple sorts referring to each others may be defined. See also
+`DATATYPE_DECL` for the dynamic counterpart.
 
 Example:
 
@@ -633,7 +634,8 @@ Where `DATATYPE` may be one of:
 Defines an algebraic type of prop, type, view or viewtype sort. The types
 introduce static identifiers but the constructors introduce dynamic
 identifiers, hence it is both static and dynamic. There is no associated
-versatile variant as there are with `ABSTYPE_DECL` and `TYPEDEF_DECL`.
+versatile variant as there are with `ABSTYPE_DECL` and `TYPEDEF_DECL`. See
+also `DATASORT_DECL` for the static counterpart.
 
 
 EXCEPTION_DECL
