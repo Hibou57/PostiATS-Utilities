@@ -738,8 +738,8 @@ Mean the same as these four ones:
         extvar "c_var" = 0
 
 The `extern` form may be more readable for `fn` and `val`. The `extype` and
-`extvar` forms may be more readable than the `extern` for. The `extype` form
-can also be used with types of other sorts:
+`extvar` forms may be more readable than the `extern`. The `extype` form can
+also be used with types of other sorts:
 
         viewtypedef vt = int
         extern viewtypedef "c_type" = vt // Same as below.
