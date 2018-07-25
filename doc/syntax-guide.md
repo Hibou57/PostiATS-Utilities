@@ -286,18 +286,15 @@ Where `ASSUME` may be one of:
   * `"assume"`
   * `"absimpl"`
 
-Assume equality of two static abstract constants of the same sort. See also
+Assume equality of two static constants of the same sort. The first one is
+abstract, the second one is typically not. Used to state the equality between
+an abstract definition and a concret definition of it. See also
 `REASSUME_DECL`.
 
 Example:
 
-        absprop p
-        absprop q
-        assume p = q
-
-        abstype t
-        abstype u
-        assume t = u
+        abst@ype file
+        assume file = int // Implement file with a POSIX file handle.
 
 
 ATLBRACE_EXP
