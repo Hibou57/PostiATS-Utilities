@@ -549,6 +549,20 @@ CLASSDEC_DECL
 
 Tags: declaration; static;
 
+Defines classes relations. A definition is of the sort `cls` and static values
+of the sort `cls` has an `<=` operator. Static values of the sort `cls` may
+be used as type index.
+
+Example:
+
+        classdec mime_type       // Defines a root.
+        classdec text: mime_type // Defines a relation: text <= mime_type.
+        classdec html: text      // html <= text.
+        classdec xml: text       // xml <= text.
+
+        abstype class(c:cls)
+        abstype file(c:cls) = [c <= mime_type] class(c)
+
 
 COMMALPAREN_EXP
 ------------------------------------------------------------------------------
