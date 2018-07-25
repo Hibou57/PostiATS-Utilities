@@ -718,7 +718,32 @@ EXTERN_DECL
 
         EXTERN_DECL = "extern" … ";"?
 
-Tags: declaration; dynamic;
+Tags: declaration; static; dynamic;
+
+Versatile construct covering the use cases of `EXTTYPE_DECL`, `EXTVAR_DECL`,
+`STATIC_DECL`, which are in the while, explained here.
+
+These four examples:
+
+        extern fn f(): int            // Declare an fn signature.
+        extern val v: int             // Declare a val signature.
+        extern typedef "c_type" = int // Export a type to the target language.
+        extern var "c_var" = 0        // Assign a targuet language variable.
+
+Mean the same as these four ones:
+
+        static fn f(): int
+        static val v: int
+        extype "c_type" = int
+        extvar "c_var" = 0
+
+The `extern` form may be more readable for `fn` and `val`. The `extype` and
+`extvar` forms may be more readable than the `extern` for. The `extype` form
+can also be used with types of other sorts:
+
+        viewtypedef vt = int
+        extern viewtypedef "c_type" = vt // Same as below.
+        extype "c_type" = vt             // Same as above.
 
 
 EXTTYPE_DECL
@@ -728,6 +753,8 @@ EXTTYPE_DECL
 
 Tags: declaration; static;
 
+See `EXTERN_DECL`.
+
 
 EXTVAR_DECL
 ------------------------------------------------------------------------------
@@ -735,6 +762,8 @@ EXTVAR_DECL
         EXTVAR_DECL = "extvar" … ";"?
 
 Tags: declaration; dynamic;
+
+See `EXTERN_DECL`.
 
 
 FIX_EXP
