@@ -645,7 +645,21 @@ Defines an algebraic type of prop, type, view or viewtype sort. The types
 introduce static identifiers but the constructors introduce dynamic
 identifiers, hence it is both static and dynamic. There is no associated
 versatile variant as there are with `ABSTYPE_DECL` and `TYPEDEF_DECL`. See
-also `DATASORT_DECL` for the static counterpart.
+also `DATASORT_DECL` for the static counterpart. The dynamic constructors
+can be matched by a `CASE_EXP`.
+
+Example:
+
+        datatype natural =
+          | Zero
+          | Succ of natural
+
+        val n: natural = Succ(Succ(Zero))
+
+        fun to_int(n: natural): int =
+          case+ n of
+            | Zero() => 0
+            | Succ(n') => 1 + to_int(n')
 
 
 EXCEPTION_DECL
