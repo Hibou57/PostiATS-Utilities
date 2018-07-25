@@ -707,6 +707,11 @@ EXTCODE_DECL
 
 Tags: declaration; static; dynamic;
 
+Embed literal foreign language snuppets in the generated target language file.
+
+This may as much impact the static and the dynamic, since even types may be
+defined this way. For the notation, see “External code” in “lexemes-guide.md”.
+
 
 EXTERN_DECL
 ------------------------------------------------------------------------------
