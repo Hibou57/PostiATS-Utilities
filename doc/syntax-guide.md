@@ -502,24 +502,27 @@ Example:
           | Left_Right(_, _) => 2
 
 
-**Warning:** nulary constructors in patterns of a `case` expression, must be
+**Warning:** nullary constructors in patterns of a `case` expression, must be
 written with parentheses for distinguishing with pattern variables. Without
 parentheses, what may looks like to be a constructor pattern will in reality
-be a pattern variable.
+be a pattern variable. You may have made this error if you have a message
+from Postiats saying “this pattern match clause is redundant”.
 
 Example:
 
-        datatype t = C
+        datatype t = C | D
 
         val c = C  // No parentheses is OK here.
 
         val b:bool =
           case c of
           | C => true // Not the intent: C is a pattern variable!
+          | D => false
 
         val b:bool =
           case c of
           | C() => true // The intent: C() refers to the constructor.
+          | D() => false
 
 
 Three different keywords for three coverage checking modes at compile‑time.
