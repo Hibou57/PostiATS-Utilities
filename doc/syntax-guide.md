@@ -252,8 +252,9 @@ Where `ABSTYPE` may be one of:
   * `"absvt0ype"`
   * `"absvtflat"`
 
-Abstract prop, type, view or viewtype. These are special cases of
-`STACST_DECL` which is more versatile but less expresses the intent.
+Abstract prop, type, view or viewtype, which defines impredicative abstract
+constants. These are comparable to `STACST_DECL` which is for abstract
+predicative constants. Usually used to encode relations.
 
 
 ADDRAT_EXP
