@@ -606,7 +606,9 @@ Provides the only way to define a new sort with constants of that sort. The
 static equality operator `==` is available for these constants. As with any
 other static values, these constants may be used as type index. With the `and`
 keyword, multiple sorts referring to each others may be defined. See also
-`DATATYPE_DECL` for the dynamic counterpart.
+`DATATYPE_DECL` for the dynamic counterpart. The constants can be matched
+by an `SCASE_EXP` which is a dynamic expression although its domain is in
+the static. This is done usually for proof value.
 
 Example:
 
@@ -614,6 +616,14 @@ Example:
           | On
           | Off
           | High_Impedance
+
+        abstype state(s:three_state)
+
+        fn is_on {s:three_state} (v: state(s)): bool =
+          scase s of
+            | On() => true
+            | Off() => false
+            | High_Impedance() => false
 
 
 DATATYPE_DECL
