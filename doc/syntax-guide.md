@@ -670,7 +670,28 @@ EXCEPTION_DECL
 
         EXCEPTION_DECL = "exception" … "and"* … ";"?
 
-Tags: declaration; static; dynamic;
+Tags: declaration; dynamic; exception;
+
+Very like a `DATATYPE_DECL`, except it only defines constructors, not an
+associated type, so it only defines dynamic identifiers. It also has not
+alternative part (since it does not introduce a type, it would be useless). An
+instance of an exception is of sort `viewtype`, that is, of a (anonymous)
+linear type. It is not usually matched by a `CASE_EXP` like with data types,
+rather a `TRY_EXP`. An instance is thrown/raised with the `"$raise"` special
+function. Raising exceptions requires memory allocation on the stack using
+“alloca”. Raising exceptions is known to possibly cause some memory leaks.
+
+Example:
+
+        exception IOError of int
+
+        fn input_fd(path: string): int =
+          if path = "stdin" then 0
+          else $raise IOError(1)
+
+        val fd =
+          try input_fd("foo")
+          with ~IOError(_) => (println! "Oops."; 0)
 
 
 EXTCODE_DECL
