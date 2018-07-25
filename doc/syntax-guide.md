@@ -1342,11 +1342,19 @@ Where `STACST` may be one of:
   * `"stacst"`
 
 Abstract static expression. Abstract: the value does not matter and there is
-none, only the introduced identity (name) and its declared sort, do.
-`ABSTYPE_DECL` has more specialized keywords better expressing the intent.
+none, only the introduced identity (name) and its declared sort, do, and
+possibly its properties defined as axioms. The constant is expected to be of a
+predicative sort; although doing otherwise will not end in a syntax error from
+Postiats, it is not supported.
 
-This has little to be compared with the usual meaning of “constant”, rather
-think of it as if it was named “absdef”.
+This is mainly used to name a constant to which some axioms will be attached,
+also to be able to have readable name in expressions exported to constraint
+solvers.
+
+Example:
+
+        stacst c: int
+        static praxi c_lemma(): [speed:int; speed < c] void
 
 
 STADEF_DECL
