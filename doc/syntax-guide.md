@@ -288,8 +288,8 @@ Where `ASSUME` may be one of:
 
 Assume equality of two static constants of the same sort. The first one is
 abstract, the second one is typically not. Used to state the equality between
-an abstract definition and a concret definition of it. See also
-`REASSUME_DECL`.
+an abstract definition and a concret definition of it. The equality is scoped.
+See also `REASSUME_DECL`.
 
 Example:
 
