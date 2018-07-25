@@ -728,7 +728,7 @@ These four examples:
         extern fn f(): int            // Declare an fn signature.
         extern val v: int             // Declare a val signature.
         extern typedef "c_type" = int // Export a type to the target language.
-        extern var "c_var" = 0        // Assign a targuet language variable.
+        extern var "c_var" = 0        // Assign a target language variable.
 
 Mean the same as these four ones:
 
