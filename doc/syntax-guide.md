@@ -718,7 +718,7 @@ EXTERN_DECL
 
         EXTERN_DECL = "extern" … ";"?
 
-Tags: declaration; static; dynamic;
+Tags: declaration; static; dynamic; binding;
 
 Versatile construct covering the use cases of `EXTTYPE_DECL`, `EXTVAR_DECL`,
 `STATIC_DECL`, which are in the while, explained here.
@@ -738,12 +738,20 @@ Mean the same as these four ones:
         extvar "c_var" = 0
 
 The `extern` form may be more readable for `fn` and `val`. The `extype` and
-`extvar` forms may be more readable than the `extern`. The `extype` form can
-also be used with types of other sorts:
+`extvar` forms may be more readable than the `extern` form. The `extype` form
+can also be used with types of other sorts:
 
         viewtypedef vt = int
         extern viewtypedef "c_type" = vt // Same as below.
         extype "c_type" = vt             // Same as above.
+
+In addition, note the two special functions `"$extype"` and `"$extval"` which
+are not keywords, for importing:
+
+        typedef t = $extype "c_type" // Import a target language type.
+        val v = $extval(t, "c_var")  // Import a target language value.
+
+Note it is `$extval` and not `$extvar` (which does not exists).
 
 
 EXTTYPE_DECL
@@ -751,7 +759,7 @@ EXTTYPE_DECL
 
         EXTTYPE_DECL = "exttype" … ";"?
 
-Tags: declaration; static;
+Tags: declaration; static; binding;
 
 See `EXTERN_DECL`.
 
@@ -761,7 +769,7 @@ EXTVAR_DECL
 
         EXTVAR_DECL = "extvar" … ";"?
 
-Tags: declaration; dynamic;
+Tags: declaration; dynamic; binding;
 
 See `EXTERN_DECL`.
 
