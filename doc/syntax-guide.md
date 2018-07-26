@@ -335,7 +335,8 @@ The equality is scoped, outside the scope where it is declared, it is not
 visible. It can be pulled from another scope using `REASSUME_DECL`.
 
 The requirement of being of the same or more general sort, implies as an
-example, a flat abstract type can only be implemented by a flat concret type.
+example, a boxed abstract type can only be implemented by a boxed concret
+type.
 
 Example:
 
