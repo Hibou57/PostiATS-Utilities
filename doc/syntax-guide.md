@@ -605,11 +605,12 @@ CLASSDEC_DECL
 
         CLASSDEC_DECL = "classdec" … ":"? … ";"?
 
-Tags: declaration; static;
+Tags: declaration; static; binding;
 
 Defines classes relations. A definition is of the sort `cls` and static values
-of the sort `cls` has an `<=` operator. Static values of the sort `cls` may
-be used as type index.
+of the sort `cls` has an `<=` operator. The static constants so defined are to
+be used as type indexes, typically aside an index of sort `addr`. Typically
+used for binding with object‑oriented library, but not restricted to that.
 
 Example:
 
