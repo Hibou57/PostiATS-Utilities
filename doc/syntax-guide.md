@@ -171,7 +171,7 @@ With explicit or implied semicolon:
 
         ASSUME_DECL =           ASSUME … "=" … ";"?
         CLASSDEC_DECL =     "classdec" … ":"? … ";"?
-        EXTCODE_DECL =       "extcode" … ";"?
+        EXTCODE_DECL =         EXTCODE … ";"?
         EXTERN_DECL =         "extern" … ";"?
         EXTTYPE_DECL =       "exttype" … ";"?
         EXTVAR_DECL =         "extvar" … ";"?
@@ -788,9 +788,14 @@ Example:
 EXTCODE_DECL
 ------------------------------------------------------------------------------
 
-        EXTCODE_DECL = "extcode" … ";"?
+        EXTCODE_DECL = EXTCODE … ";"?
 
 Tags: declaration; static; dynamic;
+
+`EXTCODE` is not a keyword, it a lexical unit started with `"%{"` and
+ended with `"%}"` as explained in “External code” in “lexemes-guide.md”. The
+single part must be empty, this declaration accept no content except the one
+in the `EXTCODE` literal.
 
 Embed literal foreign language snuppets in the generated target language file.
 
