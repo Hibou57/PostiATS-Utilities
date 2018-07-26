@@ -329,9 +329,13 @@ Where `ASSUME` may be one of:
 Assume equality of two static definitions. The first one is abstract, the
 second one is typically not. The second one must be of the same sort or of a
 more general sort than the first one. It is used to state the equality between
-an abstract definition and a concret implementation of it. The equality is
-scoped. See also `REASSUME_DECL`. The requirement of being of the same sorts,
-implies an flat abstract type can only be implemented by a flat concret type.
+an abstract definition and a concret implementation of it.
+
+The equality is scoped, outside the scope where it is declared, it is not
+visible. It can be pulled from another scope using `REASSUME_DECL`.
+
+The requirement of being of the same or more general sort, implies as an
+example, a flat abstract type can only be implemented by a flat concret type.
 
 Example:
 
@@ -350,6 +354,15 @@ Example:
 The above is valid, because the `type` sort is more general than the `t@ype`
 sort, hence a type of the `type` sort can implement a type of the `t@ype`
 sort.
+
+As soon as a concret implementation is associated to an abstract type, it not
+abstract any‑more.
+
+Example:
+
+        abst@ype file
+        absimpl file = int
+        absimpl file = int // Error here, file is not abstract anymore.
 
 
 ATLBRACE_EXP
@@ -1146,8 +1159,28 @@ Where `REASSUME` may be one of:
   * `"absreimpl"`
   * `"reassume"` — synonymous with `"absreimpl"`
 
-Recall a previously stated equality of two static constants. See
-`ASSUME_DECL`.
+Recall a previously stated implementation of an abstract type declared (the
+implementation) with `ASSUME_DECL`. It literally pulls the declaration from
+any scope to any other scope.
+
+Example:
+
+        abst@ype file
+
+        local
+           (* Scope #1 *)
+           absimpl file = int
+        in
+        end
+
+        local
+           (* Scope #2 *)
+           absreimpl file
+           fn is_stdout(f:file): bool = (f = 1)
+        in
+        end
+
+The effect of `absimpl` in scope #1 is pulled into scope #2 by `absreimpl`.
 
 
 REC_DECL
