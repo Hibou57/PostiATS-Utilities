@@ -631,7 +631,7 @@ COMMALPAREN_EXP
 Tags: expression; dynamic; macro;
 
 Borrowed from LISP, this is used with macro definition and application, to
-require evaluation of a  `BQUOTELPAREN_EXP` back‑quoted expression. See also
+require evaluation of a `BQUOTELPAREN_EXP` back‑quoted expression. See also
 `MACDEF_DECL`.
 
 Example:
@@ -642,7 +642,7 @@ Example:
            ,(m); // Evaluation occurs here.
         end
 
-A comma‑quoted expression can only be applied on or in a back‑quoted
+A comma‑quoted expression can only be applied on or in, a back‑quoted
 expression.
 
 Example:
@@ -650,8 +650,8 @@ Example:
         val a = ,(`(1)) // OK.
         val b = ,(1)    // Error.
 
-A comma‑quoted expression yields an ATS2 “code” fragment from an ATS2
-syntactic node, the latter being created using a back‑quoted expression.
+A comma‑quoted expression yields an ATS2 expression source fragment from an
+ATS2 syntactic node, the latter being created using a back‑quoted expression.
 
 
 DATASORT_DECL
