@@ -449,7 +449,8 @@ Tags: expression; dynamic; void;
 Expression of void type. It contains a sequence of void expressions,
 semicolon separated. Unlike with declarations, the semicolons are required.
 There may be extraneous semicolons at the end. The same can be written
-using an `LPAREN_EXP`, but a `BEGIN_EXP` more expresses the intent.
+using an `LPAREN_EXP`, but a `BEGIN_EXP` more expresses the intent when the
+content is a sequence of operations all returning void.
 
 Example:
 
