@@ -327,10 +327,10 @@ Where `ASSUME` may be one of:
   * `"assume"` — synonymous with `"absimpl"`
 
 Assume equality of two static constants of the same sort. The first one is
-abstract, the second one is typically not. That is, it s used to state the
+abstract, the second one is typically not. That is, it is used to state the
 equality between an abstract definition and a concret implementation of it.
 The equality is scoped. See also `REASSUME_DECL`. The requirement of being of
-the same sorts, implies and abstract flat type can only be implemented by a
+the same sorts, implies an flat abstract type can only be implemented by a
 flat concret type.
 
 Example:
