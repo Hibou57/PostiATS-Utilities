@@ -413,9 +413,9 @@ ATLPAREN_EXP
 
 Tags: expression; static; dynamic; flat;
 
-Expression for flat tuples types and values. It has two forms, one defining a
-type (static) and one defining a value of that type (dynamic).  The sort
-of a flat tuple is `t@ype`.
+Expression for flat tuple types and values. It has two forms, one defining a
+type (static) and one defining a value of that possibly anonymois type
+(dynamic). The sort of a flat tuple is `t@ype`.
 
 Example:
 
@@ -426,8 +426,9 @@ Example:
 
 The field names are natural numbers, starting at zero and increasing one by
 one. Field selectors must be expression using the decimal notation, no other
-base is allowed. A field selector is a special lexical unit. A flat tuple
-is a special case of flat record. See also `ATLBRACE_EXP`.
+base is allowed. A field selector is a special lexical unit, no space is
+allowed between the dot and the natural number. A flat tuple is a special case
+of flat record. See also `ATLBRACE_EXP`.
 
 Example:
 
