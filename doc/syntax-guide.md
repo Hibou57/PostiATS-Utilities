@@ -254,7 +254,7 @@ Where `ABSTYPE` may be one of:
 
 Abstract prop, type, view or viewtype, which defines impredicative abstract
 constants. These are comparable to `STACST_DECL` which is for abstract
-predicative constants. Usually used to encode relations.
+predicative constants. Usually used to declare relations or properties.
 
 
 ADDRAT_EXP
@@ -279,7 +279,7 @@ ASSUME_DECL
 
         ASSUME_DECL = ASSUME … ";"?
 
-Tags: declaration; static; abstract;
+Tags: declaration; static; abstract; type;
 
 Where `ASSUME` may be one of:
 
@@ -1066,7 +1066,7 @@ REASSUME_DECL
 
         REASSUME_DECL = REASSUME … ";"?
 
-Tags: declaration; static; abstract;
+Tags: declaration; static; abstract; type;
 
 Where `REASSUME` may be one of:
 
