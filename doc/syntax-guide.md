@@ -461,6 +461,10 @@ Example:
            println! "... world!";
         end
 
+Although typically used for implementing function returning void, this
+construct is a void expression which can used anywhere a void expression is
+expected, as show in the example above.
+
 
 BQUOTELPAREN_EXP
 ------------------------------------------------------------------------------
