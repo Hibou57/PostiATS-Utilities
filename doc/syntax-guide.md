@@ -252,17 +252,17 @@ Where `ABSTYPE` may be one of:
   * `"absvt0ype"` — synonymous with `"absviewt@ype"`
   * `"absvtflat"` — synonymous with `"absviewt@ype"`
 
-Abstract type of various sorts. Introduce impredicative abstract constants.
+Abstract type of various sorts. Introduces impredicative abstract constants.
 These are comparable to `STACST_DECL` which is for predicative abstract
 constants. Usually used to declare relations or properties. When an abstract
 type is defined, it may later be implemented using an `ASSUME_DECL`, which is
 usually the case when the type is intended to be data. When an abstract type
-is defined, axioms may be later be stated about it or it may be used for
-proofs returned by functions, which is usually the case when the type is
-intended to be a proof. Abstract types may be declared to get sort index(es),
-which is usually the case with abstract type intended to be proof, while less
-common with abstract type intended to be data, the latter most commonly
-standing on their own.
+is defined, axioms may later be stated about it or it may be used for proofs
+returned by functions, which is usually the case when the type is intended to
+be a proof. Abstract types may be declared to get sort index(es), which is
+usually the case when the abstract type intended to be a proof, while less
+common when the abstract type intended to be data, the latter most commonly
+standing on its own.
 
 Example with `abstype`:
 
