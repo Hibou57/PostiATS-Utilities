@@ -326,17 +326,29 @@ Where `ASSUME` may be one of:
   * `"absimpl"`
   * `"assume"` — synonymous with `"absimpl"`
 
-Assume equality of two static constants of the same sort. The first one is
-abstract, the second one is typically not. That is, it is used to state the
-equality between an abstract definition and a concret implementation of it.
-The equality is scoped. See also `REASSUME_DECL`. The requirement of being of
-the same sorts, implies an flat abstract type can only be implemented by a
-flat concret type.
+Assume equality of two static definitions. The first one is abstract, the
+second one is typically not. The second one must be of the same sort or of a
+more general sort than the first one. It is used to state the equality between
+an abstract definition and a concret implementation of it. The equality is
+scoped. See also `REASSUME_DECL`. The requirement of being of the same sorts,
+implies an flat abstract type can only be implemented by a flat concret type.
 
 Example:
 
         abst@ype file
         absimpl file = int // Implement file with a POSIX file handle.
+
+The implementing defintion may be of an equal sort or of a more general sort
+than the abstract implemented one. For sorts relations, see “sorts-guide.md”.
+
+Example:
+
+        abst@ype aft
+        datatype bt = C
+        absimpl aft = bt // Boxed type can implement abstract flat type.
+
+The above is valid, because the boxed type sort is more general than the
+flat type sort, hence can implement a type of the flat type sort.
 
 
 ATLBRACE_EXP
@@ -695,19 +707,21 @@ Tags: declaration; static; algebraic; dynamic; constructor;
 
 Where `DATATYPE` may be one of:
 
-  * `"datatype"`
-  * `"dataprop"`
-  * `"dataview"`
-  * `"dataviewtype"`
+  * `"datatype"` — algebraic type of sort `type`
+  * `"dataprop"` — algebraic type of sort `prop`
+  * `"dataview"` — algebraic type of sort `view`
+  * `"dataviewtype"` — algebraic type of sort `viewtype`
   * `"datavtype"` — synonymous with `"dataviewtype"`
 
-Defines an algebraic type of prop, type, view or viewtype sort. The types
-introduce static identifiers but the constructors introduce dynamic
-identifiers, hence it is both static and dynamic. There is no associated
-versatile variant as there are with `ABSTYPE_DECL` and `TYPEDEF_DECL`. See
-also `DATASORT_DECL` for the static counterpart. The dynamic constructors
-can be matched by a `CASE_EXP`. When all constructors are nullary, it is
-like an enumeration (a common SML idiom).
+Defines an algebraic type of various sorts. The types introduce static
+identifiers but the constructors introduce dynamic identifiers, hence it is
+both static and dynamic. There is no associated versatile variant as there are
+with `ABSTYPE_DECL` and `TYPEDEF_DECL`. See also `DATASORT_DECL` for the
+static counterpart. The dynamic constructors can be matched by a `CASE_EXP`.
+When all constructors are nullary, it is like an enumeration (a common SML
+idiom).
+
+There is no way to define an algebraic type of sort `t@ype`.
 
 Example:
 
