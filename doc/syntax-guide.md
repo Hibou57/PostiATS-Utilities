@@ -347,8 +347,8 @@ ATLBRACE_EXP
 Tags: expression; static; dynamic; flat;
 
 Expression for flat records types and values. It has two forms, one defining a
-type (static) and one defining a value of that type (dynamic). The sort
-of a flat record is `t@ype`.
+type (static) and one defining a value of that possibly anonymous type
+(dynamic). The sort of a flat record is `t@ype`.
 
 Example:
 
@@ -358,14 +358,14 @@ Example:
         val x = u.a
 
 
-The field names may be identifiers or natural numbers expressed as decimal.
-When all fields are numbers and starts at zero and increase one by one, a flat
-tuple may be used instead. A flat tuple is a special case of flat record. See
-also `ATLPAREN_EXP`.
+The field names may be identifiers or natural numbers, the latter expressed as
+decimal. When all field names are numbers and starts at zero then increasing
+one by one, a flat tuple may be used instead. A flat tuple is a special case
+of flat record. See also `ATLPAREN_EXP`.
 
 Example:
 
-        typedef t = @{1=int, 2=int, a=int, b=int}
+        typedef t = @{1=int, a=int}
         extern val v:t
         val x = v.a
         val y = v.1
