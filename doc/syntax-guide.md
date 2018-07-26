@@ -336,7 +336,7 @@ flat concret type.
 Example:
 
         abst@ype file
-        assume file = int // Implement file with a POSIX file handle.
+        absimpl file = int // Implement file with a POSIX file handle.
 
 
 ATLBRACE_EXP
