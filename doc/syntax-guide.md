@@ -1073,21 +1073,8 @@ Where `REASSUME` may be one of:
   * `"reassume"`
   * `"absreimpl"`
 
-Recall a previous assumption of equality of two static abstract constants. See
-also `ASSUME_DECL`.
-
-Example:
-
-        absprop p
-        absprop q
-        assume p = q
-
-        abstype t
-        abstype u
-        assume t = u
-
-        reassume p
-        reassume t
+Recall a previously stated equality of two static constants. See
+`ASSUME_DECL`.
 
 
 REC_DECL
