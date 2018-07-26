@@ -749,13 +749,14 @@ Tags: declaration; dynamic; exception;
 
 Very like a `DATATYPE_DECL`, except it only defines constructors, not an
 associated type, so it only defines dynamic identifiers. It also has no
-alternative (`|`) parts: since it does not introduce a type, it would be
+alternative (`|`) parts: since it does not introduce a type, it would be
 useless. An instance of an exception is of sort `viewtype`, that is, of a
 (anonymous) linear type. It is not usually matched by a `CASE_EXP` like with
-data types, rather a `TRY_EXP`. An instance is thrown/raised with the
-`"$raise"` special function. Raising exceptions requires memory allocation on
-the stack using “alloca”. Raising exceptions is known to possibly cause some
-memory leaks.
+data types, rather by a `TRY_EXP`. An instance is thrown/raised with the
+`"$raise"` special function. Raising an exception uses memory allocation in
+the background. Raising exceptions is known to possibly cause some memory
+leaks, so don’t be surprised if you find some (anyway, using exceptions as few
+as possible is always better).
 
 Example:
 
