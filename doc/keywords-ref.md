@@ -293,21 +293,19 @@ is where some care should be taken by colorizer designers.
 Synonymous groups — informational
 ------------------------------------------------------------------------------
 
-  * "assume", "absimpl"
-  * "reassume", "absreimpl"
-  * "dynload", "#dynload"
-  * "staload", "#staload"
-  * "sta", "stacst"
   * "abstbox", "abstype"
   * "abst@ype", "abst0ype", "abstflat"
   * "absviewtype", "absvtbox", "absvtype"
   * "absvt@ype", "absviewt@ype", "absviewt0ype", "absvt0ype", "absvtflat"
+  * "assume", "absimpl"
   * "dataviewtype", "datavtype"
+  * "dynload", "#dynload"
+  * "implement", "implmnt"
   * "primplement", "primplmnt"
+  * "reassume", "absreimpl"
+  * "staload", "#staload"
+  * "sta", "stacst"
   * "viewtypedef", "vtypedef"
-
-Note although "primplement" and "primplmnt" are synonymous, "implement" and
-"implmnt" are not synonymous!
 
 As a side note, “extern” **may** be a synonymous for “static”, “extype” or
 “extvar”. Also "|" **may** be a synonymous for ";" in some cases.
