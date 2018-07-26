@@ -522,15 +522,15 @@ Where `CASE` is one of:
   * `"case+"` for errors when coverage is not exhaustive.
   * `"case-"` for no static check about pattern coverage.
 
-Dynamic patterns guarded expressions, borrowed from ML/SML. The static
-counter‑part is `SCASE_EXP`.
+Dynamic patterns guarded expressions, borrowed from ML/SML. For static
+patterns, use `SCASE_EXP` instead.
 
 The first part, contains the expression to be matched with patterns. The
-second part which may be multiple `|` separated, contains the patterns and
-the associated expressions. The repeatable second part (and last third part)
-has its own inner syntax with a richer semantic than the ML/SML counter part;
-this will be documented later. For friendliness, an extraneous `|` may
-appears before the first pattern.
+second part which may be multiple `|` separated, contains the patterns and the
+associated expressions. The repeatable second part has its own inner syntax
+with a richer semantic than the ML/SML counterpart; this will be documented
+later. For friendliness, an extraneous `|` may appears before the first
+pattern.
 
 Example:
 
@@ -560,7 +560,7 @@ Example:
 **Warning:** nullary constructors in patterns of a `case` expression, must be
 written with parentheses for distinguishing with pattern variables. Without
 parentheses, what may looks like to be a constructor pattern will in reality
-be a pattern variable. You may have made this error if you have a message
+be a pattern variable. You may have made this error if you get a message
 from Postiats saying “this pattern match clause is redundant”.
 
 Example:
@@ -581,7 +581,7 @@ Example:
 
 
 Three different keywords for three coverage checking modes at compile‑time.
-In any case, a failure to find a matching clause at run‑time ends in a
+In any case, a failure to find a matching clause at run‑time, ends in a
 run‑time error (program execution stops).
 
 Example:
