@@ -346,7 +346,7 @@ ATLBRACE_EXP
 
 Tags: expression; static; dynamic; flat;
 
-Expression for flat records types and values. It has two forms, one defining a
+Expression for flat record types and values. It has two forms, one defining a
 type (static) and one defining a value of that possibly anonymous type
 (dynamic). The sort of a flat record is `t@ype`.
 
@@ -378,9 +378,9 @@ ATLBRACKET_EXP
 
 Tags: expression; static; dynamic; flat;
 
-Expression for flat one‑dimension arrays types and values. It has two forms,
-one defining a type (static) and one defining a value of that type (dynamic).
-The sort of a flat array is `t@ype`.
+Expression for flat one‑dimension array types and values. It has two forms,
+one defining a type (static) and one defining a value of that possibly
+anonymous type (dynamic). The sort of a flat array is `t@ype`.
 
 The expression `@[t][n]` means the type of an array of `n` elements of type
 `t`. The expression `@[t](a, b, …)` (without really a “…”) means a literal
@@ -398,7 +398,9 @@ not a `val`, although you don’t get a type error when trying otherwise. In
 the example above, the array is statically allocated, no heap allocation is
 involved.
 
-The elements may be all initialized with the same value:
+The elements may be all initialized with the same value.
+
+Example:
 
         typedef t = @[int][3]
         var v:t = @[int](5) // |1…2] is 5
