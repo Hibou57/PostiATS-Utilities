@@ -31,7 +31,7 @@ With these relations:
   * `view` < `view@type`.
   * `view` < `prop`.
 
-Where “B <\ A” reads as “A is more general than B” or “B is a special case of
+Where “B < A” reads as “A is more general than B” or “B is a special case of
 A”. Ex. `t@ype` is a special case of `type`.
 
 With these aliases:
