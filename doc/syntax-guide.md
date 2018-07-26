@@ -236,12 +236,12 @@ Tags: declaration; static; abstract; type; proof;
 
 Where `ABSTYPE` may be one of:
 
-  * `"abstype"` — abstract boxed type
-  * `"abst@ype"` — abstract flat type
-  * `"absprop"` — abstract proposition
-  * `"absview"` — abstract view
-  * `"absviewtype"` — abstract flat type view
-  * `"absviewt@ype"` — abstract boxed type view
+  * `"abstype"` — abstract boxed type, i.e. of sort `type`
+  * `"abst@ype"` — abstract flat type, i.e. of sort `t@ype`
+  * `"absprop"` — abstract proposition, i.e. of sort `prop`
+  * `"absview"` — abstract view, i.e. of sort `view`
+  * `"absviewtype"` — abstract flat type view, i.e. of sort `viewtype`
+  * `"absviewt@ype"` — abstract boxed type view, i.e. of sort `viewt@ype`
   * `"abstbox"` — synonymous with `"abstype"`
   * `"abst0ype"` — synonymous with `"abst@ype"`
   * `"abstflat"` — synonymous with `"abst@ype"`
