@@ -236,21 +236,21 @@ Tags: declaration; static; abstract; type;
 
 Where `ABSTYPE` may be one of:
 
-  * `"abstbox"`
   * `"abstype"`
   * `"abst@ype"`
-  * `"abst0ype"`
-  * `"abstflat"`
   * `"absprop"`
   * `"absview"`
   * `"absviewtype"`
-  * `"absvtbox"`
-  * `"absvtype"`
-  * `"absvt@ype"`
   * `"absviewt@ype"`
-  * `"absviewt0ype"`
-  * `"absvt0ype"`
-  * `"absvtflat"`
+  * `"abstbox"` — synonymous with `"abstype"`
+  * `"abst0ype"` — synonymous with `"abst@ype"`
+  * `"abstflat"` — synonymous with `"abst@ype"`
+  * `"absvtbox"` — synonymous with `"absviewtype"`
+  * `"absvtype"` — synonymous with `"absviewtype"`
+  * `"absvt@ype"` — synonymous with `"absviewt@ype"`
+  * `"absviewt0ype"` — synonymous with `"absviewt@ype"`
+  * `"absvt0ype"` — synonymous with `"absviewt@ype"`
+  * `"absvtflat"` — synonymous with `"absviewt@ype"`
 
 Abstract prop, type, view or viewtype, which defines impredicative abstract
 constants. These are comparable to `STACST_DECL` which is for abstract
@@ -283,8 +283,8 @@ Tags: declaration; static; abstract;
 
 Where `ASSUME` may be one of:
 
-  * `"assume"`
   * `"absimpl"`
+  * `"assume"` — synonymous with `"absimpl"`
 
 Assume equality of two static constants of the same sort. The first one is
 abstract, the second one is typically not. Used to state the equality between
@@ -644,7 +644,7 @@ Where `DATATYPE` may be one of:
   * `"dataprop"`
   * `"dataview"`
   * `"dataviewtype"`
-  * `"datavtype"`
+  * `"datavtype"` — synonymous with `"dataviewtype"`
 
 Defines an algebraic type of prop, type, view or viewtype sort. The types
 introduce static identifiers but the constructors introduce dynamic
@@ -895,10 +895,10 @@ Tags: declaration; dynamic;
 
 Where `IMPLEMENT` is one of:
 
-  * `"implmnt"`
   * `"implement"`
   * `"primplement"`
-  * `"primplmnt"`
+  * `"implmnt"` — synonymous with `"implement"`
+  * `"primplmnt"` — synonymous with `"primplement"`
 
 
 LAM_EXP
@@ -1070,8 +1070,8 @@ Tags: declaration; static; abstract;
 
 Where `REASSUME` may be one of:
 
-  * `"reassume"`
   * `"absreimpl"`
+  * `"reassume"` — synonymous with `"absreimpl"`
 
 Recall a previously stated equality of two static constants. See
 `ASSUME_DECL`.
@@ -1242,7 +1242,7 @@ Tags: declaration; dynamic;
 Where `SRPDYNLOAD` is one of:
 
   * `"dynload"`
-  * `"#dynload"`
+  * `"#dynload"` — synonymous with `"dynload"`
 
 
 SRPERROR_DECL
@@ -1303,7 +1303,7 @@ Tags: declaration; static; dynamic;
 Where `SRPSTALOAD` may be one of:
 
   * `"staload"`
-  * `"#staload"`
+  * `"#staload"` — synonymous with `"staload"`
 
 
 SRPUNDEF_DECL
@@ -1323,8 +1323,8 @@ Tags: declaration; static; abstract;
 
 Where `STACST` may be one of:
 
-  * `"sta"`
   * `"stacst"`
+  * `"sta"` — synonymous with `"stacst"`
 
 Abstract static expression. Abstract: the value does not matter and there is
 none, only the introduced identity (name) and its declared sort, do, and
@@ -1421,7 +1421,7 @@ Where `TYPEDEF` may be one of:
   * `"typedef"`
   * `"viewdef"`
   * `"viewtypedef"`
-  * `"vtypedef"`
+  * `"vtypedef"` — synonymous with `"viewtypedef"`
 
 Prop, type, view or viewtype expression aliasing. Specialized cases of
 `STADEF_DECL` which is more versatile but less expresses the intent.
