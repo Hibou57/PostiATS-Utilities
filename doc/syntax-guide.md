@@ -347,8 +347,9 @@ Example:
         datatype bt = C
         absimpl aft = bt // Boxed type can implement abstract flat type.
 
-The above is valid, because the boxed type sort is more general than the
-flat type sort, hence can implement a type of the flat type sort.
+The above is valid, because the `type` sort is more general than the `t@ype`
+sort, hence a type of the `type` sort can implement a type of the `t@ype`
+sort.
 
 
 ATLBRACE_EXP
