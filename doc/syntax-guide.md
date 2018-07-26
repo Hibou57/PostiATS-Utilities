@@ -232,16 +232,16 @@ ABSTYPE_DECL
 
         ABSTYPE_DECL = ABSTYPE … "and"* … ";"?
 
-Tags: declaration; static; abstract; type;
+Tags: declaration; static; abstract; type; proof;
 
 Where `ABSTYPE` may be one of:
 
-  * `"abstype"`
-  * `"abst@ype"`
-  * `"absprop"`
-  * `"absview"`
-  * `"absviewtype"`
-  * `"absviewt@ype"`
+  * `"abstype"` — abstract boxed type
+  * `"abst@ype"` — abstract flat type
+  * `"absprop"` — abstract proposition
+  * `"absview"` — abstract view
+  * `"absviewtype"` — abstract flat type view
+  * `"absviewt@ype"` — abstract boxed type view
   * `"abstbox"` — synonymous with `"abstype"`
   * `"abst0ype"` — synonymous with `"abst@ype"`
   * `"abstflat"` — synonymous with `"abst@ype"`
@@ -252,9 +252,49 @@ Where `ABSTYPE` may be one of:
   * `"absvt0ype"` — synonymous with `"absviewt@ype"`
   * `"absvtflat"` — synonymous with `"absviewt@ype"`
 
-Abstract prop, type, view or viewtype, which defines impredicative abstract
-constants. These are comparable to `STACST_DECL` which is for abstract
-predicative constants. Usually used to declare relations or properties.
+Abstract type of various sorts. Introduce impredicative abstract constants.
+These are comparable to `STACST_DECL` which is for predicative abstract
+constants. Usually used to declare relations or properties. When an abstract
+type is defined, it may later be implemented using an `ASSUME_DECL`, which is
+usually the case when the type is intended to be data. When an abstract type
+is defined, axioms may be later be stated about it or it may be used for
+proofs returned by functions, which is usually the case when the type is
+intended to be a proof. Abstract types may be declared to get sort index(es),
+which is usually the case with abstract type intended to be proof, while less
+common with abstract type intended to be data, the latter most commonly
+standing on their own.
+
+Example with `abstype`:
+
+        abstype tree                      // Abstract boxed definition.
+        extern fun size(tree): int        // Declare property or method.
+        datatype ml_tree =                // Prepare an implementation.
+          | leaf
+          | node1 of ml_tree
+          | node2 of (ml_tree, ml_tree)
+        absimpl tree = ml_tree            // Declare ml_tree implements tree.
+        implement size(ml_tree): int = …  // Implement declared property.
+
+        abstype Nat(int)                  // May also get index(es).
+
+Example with `abst@ype`:
+
+        abst@ype file                     // Abstract flat definition.
+        extern fn read(file): char        // Declare property or method.
+        absimpl file = int                // Declare a fd implements file.
+        implement read(file): char = …    // Implement declared property.
+
+        abst@ype Nat(int)                 // May also get index(es).
+
+Example with `absprop`:
+
+        datasort class = Class            // Define sort for index.
+        absprop INHERIT(class, class)     // Define relation.
+        extern praxi inherit_lemma        // State axiom on relations.
+           {a, b, c: class}
+           (INHERIT(b, a), INHERIT(c, b)): INHERIT(c, a)
+
+        absprop NAT                       // May also get no index.
 
 
 ADDRAT_EXP
