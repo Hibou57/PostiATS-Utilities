@@ -476,12 +476,13 @@ Tags: expression; dynamic; macro;
 
 Borrowed from LISP’s back‑quote notation, used in macro definition and
 invocation to treat whatever "…" is, frozen after binding resolution. The "…"
-part must be a valid ATS2 syntactic sub‑tree; as an example, it may not
-contain an unclosed expression, hence in that regard and except for freezing
-and binding resolution, it is like with `SRPDEFINE_DECL`. See also
+part must be a valid ATS2 syntactic sub‑tree of an expression; as an example,
+it may not contain an unclosed expression, hence in that regard and except for
+freezing and binding resolution, it is like with `SRPDEFINE_DECL`. See also
 `COMMALPAREN_EXP` and `MACDEF_DECL`.
 
-The identifiers used in the expression, must be dynamic identifiers.
+The identifiers used in the expression, must be dynamic identifiers. The macro
+evaluation must yield an expression, not a declaration.
 
 Example:
 
@@ -503,6 +504,9 @@ Example:
            ,(m);                          // Evaluated here.
            ,(m);                          // Evaluated one more time here.
         end
+
+Note although the example here use `macrodef`, in practice, `macdef` is most
+commonly used.
 
 
 CASE_EXP
