@@ -722,8 +722,6 @@ static counterpart. The dynamic constructors can be matched by a `CASE_EXP`.
 When all constructors are nullary, it is like an enumeration (a common SML
 idiom).
 
-There is no way to define an algebraic type of sort `t@ype`.
-
 Example:
 
         datatype natural =
@@ -736,6 +734,10 @@ Example:
           case+ n of
             | Zero() => 0
             | Succ(n') => 1 + to_int(n')
+
+There is no way to directly define an algebraic type of sort `t@ype`. However,
+this should be possible indirectly, using discrimanting index(es), proofs of
+view and flat records.
 
 
 EXCEPTION_DECL
