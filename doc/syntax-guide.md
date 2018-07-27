@@ -77,6 +77,7 @@ similarities.
   3. Declarations blocks, with explicit begin and end boundaries.
   4. Declarations, with explicit or implied semicolon.
   5. Declarations, like in #4 and repeatable with the `"and"` keyword.
+  6. Declarations, with implied end, implicitly containing the next one.
 
 
 In the following sub‑sections, keywords and symbols in rules, are shown
@@ -172,7 +173,6 @@ With explicit or implied semicolon:
         ASSUME_DECL =           ASSUME … "=" … ";"?
         CLASSDEC_DECL =     "classdec" … ":"? … ";"?
         EXTCODE_DECL =         EXTCODE … ";"?
-        EXTERN_DECL =         "extern" … ";"?
         EXTTYPE_DECL =       "exttype" … ";"?
         EXTVAR_DECL =         "extvar" … ";"?
         FIXITY_DECL =           FIXITY … ";"?
@@ -192,7 +192,6 @@ With explicit or implied semicolon:
         SRPREQUIRE_DECL =   "#require" … ";"?
         SRPSTALOAD_DECL =   SRPSTALOAD … ";"?
         SRPUNDEF_DECL =       "#undef" … ";"?
-        STATIC_DECL =         "static" … ";"?
         SYMELIM_DECL =       "symelim" … ";"?
         SYMINTR_DECL =       "symintr" … ";"?
         TKINDEF_DECL =       "tkindef" … ";"?
@@ -213,6 +212,12 @@ Similarly and repeatable with the `"and"` keyword:
         TYPEDEF_DECL =       TYPEDEF … "and"* … ";"?
         VAL_DECL =               VAL … "and"* … ";"?
         VAR_DECL =               VAR … "and"* … ";"?
+
+
+With implied end, implicitly containing the next declaration:
+
+        EXTERN_DECL = "extern" … IMPEND
+        STATIC_DECL = "static" … IMPEND
 
 
 Note the boundary for the first part of `CLASSDEC_DECL`, is a colon, not a
@@ -806,7 +811,7 @@ defined this way. For the notation, see “External code” in “lexemes-guide.
 EXTERN_DECL
 ------------------------------------------------------------------------------
 
-        EXTERN_DECL = "extern" … ";"?
+        EXTERN_DECL = "extern" … IMPEND
 
 Tags: declaration; static; dynamic; binding;
 
@@ -1469,7 +1474,7 @@ keywords better expressing the intent.
 STATIC_DECL
 ------------------------------------------------------------------------------
 
-        STATIC_DECL = "static" … ";"?
+        STATIC_DECL = "static" … IMPEND
 
 Tags: declaration; dynamic;
 
