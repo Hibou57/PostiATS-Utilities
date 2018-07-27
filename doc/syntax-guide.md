@@ -130,14 +130,13 @@ With implied end boundaries:
 
         ADDRAT_EXP =     "addr@" … IMPEND
         CASE_EXP =          CASE … "of" … "|"* … IMPEND
-        FIX_EXP =          "fix" … IMPEND
         FOLDAT_EXP =     "fold@" … IMPEND
         FOR_EXP =          "for" … IMPEND
         FORSTAR_EXP =     "for*" … "=>" … IMPEND
         FREEAT_EXP =     "free@" … IMPEND
         IFCASE_EXP =    "ifcase" … "|"* … IMPEND
         IF_EXP =            "if" … then … "else"? … IMPEND
-        LAM_EXP =          "lam" … IMPEND
+        LAM_EXP =            LAM … IMPEND
         OP_EXP =            "op" … IMPEND
         SCASE_EXP =      "scase" … "of" … "|"* … IMPEND
         SIF_EXP =          "sif" … "then" … "else" … IMPEND
@@ -869,14 +868,6 @@ Tags: declaration; dynamic; binding;
 See `EXTERN_DECL`.
 
 
-FIX_EXP
-------------------------------------------------------------------------------
-
-        FIX_EXP = "fix" … IMPEND
-
-Tags: expression;
-
-
 FIXITY_DECL
 ------------------------------------------------------------------------------
 
@@ -1001,9 +992,18 @@ Where `IMPLEMENT` is one of:
 LAM_EXP
 ------------------------------------------------------------------------------
 
-        LAM_EXP = "lam" … IMPEND
+        LAM_EXP = LAM … IMPEND
 
-Tags: expression;
+Tags: expression; closure;
+
+Where `LAM` may be one of:
+
+  * `"fix"`
+  * `"fix@"`
+  * `"lam"`
+  * `"lam@"`
+  * `"llam"`
+  * `"llam@"`
 
 
 LBRACE_EXP
