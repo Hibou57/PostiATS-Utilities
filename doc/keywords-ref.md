@@ -133,12 +133,14 @@ Note `T_SRPSTALOAD` and `T_SRPDYNLOAD` are not listed here.
   * `T_DOT` — used at top‑level too.
   * `T_EQ` — a keyword in the static.
   * `T_EQGT`
+  * `T_FIX`
   * `T_FORSTAR`
   * `T_GT`
   * `T_GTDOT`
   * `T_GTLT`
   * `T_IF`
   * `T_IFCASE`
+  * `T_LAM`
   * `T_LBRACE` — used at top‑level too.
   * `T_LBRACKET` — used at top‑level too.
   * `T_LPAREN` — used at top‑level too.
