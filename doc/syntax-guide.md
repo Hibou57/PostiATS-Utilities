@@ -280,7 +280,7 @@ Example with `abstype`:
         absimpl tree = ml_tree            // Declare ml_tree implements tree.
         implement size(ml_tree): int = …  // Implement declared property.
 
-        abstype Nat(int)                  // May also get index(es).
+        abstype nat(int)                  // May also get index(es).
 
 Example with `abst@ype`:
 
@@ -289,7 +289,7 @@ Example with `abst@ype`:
         absimpl file = int                // Declare a fd implements file.
         implement read(file): char = …    // Implement declared property.
 
-        abst@ype Nat(int)                 // May also get index(es).
+        abst@ype nat(int)                 // May also get index(es).
 
 Example with `absprop`:
 
@@ -495,7 +495,7 @@ Example:
         end
 
 Although typically used for implementing function returning void, this
-construct is a void expression which can used anywhere a void expression is
+construct is a void expression which can be used anywhere a void expression is
 expected, as show in the example above.
 
 
@@ -797,15 +797,15 @@ EXTCODE_DECL
 
 Tags: declaration; static; dynamic;
 
-`EXTCODE` is not a keyword, it a lexical unit started with `"%{"` and
-ended with `"%}"` as explained in “External code” in “lexemes-guide.md”. The
-single part must be empty, this declaration accept no content except the one
-in the `EXTCODE` literal.
+`EXTCODE` is not a keyword, it’s a lexical unit started with `"%{"` and
+ended with `"%}"` as explained in “External code” in “lexemes-guide.md”.
 
 Embed literal foreign language snuppets in the generated target language file.
 
 This may as much impact the static and the dynamic, since even types may be
-defined this way. For the notation, see “External code” in “lexemes-guide.md”.
+defined this way as with `EXTERN_DECL`. For the notation, see “External code”
+in “lexemes-guide.md”. The single part must be empty, this declaration accepts
+no content except the one in the `EXTCODE` literal.
 
 
 EXTERN_DECL
@@ -818,14 +818,14 @@ Tags: declaration; static; dynamic; binding;
 Versatile construct covering the use cases of `EXTTYPE_DECL`, `EXTVAR_DECL`,
 `STATIC_DECL`, which are in the while, explained here.
 
-These four examples:
+These four examples …:
 
         extern fn f(): int            // Declare an fn signature.
         extern val v: int             // Declare a val signature.
         extern typedef "c_type" = int // Export a type to the target language.
         extern var "c_var" = 0        // Assign a target language variable.
 
-Mean the same as these four ones:
+… mean the same as these four ones:
 
         static fn f(): int
         static val v: int
@@ -846,7 +846,7 @@ are not keywords, for importing:
         typedef t = $extype "c_type" // Import a target language type.
         val v = $extval(t, "c_var")  // Import a target language value.
 
-Note it is `$extval` and not `$extvar` (which does not exists).
+Note it is `$extval`, not `$extvar` (which does not exist).
 
 
 EXTTYPE_DECL
