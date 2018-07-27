@@ -833,14 +833,14 @@ Mean the same as these four ones:
         extvar "c_var" = 0
 
 The `extern` form may be more readable for `fn` and `val`. The `extype` and
-`extvar` forms may be more readable than the `extern` form. The `extype` form
-can also be used with types of other sorts:
+`extvar` forms may be more readable than the `extern` form for types and
+variables. The `extype` form can be used with types of any sort:
 
         viewtypedef vt = int
         extern viewtypedef "c_type" = vt // Same as below.
         extype "c_type" = vt             // Same as above.
 
-In addition, note the two special functions `"$extype"` and `"$extval"` which
+In addition, there are two special functions `"$extype"` and `"$extval"` which
 are not keywords, for importing:
 
         typedef t = $extype "c_type" // Import a target language type.
