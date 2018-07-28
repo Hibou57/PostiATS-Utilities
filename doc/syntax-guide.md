@@ -1,21 +1,20 @@
 ATS2 big lines syntax
 ==============================================================================
 
-The big lines of ATS2 syntax is described here with a purposely simple but real
-model. The model was checked running a rather formal parser on a reasonably
-large and representative set of sources. It defines a boundary based
-segmentation of ATS2 sources. Each rule is in the form of a product name
+The big lines of ATS2 syntax is described here with a purposely simple but
+real model. The model was checked running a rather formal parser on a
+reasonably large and representative set of sources. It defines a boundary
+based segmentation of ATS2 sources. Each rule is in the form of a product name
 followed by an equal‑sign follow by boundaries delimiting “…” parts which may
 contains “any” sequence of tokens. The “…” are there to say there may be
 anything between two boundaries, it may even be empty. Matching these rules is
 not enough to be valid ATS2, but these rules are enough to have a grasp on a
-source file and have a quick and easy overview of ATS2 syntax. These rules
-are also enough for a “first‑pass” or “first‑level” parsing of the ATS2
-language.
+source file and have a quick and easy overview of ATS2 syntax. These rules are
+also enough for a “first‑pass” or “first‑level” parsing of the ATS2 language.
 
 The keywords are subject to the lexical rules described in “lexemes-guide.md”.
 
-The semantic description comming with the constructs, is intended to be terce.
+The semantic description coming with the constructs, is intended to be terse.
 For more, there are [Introduction to Programming in ATS](http://ats-lang.sourceforge.net/DOCUMENT/INT2PROGINATS/HTML/HTMLTOC/book1.html)
 and [A Tutorial on Programming Features in ATS](http://ats-lang.sourceforge.net/DOCUMENT/ATS2TUTORIAL/HTML/HTMLTOC/book1.html).
 
@@ -56,7 +55,7 @@ the `else` starting the third part, is optional, thus the third part is
 optional; that is, it may as much be `if … then … else …` or `if … then …`
 (which is actually valid under conditions). The rest is as explained before.
 
-**Reaptable part boundaries:** `SCASE_EXP = scase … of … "|"* … IMPEND`
+**Repeatable part boundaries:** `SCASE_EXP = scase … of … "|"* … IMPEND`
 means `|` is an optional boundary (as explained before) which can be
 repeated; that is, it may as much be `scase … of …` or `scase … of … | …` or
 `scase … of … | … | …`. The repetition applies to the part it ends in the
@@ -146,8 +145,8 @@ With implied end boundaries:
         WHILESTAR_EXP = "while*" … "=>" … IMPEND
 
 
-`ALNUM"["` and `ALNUM"<"` are atomic lexial units, no space is allowed between
-`ALNUM` and the symbol. This is shown expanded for clarity.
+`ALNUM"["` and `ALNUM"<"` are atomic lexical units, no space is allowed
+between `ALNUM` and the symbol. This is shown expanded for clarity.
 
 The `WHERE_EXP` construct is a special case, as will be explained in its
 section.
@@ -333,13 +332,13 @@ Where `ASSUME` may be one of:
 Assume equality of two static definitions. The first one is abstract, the
 second one is typically not. The second one must be of the same sort or of a
 more general sort than the first one. It is used to state the equality between
-an abstract definition and a concret implementation of it.
+an abstract definition and a concrete implementation of it.
 
 The equality is scoped, outside the scope where it is declared, it is not
 visible. It can be pulled from another scope using `REASSUME_DECL`.
 
 The requirement of being of the same or more general sort, implies as an
-example, a boxed abstract type can only be implemented by a boxed concret
+example, a boxed abstract type can only be implemented by a boxed concrete
 type.
 
 Example:
@@ -347,7 +346,7 @@ Example:
         abst@ype file
         absimpl file = int // Implement file with a POSIX file handle.
 
-The implementing defintion may be of an equal sort or of a more general sort
+The implementing definition may be of an equal sort or of a more general sort
 than the abstract implemented one. For sorts relations, see “sorts-guide.md”.
 
 Example:
@@ -360,7 +359,7 @@ The above is valid, because the `type` sort is more general than the `t@ype`
 sort, hence a type of the `type` sort can implement a type of the `t@ype`
 sort.
 
-As soon as a concret implementation is associated to an abstract type, it not
+As soon as a concrete implementation is associated to an abstract type, it not
 abstract any‑more.
 
 Example:
@@ -445,7 +444,7 @@ ATLPAREN_EXP
 Tags: expression; static; dynamic; flat;
 
 Expression for flat tuple types and values. It has two forms, one defining a
-type (static) and one defining a value of that possibly anonymois type
+type (static) and one defining a value of that possibly anonymous type
 (dynamic). The sort of a flat tuple is `t@ype`.
 
 Example:
@@ -754,7 +753,7 @@ Example:
             | Succ(n') => 1 + to_int(n')
 
 There is no way to directly define an algebraic type of sort `t@ype`. However,
-this should be possible indirectly, using discrimanting index(es), proofs of
+this should be possible indirectly, using discriminating index(es), proofs of
 view and flat records.
 
 
@@ -799,7 +798,7 @@ Tags: declaration; static; dynamic;
 `EXTCODE` is not a keyword, it’s a lexical unit started with `"%{"` and
 ended with `"%}"` as explained in “External code” in “lexemes-guide.md”.
 
-Embed literal foreign language snuppets in the generated target language file.
+Embed literal foreign language snippets in the generated target language file.
 
 This may as much impact the static and the dynamic, since even types may be
 defined this way as with `EXTERN_DECL`. For the notation, see “External code”
@@ -1195,7 +1194,7 @@ LPAREN_EXP
 
 Tags: expression;
 
-For sequence of void expressios, see also `BEGIN_EXP`.
+For sequence of void expressions, see also `BEGIN_EXP`.
 
 
 MACDEF_DECL
@@ -1434,7 +1433,7 @@ Example:
         macdef T = int   // Error.
 
 However, C‑like macro are not expanded in static declarations, only in
-dynamic declarations, refering to static or dynamic identifiers.
+dynamic declarations, referring to static or dynamic identifiers.
 
 Example:
 
