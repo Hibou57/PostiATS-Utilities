@@ -1025,7 +1025,8 @@ Example:
         val v = 1 p 2 o 3 // Undecidable too.
 
 Hint: operators with different associativities, should have different
-priorities.
+priorities (whatever their arities) or else they may be two claiming the same
+argument, with no way to decide.
 
 
 FOLDAT_EXP
