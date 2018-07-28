@@ -1100,14 +1100,15 @@ FOR_EXP
 
         FOR_EXP = "for" … IMPEND
 
-Tags: expression; void; unsafe;
+Tags: expression; dynamic; void; unsafe;
 
-Void expression with side effects. If takes three arguments: initialization
-of previously declared variable(s), condition to go on and step. The
-expressions next to the arguments is the loop body. Its type must be void.
+Void expression with side effects. If takes three arguments: initialization of
+previously declared variable, condition to go on and step. The expressions
+next to the arguments is the loop body. Its type must be void.
 
 **Warning: there is not termination metrics, it can loop forever, the
-typechecker will not complain!**
+typechecker will not complain!**. See `FORSTAR_EXP` for the same kind of loop
+with termination metrics.
 
 Example:
 
@@ -1128,7 +1129,24 @@ FORSTAR_EXP
 
         FORSTAR_EXP = "for*" … "=>" … IMPEND
 
-Tags: expression;
+Tags: expression; dynamic; void;
+
+Same as `FOR_EXP` but with optional termination metrics. The syntax varies a
+bit: after the keyword, comes static declarations, the metrics, and a dynamic
+declaration matching the loop variable. **If the metrics are omitted, this
+construct is not safer than `FOR_EXP`.**
+
+The metrics must be strictly decreasing and greater than or equal to, zero. It
+includes the case which makes the loop stops not just the ones where the loop
+body is entered.
+
+Example:
+
+        var i: int
+        val () = for* {j:int; j <= 10} .<10 - j>. (i: int(j))
+           => (i := 0; i <= 9; i := i + 1)
+              println! i
+
 
 
 FREEAT_EXP
