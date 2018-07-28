@@ -928,47 +928,47 @@ cancel the syntactic status of the operator.
 
 Example:
 
-        infix o
+        infix o                       // Operator with an alphanumeric name.
         extern fn o(int, int): int
         val v = 1 o 2 // o(1, 2)
         val v = op o(1, 2)
 
         infix +++
-        extern fn +++(int, int): int
+        extern fn +++(int, int): int  // Function with a symbolic name.
         val v = 1 +++ 2
         val v = op +++(1, 2)
 
         infix p
-        macdef p(a, b) = ,(a) + ,(b)
+        macdef p(a, b) = ,(a) + ,(b)  // Definition is a macro.
         val v = 1 p 2 // 1 + 2
         val v = op p(1, 2)
 
         infix q
-        #define q(a, b) a * b
+        #define q(a, b) a * b         // Definition is a #define.
         val v = 1 q 2 // 1 * 2
         val v = op q(1, 2)
 
         infix r
         extern fn f(int, int): int
-        overload r with f
+        overload r with f             // Definitiion added with overloading.
         val v = 1 r 2 // f(1, 2)
         val v = op r(1, 2)
 
         prefix ++
         datatype t = ++ of int
-        val v = ++ 1 // ++ is a constructor used as a prefix operator
+        val v = ++ 1         // ++ is a constructor used as a prefix operator.
         val v = op ++ 1
         val v = op ++(1)
 
         postfix --
         datatype u = -- of int
-        val v = 1 -- // -- is a constructor used as a postfix operator
+        val v = 1 --        // -- is a constructor used as a postfix operator.
         val v = op -- 1
         val v = op --(1)
 
         infix ->>
         typedef ->>(i:int, j:int) = [k:int; k == i + j] int(k)
-        val v: 1 ->> 2 = 3 // ->> is a type as an infix operator
+        val v: 1 ->> 2 = 3            // ->> is a type as an infix operator.
 
 
 Given two operators o1 and o2 and three expressions or literals e1, e2 and e3,
