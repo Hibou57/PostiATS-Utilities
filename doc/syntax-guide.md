@@ -496,6 +496,24 @@ Although typically used for implementing function returning void, this
 construct is a void expression which can be used anywhere a void expression is
 expected, as show in the example above.
 
+Declarations are not allowed here. If declarations are needed to implement a
+void expression or function, a `LET_EXP` or a form of an `LBRACE_EXP` is to be
+used instead.
+
+Example:
+
+        implement main0() =
+           let val s = "Hello"
+           in println! s
+           end
+
+Example:
+
+        implement main0() = {
+              val s = "Hello"
+              val () = println! s
+           }
+
 
 BQUOTELPAREN_EXP
 ------------------------------------------------------------------------------
