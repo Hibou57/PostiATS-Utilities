@@ -877,11 +877,161 @@ Tags: declaration; dynamic;
 
 Where `FIXITY` may be one of:
 
-  * `"infix"`
-  * `"infixl"`
-  * `"infixr"`
-  * `"prefix"`
-  * `"postfix"`
+  * `"infix"` — binary, non‑associative
+  * `"infixl"` — binary, left associative
+  * `"infixr"` — binary, right associative
+  * `"prefix"` — unary, right associative
+  * `"postfix"` — unary, left associative
+
+
+An operator name may be symbolic or alphanumeric and multiple may be defined
+at once:
+
+Example:
+
+        infix ++
+        infix o
+        infix -- ** p q
+
+The function associated to an operator may be defined using an usual
+definition or an overloading. The definition may be any definition: function,
+macro, define, constructor, type … (see the relevant sections for each of
+these). The arity of the definition must just be the same as implied by the
+operator definition, that is binary for the infixes and unary for the pre and
+postfixes. The underlying implementation can be invoked using the usual
+function invocation syntax, with the `"op"` keyword to locally and temporary
+cancel the syntactic status of the operator.
+
+Example:
+
+        infix o
+        extern fn o(int, int): int
+        val v = 1 o 2 // o(1, 2)
+        val v = op o(1, 2)
+
+        infix +++
+        extern fn +++(int, int): int
+        val v = 1 +++ 2
+        val v = op +++(1, 2)
+
+        infix p
+        macdef p(a, b) = ,(a) + ,(b)
+        val v = 1 p 2 // 1 + 2
+        val v = op p(1, 2)
+
+        infix q
+        #define q(a, b) a * b
+        val v = 1 q 2 // 1 * 2
+        val v = op q(1, 2)
+
+        infix r
+        extern fn f(int, int): int
+        overload r with f
+        val v = 1 r 2 // f(1, 2)
+        val v = op r(1, 2)
+
+        prefix ++
+        datatype t = ++ of int
+        val v = ++ 1 // ++ is a constructor used as a prefix operator
+        val v = op ++ 1
+        val v = op ++(1)
+
+        postfix --
+        datatype u = -- of int
+        val v = 1 -- // -- is a constructor used as a postfix operator
+        val v = op -- 1
+        val v = op --(1)
+
+        infix ->>
+        typedef ->>(i:int, j:int) = [k:int; k == i + j] int(k)
+        val v: 1 ->> 2 = 3 // ->> is a type as an infix operator
+
+
+Given two operators o1 and o2 and three expressions or literals e1, e2 and e3,
+in “e1 o1 e2 o2 e3”, it must be decided which operator e2 will go to. Is it
+“(e1 o1 e2) o2 e3” or is it “e1 o1 (e2 o2 e3)” ? If o1 has an higher priority
+than o2, it will be the former, if o2 has an higher priority than o1, it will
+be the latter. The priority may be given as a natural number in decimal
+notation. It is optional and defaults to 0. If multiple operator are defined
+at once, the priority applies to each operator being defined. The file
+`$PATSHOME/prelude/fixity.ats` contains the priorities of the usual ATS2
+operators. An operator priority, may also be specified to be that of another
+operator: instead of the decimal, the name of the operator is given wrapped
+in parentheses.
+
+Example:
+
+        infix 0 o1
+        infix 1 o2
+
+        extern fn o1(int, int): int
+        extern fn o2(int, int): int
+
+        val (e1, e2, e3) = (1, 2, 3)
+        val v = e1 o1 e2 o2 e3 // Evaluated as e1 o1 (e2 o2 e3)
+
+        infix (+) ++ -- // Same priority as the + operator
+        infix ( * ) ** // Spaces needed here!
+
+
+If priority cannot be resolved or an operator is syntactically erroneously
+used, Postiats says “operator fixity cannot be resolved”. This occurs as an
+example, when two infix operators has the same priority or as another example,
+if a prefix operator is used as a postfix operator.
+
+Example:
+
+        infix b
+        prefix p
+
+        extern fn b(int, int): int
+        extern fn p(int): int
+
+        val (e1, e2, e3) = (1, 2, 3)
+        val v = e1 b e2 b e3 // Error here.
+        val v = e1 p // Error here (if the line above is commented out).
+
+Since it is common to have the same operator applied and an operator priority
+would always be undecidable compared to that of its own peer, there must be
+a way to decide it. This is associativity. The priority is on the left with
+left associative operators and on the right with right associative operators.
+A prefix operator is finally just a unary right associative operator, and the
+other way for a postfix operator.
+
+Example:
+
+        infixl b
+        infixr c
+
+        extern fn b(int, int): int
+        extern fn c(int, int): int
+
+        val (e1, e2, e3) = (1, 2, 3)
+        val v = e1 b e2 b e3 // Evaluated as (e1 b e2) b e3
+        val v = e1 c e2 c e3 // Evaluated as e1 c (e2 c e3)
+
+        infixl ++
+        infixr **
+        overload ++ with E1E2
+        overload ** with E1E2
+        val r = e1 ++ e2 ** e3
+
+The case of two operator has the same priority, one being right associative
+and the other left associative, is not decidable.
+
+Example:
+
+        infixr o
+        infixl p
+
+        extern fn o(int, int): int
+        extern fn p(int, int): int
+
+        val v = 1 o 2 p 3 // Undecidable.
+        val v = 1 p 2 o 3 // Undecidable too.
+
+Hint: operators with different associativities, should have different
+priorities.
 
 
 FOLDAT_EXP
