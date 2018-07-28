@@ -698,6 +698,13 @@ Example:
         val a = ,(`(1)) // OK.
         val b = ,(1)    // Error.
 
+Additionally, it is required for using macro arguments.
+
+Example:
+
+        macdef sum(a, b) = ,(a) + ,(b)
+        val a:int(5) = sum(2, 3)
+
 A comma‑quoted expression yields an ATS2 expression source fragment from an
 ATS2 syntactic node, the latter being created using a back‑quoted expression.
 
