@@ -872,7 +872,7 @@ FIXITY_DECL
 
         FIXITY_DECL = FIXITY … ";"?
 
-Tags: declaration; dynamic;
+Tags: declaration; static; dynamic;
 
 Where `FIXITY` may be one of:
 
@@ -1009,13 +1009,8 @@ Example:
         val v = e1 b e2 b e3 // Evaluated as (e1 b e2) b e3
         val v = e1 c e2 c e3 // Evaluated as e1 c (e2 c e3)
 
-        infixl ++
-        infixr **
-        overload ++ with E1E2
-        overload ** with E1E2
-        val r = e1 ++ e2 ** e3
 
-The case of two operator has the same priority, one being right associative
+The case of two operators with the same priority, one being right associative
 and the other left associative, is not decidable.
 
 Example:
