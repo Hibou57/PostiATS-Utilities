@@ -1034,7 +1034,40 @@ FOLDAT_EXP
 
         FOLDAT_EXP = "fold@" … IMPEND
 
-Tags: expression;
+Tags: expression; dynamic; linear; type;
+
+Applies on a variable matching an unfolded dataviewtype constructor. Such a
+variable was previously unfolded (opened‑up) with a `"@"` decorating a
+constructor in pattern matching. When the variable is unfolded, it can be
+updated. When it is folded‑back, it cannot anymore.
+
+Example:
+
+        typedef r = @{i=int}     // A record type.
+        dataviewtype t = C of r  // An r wrapped in a linear type.
+        var c = C(@{i=1})        // c is initially folded (closed).
+        val+ @C(r) = c           // Unfold (open) c to allow update.
+        prval pf = view@ r       // If ever this proof is needed.
+        val () = r.i := 2        // Update component.
+        prval () = fold@ c       // Fold‑back c.
+        val () = r.i := 3        // Error, c is folded again.
+
+Folding‑back an instance of a linear type may be required to preserve its
+type upon return to an another scope.
+
+Example:
+
+        typedef r = @{i=int}
+        dataviewtype t = C of r
+
+        fn test(c: &t >> t): void = let
+           val+ @C(r) = c
+           val () = r.i := 2
+           prval () = fold@ c // Fold‑back before return.
+        in end
+
+If the line `prval () = fold@ c` is commented‑out, a type error occurs: the
+type of `c` is not preserved.
 
 
 FOR_EXP
