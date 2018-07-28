@@ -1100,7 +1100,27 @@ FOR_EXP
 
         FOR_EXP = "for" … IMPEND
 
-Tags: expression;
+Tags: expression; void; unsafe;
+
+Void expression with side effects. If takes three arguments: initialization
+of previously declared variable(s), condition to go on and step. The
+expressions next to the arguments is the loop body. Its type must be void.
+
+**Warning: there is not termination metrics, it can loop forever, the
+typechecker will not complain!**
+
+Example:
+
+        var i: int
+        val () = for (i := 0; i <= 9; i := i + 1) println! i
+
+It can loop forever.
+
+Example:
+
+        // Purposely erroneous, to show it should be used with lot of care.
+        var i: int
+        val () = for (i := 0; i <= 9; i := i) println! i
 
 
 FORSTAR_EXP
