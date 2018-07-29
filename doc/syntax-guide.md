@@ -317,6 +317,19 @@ Example:
         val i_ref = ref_make_viewptr{int}(view@(i) | addr@(i))
 
 
+`addr@ x` is of type `ptr_addr_type(l:addr)`.
+
+Example:
+
+        var i:int = 0
+        val i_ptr: ptr_addr_type(i) = addr@ i
+
+Note in `ptr_addr_type(i)`, `i` is a static variable of `addr` sort. For each
+`var`, which introduce a dynamic identifier, also a static identifier of
+`addr` sort is introduced. So there are two `i` and the one in
+`ptr_addr_type(i)` is the static one.
+
+
 ASSUME_DECL
 ------------------------------------------------------------------------------
 
