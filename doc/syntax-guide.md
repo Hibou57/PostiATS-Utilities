@@ -1085,7 +1085,7 @@ Example:
         typedef r = @{i=int}
         dataviewtype t = C of r
 
-        fn test(c: &t >> t): void = let
+        fn test(c: &t): void = let
            val+ @C(r) = c
            val () = r.i := 2
            prval () = fold@ c // Fold‑back before return.
