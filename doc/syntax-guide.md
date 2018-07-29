@@ -1133,8 +1133,9 @@ Tags: expression; dynamic; void;
 
 Same as `FOR_EXP` but with optional termination metrics. The syntax varies a
 bit: after the keyword, comes static declarations, the metrics, and a dynamic
-declaration matching the loop variable. **If the metrics are omitted, this
-construct is not safer than `FOR_EXP`.**
+declaration matching the loop variable, then after the `=>` is the rest of the
+for‑loop. **If the metrics are omitted, this construct is not safer than
+`FOR_EXP`.**
 
 The metrics must be strictly decreasing and greater than or equal to, zero. It
 includes the case which makes the loop stops not just the ones where the loop
