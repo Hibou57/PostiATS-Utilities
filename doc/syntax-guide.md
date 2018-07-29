@@ -1187,13 +1187,15 @@ transition mentions it:
 
         dataviewtype t = C of int
 
-        fn f(c: &t >> ptr_type): void = let
+        fn f(c: &t >> t?): void = let
               val+ @C(i) = c
               val () = free@ c
            in end
 
-Here, `">>"` introduces a type transition: `c: &t >> ptr_type` means `c`
-type `t` (passed by reference) becomes `c` of type `ptr_type`.
+Here, `">>"` introduces a type transition: `c: &t >> t?` means `c`
+type `t` (passed by reference) becomes `c` of type `t?`, that is,
+`t` uninitialized. Note `t?` for any `t` may also appears as `ptr_type`,
+in particular in Postiats error messages.
 
 
 FUN_DECL
