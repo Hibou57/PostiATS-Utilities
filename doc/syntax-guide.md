@@ -307,14 +307,14 @@ ADDRAT_EXP
 
 Tags: expression; dynamic;
 
-Given a `var` named `v`, `addr@ v` returns the address of `v` of sort `addr`.
-A proof of the view of something at that location will also be needed to make
+Given a `var` named `v`, `addr@ v` returns a pointer to `v` from an `addr`. A
+proof of the view of something at that location will also be needed to make
 something out of it. See also `VIEWAT_EXP`.
 
 Example:
 
         var i:int = 0
-        val i_ref = ref_make_viewptr{int}(view@(i) | addr@(i))
+        val i_ref = ref_make_viewptr{int}(view@ i | addr@ i)
 
 
 `addr@ x` is of type `ptr_addr_type(l:addr)`.
@@ -325,7 +325,7 @@ Example:
         val i_ptr: ptr_addr_type(i) = addr@ i
 
 Note in `ptr_addr_type(i)`, `i` is a static variable of `addr` sort. For each
-`var`, which introduce a dynamic identifier, also a static identifier of
+`var`, which introduces a dynamic identifier, also a static identifier of
 `addr` sort is introduced. So there are two `i` and the one in
 `ptr_addr_type(i)` is the static one.
 
