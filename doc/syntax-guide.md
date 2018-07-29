@@ -1192,6 +1192,9 @@ transition mentions it:
               val () = free@ c
            in end
 
+Here, `">>"` introduces a type transition: `c: &t >> ptr_type` means `c`
+type `t` (passed by reference) becomes `c` of type `ptr_type`.
+
 
 FUN_DECL
 ------------------------------------------------------------------------------
