@@ -1081,26 +1081,24 @@ updated. When it is folded‑back, it cannot anymore.
 
 Example:
 
-        typedef r = @{i=int}     // A record type.
-        dataviewtype t = C of r  // An r wrapped in a linear type.
-        var c = C(@{i=1})        // c is initially folded (closed).
-        val+ @C(r) = c           // Unfold (open) c to allow update.
-        prval pf = view@ r       // If ever this proof is needed.
-        val () = r.i := 2        // Update component.
-        prval () = fold@ c       // Fold‑back c.
-        val () = r.i := 3        // Error, c is folded again.
+        dataviewtype t = C of int  // A linear type.
+        var c = C 1                // c is initially folded (closed).
+        val+ @C(i) = c             // Unfold (open) c to allow update.
+        prval pf = view@ i         // If ever this proof is needed.
+        val () = i := 2            // Update component.
+        prval () = fold@ c         // Fold‑back c.
+        val () = i := 3            // Error, c is folded again.
 
 Folding‑back an instance of a linear type may be required to preserve its
 type upon return to an another scope.
 
 Example:
 
-        typedef r = @{i=int}
-        dataviewtype t = C of r
+        dataviewtype t = C of int
 
         fn test(c: &t): void = let
-           val+ @C(r) = c
-           val () = r.i := 2
+           val+ @C(i) = c
+           val () = i := 2
            prval () = fold@ c // Fold‑back before return.
         in end
 
@@ -1168,7 +1166,31 @@ FREEAT_EXP
 
         FREEAT_EXP = "free@" … IMPEND
 
-Tags: expression;
+Tags: expression; dynamic; linear; type;
+
+`free@` is the same as `"~"` for unfolded constructors.
+
+Example:
+
+        dataviewtype t = C of int
+
+        var c = C 1
+        val+ @C(i) = c    // Unfold.
+        val () = free@ c  // Free unfolded.
+
+        var c = C 1
+        val+ ~C(_) = c    // Usual free results in the same.
+
+
+If can as much be applied to a function argument, providing a type
+transition mentions it:
+
+        dataviewtype t = C of int
+
+        fn f(c: &t >> ptr_type): void = let
+              val+ @C(i) = c
+              val () = free@ c
+           in end
 
 
 FUN_DECL
