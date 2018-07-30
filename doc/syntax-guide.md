@@ -1216,7 +1216,7 @@ Where `FUN` is one of:
   * `"castfn"` — convertion by definition, not expected to be implemented.
 
 Where recursion possibly means mutual recursion when multiple functions are
-combined with the `"and"` keyword. If tai‑call optimization is expected with
+combined with the `"and"` keyword. If tail‑call optimization is expected with
 multiple mutually recursive functions, `"fnx"` is to be used.
 
 `"praxi"` and `"castfn"` are closed to each other, the only difference is that
@@ -1242,8 +1242,9 @@ is made of these parts in that order:
   * template (generic) arguments, optional.
   * function name, required.
   * universal quantification, optional.
+  * termination metrics, optional.
   * arguments list, may be empty (avoid using `void`).
-  * colon, required.
+  * colon or function effects, required (either one).
   * returned type, required.
 
 Two other forms are also available, but not yet documented here (rarely used).
