@@ -1288,7 +1288,7 @@ is a clearer keyword). In a SATS file, the `extern` keyword must not be added.
 
 If universally quantified variables are declared with predicates, and the
 implementation is separated, the predicates must not be repeated in the
-implementation.
+implementation (subset sorts are not allowed neither).
 
 Example:
 
