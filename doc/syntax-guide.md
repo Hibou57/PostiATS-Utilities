@@ -1230,6 +1230,9 @@ Proof and axiom functions are dynamic. There is no static functions. The
 static only has lambda expressions which can’t be recursive, and functional
 tyoes or sorts. These are not documented here.
 
+This part about function declaration is a long one. It is divided into
+sub‑sections.
+
 
 ### FUN_DECL: General syntax
 
@@ -1273,9 +1276,6 @@ a single bar. See also `LBRACE_EXP`.
 For the argument list and returned type, type expressions are the same as with
 `TYPE_DECL`. Functions provides additional type operators introduced later.
 These additions applies to linear types.
-
-This part about function declaration is a long one. It is divided into
-sub‑sections.
 
 
 ### FUN_DECL: Declaration and implementation
