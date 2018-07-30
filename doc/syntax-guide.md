@@ -1258,22 +1258,88 @@ Example:
   * `{t:t@ype}` is the template (generic) arguments.
   * `f` is the function name.
   * `{i:int; i == 0}` is the universally quantified static variables.
+  * `i:int` is a (quantified) static variable declaration.
+  * `i == 0` is a predicate on `i`.
   * `(a:t)` or `(p:p | a:t)` is the arguments list.
   * `int(i)` is the returned type.
   * `<int>` is the actual template arguments instantiation.
   * `{0}` is the actual quantified static variables instantiation.
   * `(2)` is the actual function arguments.
 
+`{i:int; i == 0}` can also be written as `{i:int | i == 0}` where the bar
+separate static variables declarations and predicates. If so, there must be
+a single bar. See also `LBRACE_EXP`.
+
 For the argument list and returned type, type expressions are the same as with
 `TYPE_DECL`. Functions provides additional type operators introduced later.
 These additions applies to linear types.
 
-If an argument is not used, its name may be omitted, but its type must still
-be specified.
+This part about function declaration is a long one. It is divided into
+sub‑sections.
+
+
+### FUN_DECL: Declaration and implementation
+
+Like with `VAL_DECL`, a function may be declared and implemented separatly, or
+may be declared and implemented in the while. When the implementation is
+separate, the keyword is not repeated, this includes optional `"and"`. In a
+DATS file, a declaration needs the `extern` keyword (or `static`, but `extern`
+is a clearer keyword). In a SATS file, the `extern` keyword must not be added.
+
+If universally quantified variables are declared with predicates, and the
+implementation is separated, the predicates must not be repeated in the
+implementation.
 
 Example:
 
+        fn f(a:int): int = a
 
+        extern fn g(a:int): int
+
+        implement g(a:int): int = a
+
+        extern fn is_even {i:int; i >= 0} (int(i)): bool
+        and is_odd {i:int; i >= 0} (int(i)): bool
+
+        implement is_even {i:int} (i:int(i)) =
+           if i = 0 then true
+           else ~is_odd(i - 1)
+        // Predicate on i is not repeated.
+
+        implement is_odd {i:int} (i:int(i)) =
+           if i = 1 then true
+           else ~is_even(i)
+        // This one declared with `and` for mutual recursion, is implemented
+        // the same way.
+
+
+### FUN_DECL: Argument names
+
+If an argument is not used, either in an implementation or in a pure
+declaration — where argument names are informational, its name may be omitted,
+but its type must still be specified. This is so, independantly on which
+arguments are named in the implementation or in the pure declaration.
+
+Example:
+
+        extern fn f(int): int
+        extern fn g(int, b:int): int
+        extern fn h(a:int, b:int): int
+
+        implement f(a:int): int = a
+        implement g(a:int, int): int = a
+        implement h(int, b:int): int = b
+
+The argument names need not be the same in the declaration and in the
+implementation, which may be convenient: argument names may be choose to be
+well informational in the declaration and may be choose to avoid name
+conflicts in the implementation.
+
+Example:
+
+        extern fn f(a:int): int
+
+        implement f(b:int): int = b
 
 
 ### FUN_DECL: Template and universally quantified arguments
