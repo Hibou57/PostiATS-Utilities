@@ -1203,17 +1203,237 @@ FUN_DECL
 
         FUN_DECL = FUN … "and"* … ";"?
 
-Tags: declaration; dynamic;
+Tags: declaration; dynamic; linear;
 
 Where `FUN` is one of:
 
-  * `"fn"`
-  * `"fnx"`
-  * `"fun"`
-  * `"prfn"`
-  * `"prfun"`
-  * `"praxi"`
-  * `"castfn"`
+  * `"fn"` — non‑recursive function.
+  * `"fnx"` — mutual tail‑call recursive functions.
+  * `"fun"` — possibly recursive function.
+  * `"prfn"` — non‑recursive proof function.
+  * `"prfun"` — possibly recursive proof function.
+  * `"praxi"` — axiom, proof function not expected to be implemented.
+  * `"castfn"` — convertion by definition, not expected to be implemented.
+
+Where recursion possibly means mutual recursion when multiple functions are
+combined with the `"and"` keyword. If tai‑call optimization is expected with
+multiple mutually recursive functions, `"fnx"` is to be used.
+
+`"praxi"` and `"castfn"` are closed to each other, the only difference is that
+the former is of `prop` sort while the latter is of `type` sort, where the
+sort refers to that of the function it‑self, not of the result type. Remember
+what is of `prop` sort is not intended to be compiled, it is erased before
+compile‑time: using a `praxi` as a `castfn` will type‑check but will fail to
+compile.
+
+Proof and axiom functions are dynamic. There is no static functions. The
+static only has lambda expressions which can’t be recursive, and functional
+tyoes or sorts. These are not documented here.
+
+
+### General syntax
+
+Not counting the keyword — which means neither `"and"`, a function signature
+is made of these parts in that order:
+
+  * template (generic) arguments, optional.
+  * function name, required.
+  * universal quantification, optional.
+  * arguments list, may be empty (avoid using `void`).
+  * colon, required.
+  * returned type, required.
+
+Two other forms are also available, but not yet documented here (rarely used).
+
+Each part may refer to the static identifiers introduced in a previous part.
+That is, a type in the arguments list may refer to a type in the generic
+arguments list, or a type index in the result or arguments list, may refer to
+a type index from the universal quantification lists.
+
+Example:
+
+        fn {t:t@ype} f {i:int; i == 0} (a:t): int(i) = 0
+        val v = f<int>{0}(2)
+
+  * `{t:t@ype}` is the template (generic) arguments.
+  * `f` is the function name.
+  * `{i:int; i == 0}` is the universally quantified static variables.
+  * `(a:t)` or `(p:p | a:t)` is the arguments list.
+  * `int(i)` is the returned type.
+  * `<int>` is the actual template arguments instantiation.
+  * `{0}` is the actual quantified static variables instantiation.
+  * `(2)` is the actual function arguments.
+
+For the argument list and returned type, type expressions are the same as with
+`TYPE_DECL`. Functions provides additional type operators introduced later.
+These additions applies to linear types.
+
+If an argument is not used, its name may be omitted, but its type must still
+be specified.
+
+Example:
+
+
+
+
+### Template and universally quantified arguments
+
+The first `{…}` and second `{…}` looks very similar: to distinguish both, one
+appears right before the function name and the other right after. Also the
+former is instanciated using `f<…>` and the latter using `{…}`. No space is
+allowed between `f` and `<` in `f<…>`: `ALNUM<` is a lexical unit.
+
+There may be multiple template parameters parts and universally quantified
+variables parts, there may be multipe arguments in each of these parts.
+
+Example:
+
+        fn {t:t@ype}{u:t@ype} f {i:int}{j:int} (a:t, b:u): int = 0
+        val v = f<int><char>{0}{0}(2, 'a')
+
+        fn {t:t@ype; u:t@ype} g {i:int; j:int} (a:t, b:u): int = 0
+        val w = g<int, char>{0, 0}(2, 'a')
+
+In `f<int><char>`, no space is allowed between `>` and `<` in `><`, which is
+a lexial unit. Reminder: there is no space allowed neither in `f<`.
+
+The difference between `{i:int}{j:int}` and `{i:int; j:int}` (which is also
+possible), is the same as between a curried function and a non‑curried
+function ; similarly with `{t:t@ype}{u:t@ype}` vs `{t:t@ype; u:t@ype}`.
+
+Using `{i:int}{j:int}` or `{i:int; j:int}` may make a difference when `i` or
+`j` can be inferred. If say `j` can be inferred, the first form may be more
+handy, since with the second, both `i` and `j` needs to be explicitely given
+even if `j` could be omitted. Similarly with the template arguments.
+
+Example:
+
+        fn {t:t@ype} f {i:int} (a:t): int = 0
+        val u = f{0}(2)  // Inferred template argument.
+        val v = f(2)     // Automatically created quantified variable.
+
+In many cases, automatic inference or instantiation, is not possible, this is
+not an error, explicit template or quantified arguments just need to be given.
+
+Universally quantified static variables are not required to be bound to
+literal, it can as much be bound to static variables in the scope, as it
+usually is with types for template arguments.
+
+Example:
+
+        fn {t:t@ype} f {i:int} (a:t): int = 0
+
+        val u = f{0}(2)   // Static i bound to a literal.
+
+        stadef j:int = 0
+        val v = f{j}(2)   // Static i bound to static j in scope.
+
+        stadef i:int = 0
+        val w = f{i}(2)   // May have the same name, not ambiguous.
+
+
+### Proof arguments
+
+In the arguments list, proof arguments may be provided before an optional
+`'|'`. The proof arguments are not required to be of `prop` sort, there are
+erased before compile‑time whatever their sorts.
+
+Example:
+
+        fn f(p:int | a:int): int = p + a
+        val v = f(0 | 0)
+        // Will type‑check but will not compile: argument `p` is erased,
+        // resulting in a compilation error.
+
+        fn f(p:int | a:int): int = a
+        val v = f(0 | 0)
+        // Will type‑check and compile, the concrete (non‑proof) result does
+        // not depend on `p`.
+
+        fn f(p:int | a:int): (int|int) = (p|a)
+        val (p|v) = f(0 | 0)
+        // The same.
+
+Arguments of `prop` sort, whether or not they appear before the optional
+`"|"`, are erased before compile‑time too.
+
+Example:
+
+        absprop P
+        extern praxi p(): P
+
+        fn f(p:P | a:int): int = a  // `p` is erased before compile‑time.
+        val v = f(p() | 0)
+
+        fn f(p:P, a:int): int = a   // The same.
+        val v = f(p(), 0)
+
+
+### Linear arguments
+
+Function provides specific type operators for linear types.
+
+Example:
+
+        absviewtype t
+        extern fn e(a: t): void       // Undecorated, `a` will be consumed.
+        extern fn f(a: &t): void      // `a` by reference will not be consumed.
+        extern fn g(a: !t): void      // `a` by value will not be consumed.
+        extern fn h(a: &t >> t?): void  // Type transition (more later).
+
+Type transition introduced with `t >> u`, means the type of the arguments
+changes. It is only possible with linear values of “refval” types. There are
+two “refval” types:
+
+  * `!t` — passed by value.
+  * `&t` — passed by reference.
+
+Passed by value “refval” is not the same as just passed by value (that is,
+just `t`).
+
+Most common type transitions are to `t`, `_`, or `t?`. Although not
+recommanded, `t?` may also appears as `ptr_type` for any `t`.
+
+Example:
+
+        extern fn f(a: &t >> t): void  // Type is preserved (no change).
+        extern fn g(a: &t >> _): void  // Shorthand for the same.
+        extern fn h(a: &t >> t?): void // `a` becomes uninitialied (freed).
+
+        extern fn f(a: !t >> t): void  // Type is preserved (no change).
+        extern fn g(a: !t >> _): void  // Shorthand for the same.
+        // !t >> t? is not possible
+
+
+### Castfn and praxi
+
+`castfn` and `praxi` are not intended to be implemented, they are both
+axiomatic. If declared in a DATS file, they are to be declared as `extern`
+(or `static`, a misleading synonymous).
+
+Example:
+
+        absprop P
+        extern praxi p(): P
+        prval pf = p()
+
+        extern castfn ctoi {i:int} (c: char(i)): int(i)
+        val i:int(65) = ctoi('A')
+
+Neither `p()` nor `ctoi(…)` gets implemented, their declarations suffice.
+
+
+### Void arguments
+
+`void` should only be used for the result type, not the arguments type. Use
+an empty argument list instead of `void` arguments.
+
+Example:
+
+        fn f(): void = ()            // Type‑checks and compiles.
+        fn g(void): void = ()        // Type‑checks but does not compile.
+        fn g(unit): void = ()        // The same.
+        fn h(void, void): void = ()  // The same.
 
 
 HASHLBRACKET_EXP
