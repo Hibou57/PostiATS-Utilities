@@ -1207,11 +1207,11 @@ Tags: declaration; dynamic; linear;
 
 Where `FUN` is one of:
 
-  * `"fn"` — non‑recursive function.
+  * `"fn"` — non‑recursive function or possibly mutual recursion.
   * `"fnx"` — mutual tail‑call recursive functions.
-  * `"fun"` — possibly recursive function.
-  * `"prfn"` — non‑recursive proof function.
-  * `"prfun"` — possibly recursive proof function.
+  * `"fun"` — possibly self‑recursive function.
+  * `"prfn"` — non‑recursive proof function or possibly mutual recursion.
+  * `"prfun"` — possibly self‑recursive proof function.
   * `"praxi"` — axiom, proof function not expected to be implemented.
   * `"castfn"` — convertion by definition, not expected to be implemented.
 
@@ -1303,14 +1303,17 @@ Example:
 
         implement is_even {i:int} (i:int(i)) =
            if i = 0 then true
-           else ~is_odd(i - 1)
+           else is_odd(i - 1)
         // Predicate on i is not repeated.
 
         implement is_odd {i:int} (i:int(i)) =
-           if i = 1 then true
-           else ~is_even(i)
+           if i = 0 then false
+           else is_even(i - 1)
         // This one declared with `and` for mutual recursion, is implemented
         // the same way.
+
+Side note: since `is_even` and `is_odd` mutual recursion is tail recursion,
+`fnx` would be better than `fn`.
 
 
 ### FUN_DECL: Argument names
