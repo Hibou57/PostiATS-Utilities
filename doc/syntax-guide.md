@@ -1231,7 +1231,7 @@ static only has lambda expressions which can’t be recursive, and functional
 tyoes or sorts. These are not documented here.
 
 
-### General syntax
+### FUN_DECL: General syntax
 
 Not counting the keyword — which means neither `"and"`, a function signature
 is made of these parts in that order:
@@ -1276,7 +1276,7 @@ Example:
 
 
 
-### Template and universally quantified arguments
+### FUN_DECL: Template and universally quantified arguments
 
 The first `{…}` and second `{…}` looks very similar: to distinguish both, one
 appears right before the function name and the other right after. Also the
@@ -1332,7 +1332,7 @@ Example:
         val w = f{i}(2)   // May have the same name, not ambiguous.
 
 
-### Proof arguments
+### FUN_DECL: Proof arguments
 
 In the arguments list, proof arguments may be provided before an optional
 `'|'`. The proof arguments are not required to be of `prop` sort, there are
@@ -1369,7 +1369,7 @@ Example:
         val v = f(p(), 0)
 
 
-### Linear arguments
+### FUN_DECL: Linear arguments
 
 Function provides specific type operators for linear types.
 
@@ -1405,7 +1405,7 @@ Example:
         // !t >> t? is not possible
 
 
-### Castfn and praxi
+### FUN_DECL: Castfn and praxi
 
 `castfn` and `praxi` are not intended to be implemented, they are both
 axiomatic. If declared in a DATS file, they are to be declared as `extern`
@@ -1423,7 +1423,7 @@ Example:
 Neither `p()` nor `ctoi(…)` gets implemented, their declarations suffice.
 
 
-### Void arguments
+### FUN_DECL: Void arguments
 
 `void` should only be used for the result type, not the arguments type. Use
 an empty argument list instead of `void` arguments.
