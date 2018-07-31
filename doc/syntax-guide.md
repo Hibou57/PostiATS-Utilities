@@ -111,6 +111,7 @@ With explicit begin and end boundaries:
         BEGIN_EXP =         "begin" … "end"
         BQUOTELPAREN_EXP =     "`(" … ")"
         COMMALPAREN_EXP =      ",(" … ")"
+        DOTLT_EXP =            ".<" … ">."
         HASHLBRACKET_EXP =     "#[" … "]"
         IDENT_arr_EXP =    ALNUM"[" … "]"
         IDENT_tmp_EXP =    ALNUM"<" … ">"
@@ -793,6 +794,14 @@ Example:
 There is no way to directly define an algebraic type of sort `t@ype`. However,
 this should be possible indirectly, using discriminating index(es), proofs of
 view and flat records.
+
+
+DOTLT_EXP
+------------------------------------------------------------------------------
+
+        DOTLT_EXP = ".<" … ">."
+
+Tags: expression; static;
 
 
 EXCEPTION_DECL
