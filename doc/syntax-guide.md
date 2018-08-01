@@ -803,6 +803,81 @@ DOTLT_EXP
 
 Tags: expression; static;
 
+Termination metrics for function and loops, a static expression which must be
+proven greater than or equal to zero and strictly decreasing. Many times, the
+constraint solver will prove it and just the expression needs to be given
+along to some validity constraints. This is used used as a proof of
+well‑founded recursion.
+
+Example:
+
+        var i: int
+        val () = for* {j:int; j <= 10} .<10 - j>. (i: int(j))
+           => (i := 0; i <= 9; i := i + 1)
+              println! i
+
+
+The same works with co‑recursion.
+
+Example:
+
+        fnx is_even {i:int; i >= 0} .<i>. (i:int(i)): bool =
+           if i = 0 then true
+           else is_odd(i - 1)
+        and is_odd {i:int; i >= 0} .<i>. (i:int(i)): bool =
+           if i = 0 then false
+           else is_even(i - 1)
+
+
+Termination metrics can be required by specifying the function has no
+effects, which means it cannot have the “possibly non‑terminating” effect.
+
+Example:
+
+        // Postiats complains termination metrics is missing.
+        fun f {i:int | i >= 0} (i:int(i)):<> void =
+          if i > 0 then f(i - 1)
+          else ()
+
+        // With terminations metrics added, there is no error.
+        fun f {i:int | i >= 0} .<i>. (i:int(i)):<> void =
+          if i > 0 then f(i - 1)
+          else ()
+
+        // Without the no‑effect specification, Postiats does not
+        // require termination metrics is provided.
+        fun f {i:int | i >= 0} (i:int(i)) void =
+          if i > 0 then f(i - 1)
+          else ()
+
+Warning: this is not enforced with separate declarations and implementations.
+
+Example:
+
+        extern fun f {i:int | i >= 0} (i:int(i)):<> void
+
+        // No termination metrics and Postiats does not complain.
+        implement f {i:int} (i:int(i)): void =
+          if i > 0 then f(i - 1)
+          else ()
+
+If ensuring all functions are terminating, it may be better to always use
+declaration and implementation in the while and avoid using separate
+declaration and implementation.
+
+ATS2 does not directly supports well‑founded recursion on data‑types and the
+likes, it has to be carefully specified in the recursive definition using
+index of `int` sort.
+
+Example:
+
+        datatype s(i:int) = Z(0) | {j:int | j >= 0} S(j + 1) of s(j)
+
+        fun g {i:int; i >= 0} .<i>. (a:s(i)):<> void =
+           case+ a of
+           | Z() => ()
+           | S(a') => g(a')
+
 
 EXCEPTION_DECL
 ------------------------------------------------------------------------------
@@ -1265,7 +1340,7 @@ a type index from the universal quantification lists.
 
 Example:
 
-        fn {t:t@ype} f {i:int; i == 0} (a:t): int(i) = 0
+        fn {t:t@ype} f {i:int; i == 0} .<>. (a:t): int(i) = 0
         val v = f<int>{0}(2)
 
   * `{t:t@ype}` is the template (generic) arguments.
@@ -1273,6 +1348,7 @@ Example:
   * `{i:int; i == 0}` is the universally quantified static variables.
   * `i:int` is a (quantified) static variable declaration.
   * `i == 0` is a predicate on `i`.
+  * `.<>.` is the termination metrics, here empty.
   * `(a:t)` or `(p:p | a:t)` is the arguments list.
   * `int(i)` is the returned type.
   * `<int>` is the actual template arguments instantiation.
@@ -1286,6 +1362,8 @@ a single bar. See also `LBRACE_EXP`.
 For the argument list and returned type, type expressions are the same as with
 `TYPE_DECL`. Functions provides additional type operators introduced later.
 These additions applies to linear types.
+
+About termination metrics, see also `DOTLT_EXP`.
 
 
 ### FUN_DECL: Declaration and implementation
@@ -1323,7 +1401,17 @@ Example:
         // the same way.
 
 Side note: since `is_even` and `is_odd` mutual recursion is tail recursion,
-`fnx` would be better than `fn`.
+`fnx` would be better than `fn`. If the declarations and the implementations
+are not separate, the keyword `fnx` is required with mutual recursion.
+
+Example:
+
+        fnx is_even {i:int; i >= 0} (i:int(i)): bool =
+           if i = 0 then true
+           else is_odd(i - 1)
+        and is_odd {i:int; i >= 0} (i:int(i)): bool =
+           if i = 0 then false
+           else is_even(i - 1)
 
 
 ### FUN_DECL: Argument names
