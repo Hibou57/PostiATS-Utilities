@@ -1234,7 +1234,7 @@ for‑loop. **If the metrics are omitted, this construct is not safer than
 
 The metrics must be strictly decreasing and greater than or equal to, zero. It
 includes the case which makes the loop stops not just the ones where the loop
-body is entered.
+body is entered. About termination metrics, see also `DOTLT_EXP`.
 
 Example:
 
