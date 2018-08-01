@@ -861,9 +861,9 @@ Example:
           if i > 0 then f(i - 1)
           else ()
 
-If ensuring all functions are terminating, it may be better to always use
-declaration and implementation in the while and avoid using separate
-declaration and implementation.
+If ensuring all functions are terminating is important, it may be better to
+always use declaration and implementation in the while and avoid using
+separate declaration and implementation.
 
 ATS2 does not directly supports well‑founded recursion on data‑types and the
 likes, it has to be carefully specified in the recursive definition using
