@@ -1620,6 +1620,11 @@ Example:
         fn g(unit): void = ()        // The same.
         fn h(void, void): void = ()  // The same.
 
+The same applies with functional types.
+
+        typedef f = () -> int    // Recommended.
+        typedef g = void -> int  // To be avoided.
+
 
 HASHLBRACKET_EXP
 ------------------------------------------------------------------------------
