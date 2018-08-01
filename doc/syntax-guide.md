@@ -1347,8 +1347,8 @@ Example:
   * `f` is the function name.
   * `{i:int; i == 0}` is the universally quantified static variables.
   * `i:int` is a (quantified) static variable declaration.
-  * `i == 0` is a predicate on `i` (not with separate implementation).
-  * `.<>.` is the termination metrics, here empty.
+  * `i == 0` is a predicate on `i` (not in separate implementation).
+  * `.<>.` is the termination metrics, here empty (not in implementation).
   * `(a:t)` or `(p:p | a:t)` is the arguments list.
   * `int(i)` is the returned type.
   * `<int>` is the actual template arguments instantiation.
