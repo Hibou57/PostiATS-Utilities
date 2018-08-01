@@ -1451,7 +1451,8 @@ Example:
 The first `{…}` and second `{…}` looks very similar: to distinguish both, one
 appears right before the function name and the other right after. Also the
 former is instanciated using `f<…>` and the latter using `{…}`. No space is
-allowed between `f` and `<` in `f<…>`: `ALNUM<` is a lexical unit.
+allowed between `f` and `<` in `f<…>`: `ALNUM<` is a lexical unit, as
+reminded in `IDENT_tmp_EXP`.
 
 There may be multiple template parameters parts and universally quantified
 variables parts, there may be multipe arguments in each of these parts.
