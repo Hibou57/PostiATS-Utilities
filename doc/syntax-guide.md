@@ -1630,7 +1630,7 @@ Example:
         extern fn f(a: &int >> int(i)): #[i:int; i == 1] int(i)
 
         // This is not the same as this, where the `i` in the result type
-        // is unknown.
+        // is unknown … unless `i` does not appear in the result type.
         extern fn g(a: &int >> [i:int; i == 1] int(i)): int(i) // Error.
 
 It works with existantial quantification only (asserting types), this notation
