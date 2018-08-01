@@ -1619,7 +1619,22 @@ HASHLBRACKET_EXP
 
         HASHLBRACKET_EXP = "#[" … "]"
 
-Tags: expression;
+Tags: expression; dynamic; linear;
+
+An a‑posteriori quantification used with type transitions. A type transition
+may be seen as a result type. This notation allows to move the type transition
+quantification, at the place of the function result type.
+
+Example:
+
+        // The `i` in `int(i)` refers to the one in `#[…]`.
+        extern fn f(a: &int >> int(i)): #[i:int; i == 1] void
+
+        // The above is equivalent to this:
+        extern fn g(a: &int >> [i:int; i == 1] int(i)): void
+
+It works with existantial quantification only, thid notation is not available
+with universal quantification.
 
 
 IDENT_arr_EXP
