@@ -1742,7 +1742,8 @@ declaration and implementation. Some limitations apply to a separate
 implementation, as explained in `FUN_DECL` (with termination metrics and
 quantifications). The keyword of the kind of declaration is not repeated, only
 the signature, which includes the name. However, the implementation keyword
-depends on declaration keyword for the kind of construct being implemented.
+depends on the declaration keyword for the kind of construct being
+implemented.
 
 Example:
 
