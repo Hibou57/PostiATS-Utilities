@@ -1671,7 +1671,34 @@ IFCASE_EXP
 
         IFCASE_EXP = "ifcase" … "|"* … IMPEND
 
-Tags: expression;
+Tags: expression; dynamic;
+
+Alternative and more expressive syntax, to a common case‑expression idiom.
+Select an expression based on boolean expressions. It must be ended by a
+catch‑all expression, named an “else‑clause”, however not using an `else`
+keyword, the special `_` identifier instead. Unlike with case‑expressions,
+there is no common discriminating expression. See also `IF_EXP`.
+
+Unlike with case‑expression, there is no arrow for sequential assumption, the
+order of the clauses always matters.
+
+Example:
+
+        val a = 5
+        val b = 3
+
+        val c = ifcase
+           | a = 0 => true
+           | b = 0 => true
+           | a = b => true
+           | _ => false     // Required else-clause, a catch‑all clause.
+
+        // The above is a cleaner and more expressive alternative to this:
+        val c = case 0 of
+           | _ when a = 0 => true
+           | _ when b = 0 => true
+           | _ when a = b => true
+           | _ => false
 
 
 IF_EXP
