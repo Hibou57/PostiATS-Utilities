@@ -436,6 +436,9 @@ Example:
         var v:t = @[int](1, 2, 3)
         val a = v[0]
 
+In `v[0]`, no space is allowed between `v` and `[`, this is a special
+lexical unit, as reminded in `IDENT_arr_EXP`.
+
 An array type is mono–dimensional only, even if you don’t get a syntax error
 trying otherwise. To be accessible, an array needs to be allocated in a `var`,
 not a `val`, although you don’t get a type error when trying otherwise. In
@@ -1654,8 +1657,8 @@ IDENT_tmp_EXP
 Tags: expression; static;
 
 Templates arguments. The alphanumeric identifier is that of the function and
-what in `<…>` is/are the template arguments. See `FUN_DECL`. No space is
-allowed between the identifier and the `<`, this is a special lexical unit.
+in `<…>` is/are the template arguments. See `FUN_DECL`. No space is allowed
+between the identifier and the `<`, this is a special lexical unit.
 
 
 IFCASE_EXP
