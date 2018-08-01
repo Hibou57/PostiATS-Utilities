@@ -1647,7 +1647,11 @@ IDENT_arr_EXP
 
         IDENT_arr_EXP = ALNUM"[" … "]"
 
-Tags: expression;
+Tags: expression; dynamic;
+
+Array indexing. If `v` is of an array type, then `v[0]` is the 0-th element
+of `v`. No space is allowed between `v` and `[`, this is a special lexical
+unit. See `ATLBRACKET_EXP`.
 
 
 IDENT_tmp_EXP
