@@ -1347,7 +1347,7 @@ Example:
   * `f` is the function name.
   * `{i:int; i == 0}` is the universally quantified static variables.
   * `i:int` is a (quantified) static variable declaration.
-  * `i == 0` is a predicate on `i`.
+  * `i == 0` is a predicate on `i` (not with separate implementation).
   * `.<>.` is the termination metrics, here empty.
   * `(a:t)` or `(p:p | a:t)` is the arguments list.
   * `int(i)` is the returned type.
@@ -1376,7 +1376,10 @@ is a clearer keyword). In a SATS file, the `extern` keyword must not be added.
 
 If universally quantified variables are declared with predicates, and the
 implementation is separated, the predicates must not be repeated in the
-implementation (subset sorts are not allowed neither).
+implementation and subset sorts are not allowed neither. If keeping track of
+predicates is important, it may be better to always use declaration and
+implementation in the while and avoid using separate declaration and
+implementation.
 
 Example:
 
