@@ -1621,20 +1621,21 @@ HASHLBRACKET_EXP
 
 Tags: expression; dynamic; linear;
 
-An a‑posteriori quantification used with type transitions. A type transition
-may be seen as a result type. This notation allows to move the type transition
-quantification, at the place of the function result type.
+
+Existantial quantification including static variable appearing in the
+right‑most part of a type transition.
 
 Example:
 
-        // The `i` in `int(i)` refers to the one in `#[…]`.
-        extern fn f(a: &int >> int(i)): #[i:int; i == 1] void
+        // The `i` in `#[…]` includes the one in `>> …`.
+        extern fn f(a: &int >> int(i)): #[i:int; i == 1] int(i)
 
-        // The above is equivalent to this:
-        extern fn g(a: &int >> [i:int; i == 1] int(i)): void
+        // This is not the same as this, where the `i` in the result type
+        // is unknown.
+        extern fn g(a: &int >> [i:int; i == 1] int(i)): int(i) // Error.
 
-It works with existantial quantification only, thid notation is not available
-with universal quantification.
+It works with existantial quantification only (asserting types), this notation
+is not available with universal quantification (guarded types).
 
 
 IDENT_arr_EXP
