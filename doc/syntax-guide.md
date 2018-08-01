@@ -1621,8 +1621,7 @@ HASHLBRACKET_EXP
 
 Tags: expression; dynamic; linear;
 
-
-Existantial quantification including static variable appearing in the
+Existantial quantification including static variables appearing in the
 right‑most part of a type transition.
 
 Example:
