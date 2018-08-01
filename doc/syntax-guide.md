@@ -1649,9 +1649,9 @@ IDENT_arr_EXP
 
 Tags: expression; dynamic;
 
-Array indexing. If `v` is of an array type, then `v[0]` is the 0-th element
-of `v`. No space is allowed between `v` and `[`, this is a special lexical
-unit. See `ATLBRACKET_EXP`.
+Array indexing. If the alphanumeric identifier `v` is of an array type, then
+`v[0]` is the 0-th element of `v`. No space is allowed between the identifier
+and `[`, this is a special lexical unit. See `ATLBRACKET_EXP`.
 
 
 IDENT_tmp_EXP
