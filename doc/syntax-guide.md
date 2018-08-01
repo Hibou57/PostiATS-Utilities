@@ -940,7 +940,8 @@ EXTERN_DECL
 Tags: declaration; static; dynamic; binding;
 
 Versatile construct covering the use cases of `EXTTYPE_DECL`, `EXTVAR_DECL`,
-`STATIC_DECL`, which are in the while, explained here.
+`STATIC_DECL`, which are in the while, explained here. See also
+`IMPLEMENT_DECL`.
 
 These four examples …:
 
@@ -1377,6 +1378,7 @@ may be declared and implemented in the while. When the implementation is
 separate, the keyword is not repeated, this includes optional `"and"`. In a
 DATS file, a declaration needs the `extern` keyword (or `static`, but `extern`
 is a clearer keyword). In a SATS file, the `extern` keyword must not be added.
+See also `IMPLEMENT_DECL`.
 
 If universally quantified variables are declared with predicates, and the
 implementation is separated, the predicates must not be repeated in the
@@ -1729,10 +1731,45 @@ Tags: declaration; dynamic;
 
 Where `IMPLEMENT` is one of:
 
-  * `"implement"`
-  * `"primplement"`
+  * `"implement"` — for values and functions
+  * `"primplement"` — for proof values and proof functions
   * `"implmnt"` — synonymous with `"implement"`
   * `"primplmnt"` — synonymous with `"primplement"`
+
+Implementation of purely declared functions and values. See also `FUN_DECL`,
+`VAL_DECL` and `EXTERN_DECL`. This is the implementation part of separate
+declaration and implementation. Some limitations apply to a separate
+implementation, as explained in `FUN_DECL` (with termination metrics and
+quantifications). The keyword of the kind of declaration is not repeated, only
+the signature, which includes the name. However, the implementation keyword
+depends on declaration keyword for the kind of construct being implemented.
+
+Example:
+
+        extern val a:int
+        implement a:int = 0  // `val` is not repeated.
+
+        extern fn f(int): int
+        implement f(a:int): int = 0  // `fn` is not repeated.
+
+        dataprop P = P1 | P2  // Requirement of the example.
+
+        extern prval p:P
+        primplement p:P = P1  // `primplement` for a `prval`.
+
+        extern prfn pf(): P
+        primplement pf(): P = P2  // `primplement` for a `prfn`.
+
+
+The type or return type may be omitted, but arity must match.
+
+Example:
+
+        extern val a:int
+        implement a = 0
+
+        extern fn f(int): int
+        implement f(int) = 0  // Arity must match.
 
 
 LAM_EXP
