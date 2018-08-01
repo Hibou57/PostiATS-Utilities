@@ -424,7 +424,8 @@ Tags: expression; static; dynamic; flat;
 
 Expression for flat one‑dimension array types and values. It has two forms,
 one defining a type (static) and one defining a value of that possibly
-anonymous type (dynamic). The sort of a flat array is `t@ype`.
+anonymous type (dynamic). The sort of a flat array is `t@ype`. Unlike with
+records and tuples, there is no boxed array type.
 
 The expression `@[t][n]` means the type of an array of `n` elements of type
 `t`. The expression `@[t](a, b, …)` (without really a “…”) means a literal
