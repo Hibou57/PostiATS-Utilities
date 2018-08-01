@@ -1650,7 +1650,11 @@ IDENT_tmp_EXP
 
         IDENT_tmp_EXP = ALNUM"<" … ">"
 
-Tags: expression;
+Tags: expression; static;
+
+Templates arguments. The alphanumeric identifier is that of the function and
+what in `<…>` is/are the template arguments. See `FUN_DECL`. No space is
+allowed between the identifier and the `<`, this is a special lexical unit.
 
 
 IFCASE_EXP
