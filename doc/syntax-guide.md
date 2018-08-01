@@ -1539,9 +1539,10 @@ Example:
         val v = f(p(), 0)
 
 
-### FUN_DECL: Linear arguments
+### FUN_DECL: Refval arguments and type transitions
 
-Function provides specific type operators for linear types.
+Function signatures comes with specific type operators, usually used with
+linear types, but not restricted to it.
 
 Example:
 
@@ -1552,7 +1553,7 @@ Example:
         extern fn h(a: &t >> t?): void  // Type transition (more later).
 
 Type transition introduced with `t >> u`, means the type of the arguments
-changes. It is only possible with linear values of “refval” types. There are
+changes. It is only possible with arguments of “refval” types. There are
 two “refval” types:
 
   * `!t` — passed by value.
@@ -1573,6 +1574,13 @@ Example:
         extern fn f(a: !t >> t): void  // Type is preserved (no change).
         extern fn g(a: !t >> _): void  // Shorthand for the same.
         // !t >> t? is not possible
+
+
+This is not restricted to view types.
+
+Example:
+
+        extern fn f (a: &int >> int): void
 
 
 ### FUN_DECL: Castfn and praxi
