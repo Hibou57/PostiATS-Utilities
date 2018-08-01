@@ -1706,7 +1706,18 @@ IF_EXP
 
         IF_EXP = "if" … then … "else"? … IMPEND
 
-Tags: expression;
+Tags: expression; dynamic;
+
+Conditional expression. The condition is a boolean expression, the `else`
+part is optional if the expression type is `void`. See also `IFCASE_EXP`.
+There is no `elif`, use parentheses to avoid the dangling‑else ambiguity
+or use `IFCASE_EXP` if appropriated.
+
+Example:
+
+        val a = true
+        val b = if a then 1 else 0
+        val () = if a then ()  // Implicit `else ()`.
 
 
 IMPLEMENT_DECL
