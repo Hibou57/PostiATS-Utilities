@@ -1317,7 +1317,7 @@ compile.
 
 Proof and axiom functions are dynamic. There is no static functions. The
 static only has lambda expressions which can’t be recursive, and functional
-tyoes or sorts. These are not documented here.
+types or sorts. See `LAM_EXP`.
 
 This part about function declaration is a long one. It is divided into
 sub‑sections.
@@ -1341,7 +1341,9 @@ Two other forms are also available, but not yet documented here (rarely used).
 Each part may refer to the static identifiers introduced in a previous part.
 That is, a type in the arguments list may refer to a type in the generic
 arguments list, or a type index in the result or arguments list, may refer to
-a type index from the universal quantification lists.
+a type index from the universal quantification lists. There is an exception
+with `HASHLBRACKET_EXP` where a static identifier may be introduced on the
+right and be accessible on the left.
 
 Example:
 
@@ -1366,7 +1368,7 @@ a single bar. See also `LBRACE_EXP`.
 
 For the argument list and returned type, type expressions are the same as with
 `TYPE_DECL`. Functions provides additional type operators introduced later.
-These additions applies to linear types.
+These additions applies to “refval” types, which usually are linear types.
 
 About termination metrics, see also `DOTLT_EXP`.
 
@@ -1376,9 +1378,9 @@ About termination metrics, see also `DOTLT_EXP`.
 Like with `VAL_DECL`, a function may be declared and implemented separatly, or
 may be declared and implemented in the while. When the implementation is
 separate, the keyword is not repeated, this includes optional `"and"`. In a
-DATS file, a declaration needs the `extern` keyword (or `static`, but `extern`
-is a clearer keyword). In a SATS file, the `extern` keyword must not be added.
-See also `IMPLEMENT_DECL`.
+DATS file, a pure declaration needs the `extern` keyword (or `static`, but
+`extern` is a clearer keyword). In a SATS file, the `extern` keyword must not
+be added. See also `IMPLEMENT_DECL`.
 
 If universally quantified variables are declared with predicates, and the
 implementation is separated, the predicates must not be repeated in the
@@ -1389,11 +1391,11 @@ implementation.
 
 Example:
 
-        fn f(a:int): int = a
+        fn f(a:int): int = a         // Declare and implement in the while.
 
-        extern fn g(a:int): int
+        extern fn g(a:int): int      // Pure declaration.
 
-        implement g(a:int): int = a
+        implement g(a:int): int = a  // Separate implementation.
 
         extern fn is_even {i:int; i >= 0} (int(i)): bool
         and is_odd {i:int; i >= 0} (int(i)): bool
@@ -1471,8 +1473,9 @@ Example:
         fn {t:t@ype; u:t@ype} g {i:int; j:int} (a:t, b:u): int = 0
         val w = g<int, char>{0, 0}(2, 'a')
 
-In `f<int><char>`, no space is allowed between `>` and `<` in `><`, which is
-a lexial unit. Reminder: there is no space allowed neither in `f<`.
+In `f<int><char>`, no space is allowed between `>` and `<` in `><`, which is a
+lexial unit as reminded in `IDENT_tmp_EXP`. Reminder: there is no space
+allowed neither in `f<`.
 
 The difference between `{i:int}{j:int}` and `{i:int; j:int}` (which is also
 possible), is the same as between a curried function and a non‑curried
@@ -1588,13 +1591,14 @@ This is not restricted to view types.
 Example:
 
         extern fn f (a: &int >> int): void
+        extern fn g (a: &int >> int(2)): void
 
 
 ### FUN_DECL: Castfn and praxi
 
 `castfn` and `praxi` are not intended to be implemented, they are both
 axiomatic. If declared in a DATS file, they are to be declared as `extern`
-(or `static`, a misleading synonymous).
+(or `static`, a rather misleading synonymous).
 
 Example:
 
@@ -1610,8 +1614,8 @@ Neither `p()` nor `ctoi(…)` gets implemented, their declarations suffice.
 
 ### FUN_DECL: Void arguments
 
-`void` should only be used for the result type, not the arguments type. Use
-an empty argument list instead of `void` arguments.
+`void` should only be used for the result type, not arguments type. Use an
+empty argument list instead of `void` arguments.
 
 Example:
 
@@ -1783,16 +1787,116 @@ LAM_EXP
 
         LAM_EXP = LAM … IMPEND
 
-Tags: expression; closure;
+Tags: expression; dynamic; closure; linear;
 
 Where `LAM` may be one of:
 
-  * `"fix"`
-  * `"fix@"`
-  * `"lam"`
-  * `"lam@"`
-  * `"llam"`
-  * `"llam@"`
+  * `"fix"` — boxed recursive closure
+  * `"fix@"` — flat recursive closure
+  * `"lam"` — boxed closure (dynamic) or static non‑recursive function
+  * `"lam@"` — flat closure
+  * `"llam"` — boxed linear function (not closure)
+  * `"llam@"` — flat linear function (not closure)
+
+Note static lambda is not the same. The static only has `"lam"` which is for
+non‑recursive functions.
+
+If you know SML, you know closures. ATS2 is a lot functional but makes
+a distinction between closure and non‑closure functions, because it allows
+to care about memory management, unlike SML which is always garbage collected.
+Also SML don’t provide linear logic, while ATS2 do, not only with data and
+other resources, with functions too.
+
+Linear functions are not closures, while closures may be linear. A linear
+function is evaluated only once, then it is not available anymore. A linear
+closure is a manually managed closure.
+
+Closures are distinguished from usual function types, by their function
+effect.
+
+  * `clo` for stack allocated closures, ex. for `lam@`.
+  * `cloref` for garbage‑collector managed closures, ex. for `lam`.
+  * `cloptr` for manually managed closures, they are of linear types.
+  * `lin` for linear functions, which are not closures.
+
+It may have additional effects, like `0` for “pure”.
+
+Usual function types do not support closure.
+
+Example:
+
+        // Type‑checks, but does not compile: inner `f` is not
+        // environmentless.
+
+        typedef t = () -> int
+
+        fn h(): t = let
+          val v = 1 // Environment of `f` below.
+          fn f(): int = v
+        in f end
+
+        val f = h()
+        val v = f()
+
+
+The `cloref` effect allows closure, this is how ATS2 dynamic lambda works.
+
+Example:
+
+        typedef t = () -<cloref> int // Prerequisite.
+
+        fn h(): t = let
+          val v = 1
+          fn f():<cloref> int = v
+        in f end
+
+        val f = h()
+        val v = f()
+
+        // Below is the equivalent with a lambda expression.
+
+        fn h(): t = let
+           val v = 1
+        in lam(): int => v end
+
+        val f = h()
+        val v = f()
+
+A boxed closure as above, is allocated on heap, a flat closure is allocated on
+stack, as below.
+
+Example:
+
+        typedef t = () -<clo> int // Prerequisite.
+
+        fn h(): t = let
+           val v = 1
+        in lam@(): int =<clo> v end
+
+        var f = h()  // `var` instead of `val`, its allocation.
+        val v = f()
+
+
+Alternatively to the previous `cloref`, a `cloptr` may be used for explicit
+deallocation.
+
+Example:
+
+        staload UN = "prelude/SATS/unsafe.sats" // Prerequisite.
+        viewtypedef t = () -<cloptr> int // Prerequisite.
+
+        fn h(): t = let
+           val v = 1
+        in lam(): int => v end
+
+        // `g` evaluates `f` and then frees it.
+        fn g(f: &t >> t?): int = let
+           val r = f()
+           val _ = cloptr_free($UN.castvwtp0(f))
+        in r end
+
+        var f = h()
+        val v = g(f)
 
 
 LBRACE_EXP
