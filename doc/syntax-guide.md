@@ -1787,7 +1787,7 @@ LAM_EXP
 
         LAM_EXP = LAM … IMPEND
 
-Tags: expression; dynamic; closure; linear;
+Tags: expression; dynamic; static; closure; linear;
 
 Where `LAM` may be one of:
 
