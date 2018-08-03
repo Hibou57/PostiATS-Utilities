@@ -1812,7 +1812,7 @@ function is evaluated only once, then it is not available anymore. A linear
 closure is a manually managed closure.
 
 Closures are distinguished from usual function types, by their function
-effect.
+effect. Function effects notation is explained in `SYMLT_EXP`.
 
   * `clo` for stack allocated closures, ex. for `lam@`.
   * `cloref` for garbage‑collector managed closures, ex. for `lam`.
@@ -1878,7 +1878,8 @@ Example:
 
 
 Alternatively to the previous `cloref`, a `cloptr` may be used for explicit
-deallocation.
+deallocation of heap allocated closures. Unlike a `cloref`, a `cloptr` is
+linear, hence `t` is defined with `viewtypedef`.
 
 Example:
 
@@ -1892,11 +1893,15 @@ Example:
         // `g` evaluates `f` and then frees it.
         fn g(f: &t >> t?): int = let
            val r = f()
-           val _ = cloptr_free($UN.castvwtp0(f))
+           val () = cloptr_free($UN.castvwtp0(f))
         in r end
 
-        var f = h()
+        var f = h() // `var` instead of `val`.
         val v = g(f)
+
+
+Don’t be afraid, `$UN.castvwtp0(f)` is safe, it just does not match any
+typing rule of ATS2.
 
 
 LBRACE_EXP
