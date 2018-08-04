@@ -1839,7 +1839,8 @@ Example:
         val v = f()
 
 
-The `cloref` effect allows closure, this is how ATS2 dynamic lambda works.
+The “cloXXX” familly of effects, like `cloref` is an example, allows closure,
+this is how ATS2 dynamic lambda works.
 
 Example:
 
@@ -1862,8 +1863,8 @@ Example:
         val f = h()
         val v = f()
 
-A boxed closure as above, is allocated on heap, a flat closure is allocated on
-stack, as below.
+A boxed closure as above, is allocated on heap, a flat closure, `clo`, is
+allocated on stack, as below.
 
 Example:
 
@@ -1879,12 +1880,12 @@ Example:
 
 Alternatively to the previous `cloref`, a `cloptr` may be used for explicit
 deallocation of heap allocated closures. Unlike a `cloref`, a `cloptr` is
-linear, hence `t` is defined with `viewtypedef`.
+linear.
 
 Example:
 
         staload UN = "prelude/SATS/unsafe.sats" // Prerequisite.
-        viewtypedef t = () -<cloptr> int // Prerequisite.
+        viewtypedef t = () -<cloptr> int // `viewtypedef` instead of `typedef`
 
         fn h(): t = let
            val v = 1
