@@ -1612,7 +1612,7 @@ Example:
 Neither `p()` nor `ctoi(…)` gets implemented, their declarations suffice.
 
 
-### FUN_DECL: Void arguments
+### FUN_DECL: Void arguments and result
 
 `void` should only be used for the result type, not arguments type. Use an
 empty argument list instead of `void` arguments.
@@ -1628,6 +1628,14 @@ The same applies with functional types.
 
         typedef f = () -> int    // Recommended.
         typedef g = void -> int  // To be avoided.
+
+In result type, `()` is not `void`, it is an empty flat tuple type.
+
+Example:
+
+        fn f(): void = ()  // Ovbviously.
+        fn g(): () = ()    // Does not type‑check.
+        fn g(): () = @()   // Type‑checks.
 
 
 HASHLBRACKET_EXP
