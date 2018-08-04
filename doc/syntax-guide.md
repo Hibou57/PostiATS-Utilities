@@ -1795,8 +1795,8 @@ Where `LAM` may be one of:
   * `"fix@"` — flat recursive closure
   * `"lam"` — boxed closure (dynamic) or static non‑recursive function
   * `"lam@"` — flat closure
-  * `"llam"` — boxed linear function (not closure)
-  * `"llam@"` — flat linear function (not closure)
+  * `"llam"` — boxed linear closure
+  * `"llam@"` — flat linear closure
 
 Note static lambda is not the same. The static only has `"lam"` which is for
 non‑recursive functions.
@@ -1807,11 +1807,8 @@ to care about memory management, unlike SML which is always garbage collected.
 Also SML don’t provide linear logic, while ATS2 do, not only with data and
 other resources, with functions too.
 
-Linear functions are not closures, while closures may be linear. A linear
-function is evaluated only once, then it is not available anymore. A linear
-closure is a manually managed closure. There is a distinction between a
-function on its own, that is as an object or as data and a function as
-its evaluation. Their linearity is distinct.
+There is a distinction between a function on its own, that is as an object or
+as data and a function as its evaluation. Their linearity is distinct.
 
 Closures are distinguished from usual function types, by their function
 effect. Function effects notation is explained in `SYMLT_EXP`.
@@ -1819,11 +1816,13 @@ effect. Function effects notation is explained in `SYMLT_EXP`.
   * `clo` for stack allocated closures, ex. for `lam@`.
   * `cloref` for garbage‑collector managed closures, ex. for `lam`.
   * `cloptr` for manually managed closures, they are of linear types.
-  * `lin` for linear functions, which are not closures.
+  * `lin` for linear evaluation.
 
-The `lin` effect may be combined with one of the “cloXXX” effect.
+The `lin` effect may be combined with `cloptr` (the default) or `clo`.
 
 It may have additional effects, like `0` for “pure”.
+
+First, we see `"lam"` and `"lam@"`.
 
 Usual function types do not support closure.
 
@@ -1907,6 +1906,40 @@ Example:
 
 Don’t be afraid, `$UN.castvwtp0(f)` is safe, it just does not match any
 typing rule of ATS2.
+
+`"fix"` and `"fix@"` are similar to `lam` and `lam@`, except they may be
+self‑recursive. If the name looks strange, I believe the name “fix” comes from
+the “fixed‑point” combinator which is the foundation for recursion in the
+Hindley‑Milner typed lambda calculus, while there is no possible recursion in
+the simply typed lambda calculus.
+
+Since it must be able to refer to it‑self, the syntax gives place to a name
+for self‑reference. This name may be freely chosse, it is “me” in the examples
+below. This name is not visible outside of the lambda expression.
+
+Like `lam`, `fix` may be garbage collected or manually managed.
+
+Example:
+
+        typedef t = int -<cloref> void
+        var f:t = fix me(i:int) => if i > 0 then me(i - 1) else ()
+
+        staload UN = "prelude/SATS/unsafe.sats"
+        viewtypedef t = int -<cloptr> void
+        var g:t = fix me(i:int) => if i > 0 then me(i - 1) else ()
+        val () = cloptr_free($UN.castvwtp0(g))
+
+Like `lam@`, `fix@` is stack allocated.
+
+Example:
+
+        typedef t = int -<clo> void
+        var h:t = fix@ me(i:int) => if i > 0 then me(i - 1) else ()
+
+`"llam"` and `"llam@"` alone, whose type is distinguished by the `lin` effect,
+are for linear evaluation, may be combined with `cloptr` for the former or
+`clo` for the latter. If a type specifies only `lin`, then `cloptr` is the
+default.
 
 
 LBRACE_EXP
