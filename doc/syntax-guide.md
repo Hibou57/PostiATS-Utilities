@@ -1807,8 +1807,8 @@ to care about memory management, unlike SML which is always garbage collected.
 Also SML don’t provide linear logic, while ATS2 do, not only with data and
 other resources, with functions too.
 
-There is a distinction between a function on its own, that is as an object or
-as data and a function as its evaluation. Their linearity is distinct.
+**There is a distinction between a function on its own, that is as an object
+or as data and a function as its evaluation. Their linearity is distinct.**
 
 Closures are distinguished from usual function types, by their function
 effect. Function effects notation is explained in `SYMLT_EXP`.
@@ -1822,7 +1822,7 @@ The `lin` effect may be combined with `cloptr` (the default) or `clo`.
 
 It may have additional effects, like `0` for “pure”.
 
-First, we see `"lam"` and `"lam@"`.
+First, we explain `"lam"` and `"lam@"`.
 
 Usual function types do not support closure.
 
