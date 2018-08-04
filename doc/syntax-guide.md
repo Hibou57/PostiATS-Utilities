@@ -1914,32 +1914,25 @@ Hindley‑Milner typed lambda calculus, while there is no possible recursion in
 the simply typed lambda calculus.
 
 Since it must be able to refer to it‑self, the syntax gives place to a name
-for self‑reference. This name may be freely chosse, it is “me” in the examples
-below. This name is not visible outside of the lambda expression.
-
-Like `lam`, `fix` may be garbage collected or manually managed.
+for self‑reference. This name may be freely chosse, it is “me” in the example
+below. This name is not visible outside of the lambda expression. Except for
+this difference, the rest is as with `lam` and `lam@`.
 
 Example:
 
         typedef t = int -<cloref> void
         var f:t = fix me(i:int) => if i > 0 then me(i - 1) else ()
 
-        staload UN = "prelude/SATS/unsafe.sats"
-        viewtypedef t = int -<cloptr> void
-        var g:t = fix me(i:int) => if i > 0 then me(i - 1) else ()
-        val () = cloptr_free($UN.castvwtp0(g))
-
-Like `lam@`, `fix@` is stack allocated.
-
-Example:
-
-        typedef t = int -<clo> void
-        var h:t = fix@ me(i:int) => if i > 0 then me(i - 1) else ()
-
-`"llam"` and `"llam@"` alone, whose type is distinguished by the `lin` effect,
-are for linear evaluation, may be combined with `cloptr` for the former or
+`"llam"` and `"llam@"`, whose type is distinguished by the `lin` effect, are
+for linear evaluations and may be combined with `cloptr` for the former or
 `clo` for the latter. If a type specifies only `lin`, then `cloptr` is the
 default.
+
+Unlike `lam`, `llam` cano only be manually managed, and a `lam` or `llam` can
+only be evaluated once (however may be created multiple times). Except for
+these differences, the rest is as with `lam` and `lam@`.
+
+Note the `lin` effect is ignored on ordinary functions.
 
 
 LBRACE_EXP
