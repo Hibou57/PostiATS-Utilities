@@ -1942,6 +1942,14 @@ these differences, the rest is as with `lam` and `lam@`.
 
 Note the `lin` effect is ignored on ordinary functions.
 
+`"lam"` alone is a bit overloaded, it also has a meaning in the static:
+a non‑recursive function, the only kind of function which can be defined
+in the static.
+
+Example:
+
+        stadef f: int -> int = lam(x) => x + 1
+
 
 LBRACE_EXP
 ------------------------------------------------------------------------------
