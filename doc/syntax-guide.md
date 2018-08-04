@@ -1956,7 +1956,20 @@ LBRACE_EXP
 
         LBRACE_EXP = "{" … "}"
 
-Tags: expression;
+Tags: expression; static; dynamic;
+
+The `LBRACE_EXP` is an overloaded notation.
+
+It is used for:
+
+  * alternative notation for let‑expressions returning void.
+  * body of a where‑expression (for one of its notation).
+  * constraint arguments of function evaluation.
+  * sub‑sort definitions.
+  * template parameters list of functions.
+  * universal quantification of functions (constraint parameters).
+  * universal quantification of guarded types.
+  * universal quantification of loop constructs (constraints).
 
 
 LBRACKET_EXP
