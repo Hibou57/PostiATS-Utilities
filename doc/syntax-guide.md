@@ -1936,7 +1936,7 @@ for linear evaluations and may be combined with `cloptr` for the former or
 `clo` for the latter. If a type specifies only `lin`, then `cloptr` is the
 default.
 
-Unlike `lam`, `llam` cano only be manually managed, and a `lam` or `llam` can
+Unlike `lam`, `llam` can only be manually managed, and a `llam` or `llam@` can
 only be evaluated once (however may be created multiple times). Except for
 these differences, the rest is as with `lam` and `lam@`.
 
