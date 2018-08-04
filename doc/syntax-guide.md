@@ -1809,7 +1809,9 @@ other resources, with functions too.
 
 Linear functions are not closures, while closures may be linear. A linear
 function is evaluated only once, then it is not available anymore. A linear
-closure is a manually managed closure.
+closure is a manually managed closure. There is a distinction between a
+function on its own, that is as an object or as data and a function as
+its evaluation. Their linearity is distinct.
 
 Closures are distinguished from usual function types, by their function
 effect. Function effects notation is explained in `SYMLT_EXP`.
@@ -1818,6 +1820,8 @@ effect. Function effects notation is explained in `SYMLT_EXP`.
   * `cloref` for garbage‑collector managed closures, ex. for `lam`.
   * `cloptr` for manually managed closures, they are of linear types.
   * `lin` for linear functions, which are not closures.
+
+The `lin` effect may be combined with one of the “cloXXX” effect.
 
 It may have additional effects, like `0` for “pure”.
 
