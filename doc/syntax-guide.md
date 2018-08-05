@@ -2545,11 +2545,9 @@ Example:
         var i:int
         prval pf = view@ i
 
-A view‑at proof is a linear proof and an l‑value. Being a linear proof, it
-means when it is retrieved it picked‑up from where it is retrieved and
-sometime it needs to be given back. Being an l‑value means it can be assigned
-to, which is how it can be given back. To give back a view‑at proof is named
-a “view‑at restauration”.
+A view‑at proof is a linear proof and an l‑value. Being an l‑value means it
+can be assigned to (conditionally), which is how it can be given back. To give
+back a view‑at proof is named a “view‑at restauration”.
 
 Example:
 
