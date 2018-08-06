@@ -1963,7 +1963,7 @@ The `LBRACE_EXP` is an overloaded notation.
 It is used for:
 
   * universal quantification of guarded types, ex. a `TYPEDEF_DECL`.
-  * universal quantification of `FUN_DECL` (constraint parameters).
+  * universal quantification of `FUN_DECL` (constraints specifications).
   * universal quantification of `FORSTAT_EXP` and `WHILESTAR_EXP`.
   * template parameters list of `FUN_DECL`.
   * constraint arguments of function evaluation expressions.
