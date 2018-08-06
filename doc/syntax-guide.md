@@ -1962,14 +1962,136 @@ The `LBRACE_EXP` is an overloaded notation.
 
 It is used for:
 
-  * alternative notation for let‑expressions returning void.
-  * body of a where‑expression (for one of its notation).
-  * constraint arguments of function evaluation.
-  * sub‑sort definitions.
-  * template parameters list of functions.
-  * universal quantification of functions (constraint parameters).
-  * universal quantification of guarded types.
-  * universal quantification of loop constructs (constraints).
+  * universal quantification of guarded types, ex. a `TYPEDEF_DECL`.
+  * universal quantification of `FUN_DECL` (constraint parameters).
+  * universal quantification of `FORSTAT_EXP` and `WHILESTAR_EXP`.
+  * template parameters list of `FUN_DECL`.
+  * constraint arguments of function evaluation expressions.
+  * sub‑sort definition of `SORTDEF_DECL`.
+  * void expression, mainly as an alternative to `LET_EXP` returning void.
+  * declarations list of `WHERE_EXP` (for one of its notations).
+
+
+### LBRACE_EXP: universal quantification
+
+Universal quantification may contains static variable declarations and/or
+boolean static predicates over these variables or be empty. The static
+variables being declared may or may not be used and in some circumstances, may
+be implicitely declared. Variables declarations and predicates may be
+separated by a single `"|"` as a convention, but this is just a convention, in
+an universal quantification, any `";"` may be changed into a `"|"`.
+
+Universal quantification may be used as the guard of a guarded type or as
+constraints, ex. the constraints of a function, type constructor or loop. The
+semantic varies depending on which use is made of the overloaded concept of
+universal quantification.
+
+Here, `typedef` and `datatype` are used as examples, but the examples applies
+to all cases where an universal quantification is expected.
+
+Example:
+
+        typedef t = {i:int} int(i)             // A static declaration.
+        typedef t = {i:int} int                // `i` is not used, that’s OK.
+        typedef t = { } int                    // Empty, that’s OK.
+        typedef t = {i:int; i >= 0} int(i)     // Variable and predicate.
+        typedef t = {i:int | i >= 0} int(i)    // … bar separated.
+        typedef t = {i, j:int | i >= 0} int(i) // Two variables.
+
+Specific to some construct, static variables may be implicitely dclared.
+
+Example:
+
+        datatype t(i:int) = {i >= 0} C(i)  // `i` implicitely declared.
+        datatype t(i:int) = {i >= 0} C1(i) | {i >= 3} C2(i)  // Similarly.
+
+The static variables may be declared in the scope or outer scope.
+
+Example:
+
+        stacst i: int
+        typedef t = {i >= 0} int
+
+There may be multiple quantification, one next to the previous one. It is
+like the arguments of a curried function. Say we have something like
+“f -> (g -> h)” wich is evaluated as “f (x) (y) (z)”, then “{x} {y} {z}”
+may be understood as something similar to “(x) (y) (z)”. That is, if the
+application is partial it may be either “{x}” or “{x} {y}”. Talking about
+application is only applicable when the universal quantifications appears
+as constraints, in which case, the arguments are the constraint arguments.
+
+Example:
+
+        fn f {i:int} {j:int} {k:int} () = ()
+        val () = f()
+        val () = f{0}() // The literals in `{…}` are constraints arguments.
+        val () = f{0}{1}()
+        val () = f{0}{1}{2}()
+
+        fn g {i, j, k:int} () = ()
+        val () = g()
+        val () = g{0, 1, 2}() // All three or none.
+
+
+### LBRACE_EXP: template parameters
+
+For template parameters, the syntax is the same as for universal
+quantification, except that precicates (constraints) are rejected although
+syntactically correct.
+
+Example:
+
+        fn {t:t@ype} f(a:t) = ()
+        fn {t:t@ype; u:t@ype} g(a:t, b:u) = ()
+        fn {t:t@ype | u:t@ype} h(a:t, b:u) = ()
+
+
+### LBRACE_EXP: constraints arguments
+
+See the last examples of the part about universal quantification.
+
+
+### LBRACE_EXP: sub‑sort definition
+
+It looks like an universal quantification, the syntax is just more restricted.
+First, a single static variable is declared and it is required. Then, the
+predicate must follow a bar, this part is required too. Predicates are
+separated by a `";"`.
+
+Example:
+
+        sortdef n = {i: int | i >= 0}
+        sortdef n = {i: int | i >= 0; i <= 9}
+
+
+### LBRACE_EXP: void expression
+
+Where a dynamic expression is expected, `{…}` is the same as
+`let … in end` which is it‑self the same as `let … in () end`.
+
+Example:
+
+        val () = { }
+
+        val () = {
+              val s = "Hello;"
+              val () = println! s
+           }
+
+        implement main0() = {
+        }
+
+
+### LBRACE_EXP: where‑expression
+
+One of the form of `WHERE_EXP` uses braces to list declarations used to
+resolve bindings in a function result. Between the braces, only declarations
+may appear. It looks similar as the braces used as a void expression, however
+although the syntax is the same, but the semantic is not.
+
+Example:
+
+        fn f(): int = a where { val a = 0 }
 
 
 LBRACKET_EXP
